@@ -1,0 +1,26 @@
+.titulo{
+    color:blue;
+    text-decoration: none;
+}
+.texto{
+    text-decoration: none;
+    transform: translateX(10px); /* empurra 30px para a direita */
+}
+.apresentacao{
+
+    margin: 0;
+    height: 70vh; /* altura total da tela */
+    display: flex;
+    flex-direction: column; /* um embaixo do outro */
+    justify-content: center; /* centraliza verticalmente */
+    transform: translateX(60px); /* empurra 30px para a direita */
+}
+.botao{
+    cursor: pointer;
+    border: none;
+    margin: 0;
+    display: flex;
+    transform: translate(20vh, 15vh); 
+    background: tomato;
+   
+}
