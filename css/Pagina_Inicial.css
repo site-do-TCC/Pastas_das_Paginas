@@ -9,7 +9,7 @@
 }
 .texto{
     text-decoration: none;
-    transform: translateX(10px); /* empurra 30px para a direita */
+    transform: translateX(10px);
 }
 .apresentacao{
 
