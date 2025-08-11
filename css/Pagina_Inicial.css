@@ -1,3 +1,8 @@
+*{
+    margin: 0;
+    padding: 0;
+     box-sizing: border-box;
+}
 .titulo{
     color:blue;
     text-decoration: none;
@@ -16,11 +21,13 @@
     transform: translateX(60px); /* empurra 30px para a direita */
 }
 .botao{
+    text-decoration: none;
+    top:85%;
+    left: 10%;
+    position: absolute;                                     
+    border-radius: 14px;
+    padding: 10px;
     cursor: pointer;
     border: none;
-    margin: 0;
-    display: flex;
-    transform: translate(20vh, 15vh); 
     background: tomato;
-   
 }
