@@ -7,27 +7,25 @@
     color:blue;
     text-decoration: none;
 }
-.texto{
-    text-decoration: none;
-    transform: translateX(10px);
+article{
+    /* Esse modelo abaixo centralzia os elemenos*/
+    top: 50%;
+    left:10%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    background: tomato;
 }
-.apresentacao{
 
-    margin: 0;
-    height: 70vh; /* altura total da tela */
-    display: flex;
-    flex-direction: column; /* um embaixo do outro */
-    justify-content: center; /* centraliza verticalmente */
-    transform: translateX(60px); /* empurra 30px para a direita */
-}
 .botao{
     text-decoration: none;
-    top:85%;
-    left: 10%;
     position: absolute;                                     
     border-radius: 14px;
     padding: 10px;
     cursor: pointer;
     border: none;
     background: tomato;
+    top: 150%;
+    left:50%;
+    transform: translate(-50%, -50%);
 }
+    
