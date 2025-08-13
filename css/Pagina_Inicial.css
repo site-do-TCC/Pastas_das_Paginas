@@ -1,43 +1,65 @@
-*{
+* {
     margin: 0;
     padding: 0;
-     box-sizing: border-box;
+    box-sizing: border-box;
 }
-.titulo{
-    color:blue;
+
+.titulo {
+    color: blue;
     text-decoration: none;
 }
-article{
+
+article {
     /* Esse modelo abaixo centralzia os elemenos*/
     top: 50%;
-    left:10%;
+    left: 10%;
     transform: translate(-50%, -50%);
     position: absolute;
     background: tomato;
 }
 
-.botao{
+.botao {
     text-decoration: none;
-    position: absolute;                                     
+    position: absolute;
     border-radius: 14px;
     padding: 10px;
     cursor: pointer;
     border: none;
     background: tomato;
     top: 150%;
-    left:50%;
+    left: 50%;
     transform: translate(-50%, -50%);
 }
-ul{
+
+ul {
     list-style-type: none;
     margin: 0;
-    padding: 0;
+
+    margin-left: 55%;
 }
-li{
-    padding-right: 5px;
-    padding-left: 5px;
+
+li {
     display: inline;
 }
-a{
+
+a {
+    font-size: 130%;
+    padding-left: 25px;
+    padding-right: 25px;
     text-decoration: none;
+}
+
+.entrar {
+    font-size: 140%;
+    background: tomato;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    padding: 7px 25px 7px 25px;
+    margin-left: 10%;
+}
+nav{
+    background: tomato;
+    margin-top:1px;
+    box-shadow: 1px 4px 10px rgba(0, 0, 0, 0.3);
 }
