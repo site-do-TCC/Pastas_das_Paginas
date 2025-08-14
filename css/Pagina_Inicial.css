@@ -3,6 +3,9 @@
     padding: 0;
     box-sizing: border-box;
 }
+body{
+    background: #F5F5F5;
+}
 
 .titulo {
     color: blue;
@@ -15,7 +18,6 @@ article {
     left: 10%;
     transform: translate(-50%, -50%);
     position: absolute;
-    background: tomato;
 }
 
 .botao {
@@ -59,7 +61,27 @@ a {
     margin-left: 10%;
 }
 nav{
-    background: tomato;
-    margin-top:1px;
-    box-shadow: 1px 4px 10px rgba(0, 0, 0, 0.3);
+    background: #FFFFFF;
+    padding-top:20px;
+    padding-bottom:20px;
+    box-shadow: 1px 4px 10px rgba(0, 0, 0, 0.1);
+}
+.moldura {
+  width: 90%; /* tamanho da moldura */
+  height: 90%;
+  background: url('\img\ImagemPgInicial.png') no-repeat center/contain;
+  display: flex;
+  align-items: center; /* centraliza verticalmente */
+  justify-content: center; /* centraliza horizontalmente */
+  overflow: hidden; /* corta o que passar */
+  margin-top: 3%;
+  margin-left: 14%;
+}
+
+.moldura img {
+  width: 75%; /* aumenta ou diminui */
+  height: auto;
+  position: relative; /* pra poder mover */
+  top: 20%; /* mexe verticalmente */
+  left: 15%; /* mexe horizontalmente */
 }
