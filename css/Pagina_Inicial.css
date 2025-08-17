@@ -103,13 +103,26 @@ nav {
   justify-content: flex-end;
   margin-left: auto;
 }
-
 .imagem img {
   width: 100%;
   max-width: 1000px;
   height: auto;
   display: block;
+  animation: imgAnimationvolta 10s ease forwards;
 }
+@keyframes imgAnimation {
+  from {
+    transform: translateY(20px);
+  }
+  to {
+    transform: translateY(0px);
+  }
+}
+.imagem img:hover{
+  animation: imgAnimation 2s ease forwards;
+}
+
+
 
 /* Barra de busca */
 
