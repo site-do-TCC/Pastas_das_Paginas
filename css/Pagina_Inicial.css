@@ -1,14 +1,32 @@
+
+@font-face {
+  font-family: "Birthstone";
+  src: url("/fonts/paginaInicial/Birthstone/Birthstone-Regular.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Mulish";
+  src: url("/fonts/paginaInicial/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: "Mulish";
+  
+}
+
+body{
+  background:#8e78a1;
 }
 
 /* Cabeçalho */
 header {
   background: #917ba4; /* Roxinho */
-  padding: 15px 40px;
+  padding: 10px 40px;
 }
 
 nav {
@@ -18,28 +36,32 @@ nav {
 }
 
 .logo img {
-  height: 100px;
+  cursor:pointer;
+  height: 50px;
 }
 
 .menu {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
 }
 
 .btnEntrar {
-  background: #ff6f6f;
+  background: #ff7f86;
   color: white;
   font-weight: bold;
   border: none;
   border-radius: 8px;
   padding: 8px 20px;
   cursor: pointer;
-  font-size: 1em;
+  font-size: 1.5em;
 }
 
 .menu-icon {
-  font-size: 33px;
+  background: #917ba4;
+  border: none;
+  margin-bottom: 9px;
+  font-size: 2.9em;
   color: white;
   cursor: pointer;
 }
@@ -59,18 +81,20 @@ nav {
 
 .texto h2 {
   color: white;
-  font-size: 28px;
+  font-size: 45px;
   margin-bottom: 10px;
+  font-weight: normal;
 }
 
 .texto h1 {
+  margin-bottom: 40%;
+  font-family: "Birthstone";
+  margin-left:45%;
   color: white;
-  font-size: 48px;
+  font-size: 150px;
   font-style: italic;
   font-weight: bold;
 }
-
-
 .imagem {
   flex: 1;
   display: flex;
@@ -79,9 +103,9 @@ nav {
 }
 .imagem img {
   width: 100%;
-  max-width: 700px;
+  max-width: 1000px;
   height: auto;
-   display: block;  
+  display: block;  
 }
 
 /* Barra de busca */
@@ -98,7 +122,7 @@ nav {
 }
 
 .campo p {
-  font-size: 20px;
+  font-size: 25px;
   margin-bottom: 5px;
   color: #ffffff;
 }
@@ -107,5 +131,6 @@ nav {
   padding: 12px 15px;
   border-radius: 10px;
   border: 1px solid #ccc;
-  width: 100%;
+  max-width: 200%;
+  height: auto;
 }
