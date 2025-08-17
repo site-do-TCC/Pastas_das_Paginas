@@ -1,42 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Página Inicial TCC</title>
-  <link rel="stylesheet" href="\css\Pagina_Inicial.css">
+  <title>Avena</title>
+  <link rel="stylesheet" href="/css/Pagina_Inicial.css">
 </head>
-
 <body>
-  <nav>
-    <ul>
-      <div class="links">
-        <li><a href="Pagina_Inicial.html">Home</a></li>
-        <li><a href="sobre.html">Quem somos</a></li>
-        <li><a href="#">Serviços</a></li>
-        <li><a href="contato.html">Contato</a></li>
+  
+  <header>
+    <nav>
+      <div class="logo">
+        <img src="/img/logoAvena.png" alt="Logo Avena">
       </div>
-      <li class="btnEntrar">
-        <button>Entrar</button>
-      </li>
-    </ul>
-  </nav>
-
-  <article>
-    <div>
-      <h1 class="titulo">Lorem ipsum dolor sit amet consectetur. </h1>
-      <h6 class="texto">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse numquam ut quisquam quidem tenetur
-        totam velit nulla distinctio provident odit?</h6>
-
-      <div>
-        <a class="botao" href="cadastro.html">Cadastre-se</a>
+      <div class="menu">
+        <button class="btnEntrar">Entrar</button>
+        <div class="menu-icon">&#9776;</div>
       </div>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="texto">
+      <h2>Encontre aqui as melhores</h2>
+      <h1>Profissionais!</h1>
     </div>
-  </article>
-  <div class="moldura">
-    <img src="\img\ImagemPgInicial.png" alt="Imagem na moldura">
-  </div>
-</body>
+    <div class="imagem">
+      <img src="/img/imgInicial.png" alt="Profissionais sorrindo">
+    </div>
+  </section>
 
+  <div class="busca">
+    <div class="campo">
+      <p>O que você está procurando?</p>
+      <input type="text" placeholder="Unhas, Cabelo, Faxina...">
+    </div>
+    <div class="campo">
+      <p>Onde você está?</p>
+      <input type="text" placeholder="Cidade ou Estado">
+    </div>
+  </div>
+
+</body>
 </html>

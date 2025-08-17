@@ -1,94 +1,108 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-body{
-    background: #F5F5F5;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-.titulo {
-    color: blue;
-    text-decoration: none;
-}
-
-article {
-    /* Esse modelo abaixo centralzia os elemenos*/
-    top: 50%;
-    left: 10%;
-    transform: translate(-50%, -50%);
-    position: absolute;
-}
-
-.botao {
-    text-decoration: none;
-    position: absolute;
-    border-radius: 14px;
-    padding: 10px;
-    cursor: pointer;
-    border: none;
-    background: tomato;
-    top: 150%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* Cabeçalho */
+header {
+  background: #8e78a1; /* Roxinho */
+  padding: 15px 40px;
 }
 
 nav {
-  background: #FFFFFF;
-  padding: 20px 40px;
-  box-shadow: 1px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-ul {
   display: flex;
-  justify-content: space-between; /* separa links e botão */
+  justify-content: space-between;
   align-items: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
 }
 
-.links {
-  margin-left:50%;
+.logo img {
+  height: 100px;
+}
+
+.menu {
   display: flex;
-  gap: 70px; /* espaço entre os links */
+  align-items: center;
+  gap: 20px;
 }
 
-.links a {
-  font-size: 150%;
-  text-decoration: none;
-  color: black;
-}
-
-.btnEntrar button {
-  font-size: 24px;
-  background: #e26da7;
+.btnEntrar {
+  background: #ff6f6f;
   color: white;
   font-weight: bold;
-  cursor: pointer;
   border: none;
-  border-radius: 10px;
-  padding: 7px 25px;
+  border-radius: 8px;
+  padding: 8px 20px;
+  cursor: pointer;
+  font-size: 1em;
 }
 
+.menu-icon {
+  font-size: 33px;
+  color: white;
+  cursor: pointer;
+}
 
-
-.moldura {
-  width: 86%; /* tamanho da moldura */
-  height: 90%;
-  background: url('\img\ImagemPgInicial.png') no-repeat center/contain;
+/* Hero section */
+.hero {
+  height: 100%;
   display: flex;
-  align-items: center; /* centraliza verticalmente */
-  justify-content: center; /* centraliza horizontalmente */
-  overflow: hidden; /* corta o que passar */
-  margin-top: 3%;
-  margin-left: 14%;
+  align-items: center;
+  justify-content: flex-end;
+  background:#8e78a1;
+  padding: 0px;
+  gap: 10%;
 }
 
-.moldura img {
-  width: 75%; /* aumenta ou diminui */
+.texto h2 {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.texto h1 {
+  color: white;
+  font-size: 48px;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.imagem {
+  display: flex;
+  justify-content: flex-end; /* cola a imagem na borda direita do espaço dela */
+  flex: 1; /* garante que ocupe o espaço da direita */
+}
+.imagem img {
+  width: 100%;
+  max-width: 800px; /* controla o tamanho */
   height: auto;
-  position: relative; /* pra poder mover */
-  top: 20%; /* mexe verticalmente */
-  left: 19%; /* mexe horizontalmente */
+  object-fit:; /* corta o excesso da imagem */
+  object-position: right; /* foca a parte da direita da imagem */
+}
+
+/* Barra de busca */
+.busca {
+  display: flex;
+  margin-left: 10%;
+  gap: 20px;
+  margin-top: -40px; /* sobe um pouco pra "colar" no hero */
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo p {
+  font-size: 20px;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.campo input {
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  width: 100%;
 }
