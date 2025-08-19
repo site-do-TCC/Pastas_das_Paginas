@@ -4,46 +4,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Página Inicial TCC</title>
-  <link rel="stylesheet" href="\css\Pagina_Inicial.css">
+  <title>Avena</title>
+  <link rel="stylesheet" href="/css/Pagina_Inicial.css">
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="Pagina_Inicial.html">Início</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="login.html">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="sobre.html">Conheça-nos</a>
-          </li>
-        </ul>
+
+  <header>
+    <nav>
+      <div class="logo">
+        <img src="/img/logoAvena.png" alt="Logo Avena" href="Pagina_Inicial.html">
       </div>
-    </div>
+      <div class="menu">
+        <a href="login.html"><button class="btnEntrar">Entrar</button></a>
+        <button class="menu-icon" id="menu-btn">&#9776;</button>
+      </div>  
+    </nav>
+  </header>
+
+
+
+  <!-- Menu -->
+  <nav id="menu" class="hidden">
+    <ul>
+      <li><a href="sobre.html"><span class="quemSomos">Quem somos<span></a></li>
+      <li><a href="cadastro.html">Cadastrar-se</a></li>
+      <hr>
+      <li><a href="contato.html">Seja um Parceiro</a></li>
+      <li><a href="suporte.html">Suporte</a></li>
+    </ul>
   </nav>
 
-  <article>
-    <div>
-      <h1 class="titulo">Lorem ipsum dolor sit amet consectetur. </h1>
-      <h6 class="texto">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse numquam ut quisquam quidem tenetur totam velit nulla distinctio provident odit?</h6>
 
-      <div>
-        <a class="botao" href="cadastro.html">Cadastre-se</a>
+
+
+
+  <section class="hero">
+    <div class="texto">
+      <h2>Encontre aqui as melhores</h2>
+      <h1>Profissionais!</h1>
+
+      <div class="busca">
+        <div class="campo">
+          <p>O que você está procurando?</p>
+          <input type="text" name="servico" placeholder="Unhas, Cabelo, Faxina...">
+        </div>
+        <div class="campo">
+          <p>Onde você está?</p>
+          <input type="text" name="local" placeholder="Cidade">
+        </div>
       </div>
-
     </div>
 
+    <div class="imagem">
+      <img src="/img/imgInicial.png" alt="Profissional sorrindo">
+    </div>
+  </section>
 
-  </article>
+  <script src="/js/Pagina_Inicial.js"></script>
 </body>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
-  integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
 
 </html>
