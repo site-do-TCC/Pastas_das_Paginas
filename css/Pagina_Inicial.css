@@ -119,6 +119,7 @@ nav {
   }
 }
 .imagem img:hover{
+  z-index: 0;
   animation: imgAnimation 2s ease forwards;
 }
 
@@ -168,6 +169,7 @@ nav {
   }
 }
 .show {
+  z-index: 1;
   animation: fadeInUp 1s ease forwards;
   margin-left: 84%;
   border-radius: 10%;
