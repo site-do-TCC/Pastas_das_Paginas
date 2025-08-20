@@ -128,7 +128,6 @@ h1:hover{
   max-width: 1000px;
   height: auto;
   display: block;
-  transition: background 0.3s ease;
 }
 .imagem img:hover{
   z-index: 0;
