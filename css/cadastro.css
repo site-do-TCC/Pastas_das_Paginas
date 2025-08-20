@@ -1,0 +1,14 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+form{
+    display: flex;
+    position: absolute;
+     /* Esse modelo abaixo centralzia os elemenos */
+    top: 50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+}
