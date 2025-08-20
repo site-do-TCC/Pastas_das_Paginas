@@ -38,6 +38,10 @@ nav {
 .logo img {
   cursor: pointer;
   height: 50px;
+  transition: 1s ease;
+}
+.logo img:hover{
+  height: 60px;
 }
 
 .menu {
@@ -55,6 +59,12 @@ nav {
   padding: 8px 20px;
   cursor: pointer;
   font-size: 1.5em;
+  transition: 0.7s ease;
+}
+.btnEntrar:hover{
+  font-weight: bolder;
+  font-size: 1.9em;
+  background: #ff616a;
 }
 
 .menu-icon {
@@ -65,7 +75,6 @@ nav {
   color: white;
   cursor: pointer;
 }
-
 /* Hero section */
 .hero {
   display: flex;
@@ -85,6 +94,11 @@ nav {
   font-size: 45px;
   margin-bottom: 10px;
   font-weight: normal;
+  transition: 1s ease;
+}
+
+h2:hover{
+  font-size: 50px;
 }
 
 .texto h1 {
@@ -95,6 +109,10 @@ nav {
   font-size: 150px;
   font-style: italic;
   font-weight: bold;
+  transition: 1s ease;
+}
+h1:hover{
+    font-size: 160px;
 }
 
 .imagem {
@@ -102,25 +120,17 @@ nav {
   display: flex;
   justify-content: flex-end;
   margin-left: auto;
+  transition: 1s ease;
 }
 .imagem img {
   width: 100%;
   max-width: 1000px;
   height: auto;
   display: block;
-  animation: imgAnimationvolta 10s ease forwards;
-}
-@keyframes imgAnimation {
-  from {
-    transform: translateY(20px);
-  }
-  to {
-    transform: translateY(0px);
-  }
+  transition: background 0.3s ease;
 }
 .imagem img:hover{
   z-index: 0;
-  animation: imgAnimation 2s ease forwards;
 }
 
 
