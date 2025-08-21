@@ -1,20 +1,65 @@
+@font-face {
+  font-family: "Birthstone";
+  src: url("/fonts/paginaInicial/Birthstone/Birthstone-Regular.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
 
+@font-face {
+  font-family: "Mulish";
+  src: url("/fonts/paginaInicial/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-   
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/edicaoPerfil/Poppins/Poppins-Regular.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "OpenSans-Bold";
+  src: url("/fonts/edicaoPerfil/Open_Sans/static/OpenSans-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/edicaoPerfil/Inter/static/Inter_18pt-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* ================= RESET ================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Mulish", sans-serif;
 }
 
 body {
-  background: #8e78a1;
+  background: #f5f5f5;
+  color: #545454;
+  padding-top: 90px; /* compensa altura do header fixo */
+  
 }
 
+/* ================= HEADER ================= */
 header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
   background: #917ba4;
   padding: 10px 40px;
- 
+  z-index: 1;
+  
 }
 
 nav {
@@ -26,7 +71,7 @@ nav {
 .logo img {
   cursor: pointer;
   height: 50px;
-  
+  margin-top: 10px;
 }
 
 .menu {
@@ -35,25 +80,10 @@ nav {
   gap: 30px;
 }
 
-.btnEntrar {
-  background: #ff7f86;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 20px;
-  cursor: pointer;
-  font-size: 1em;
-  margin-bottom: -5px;
-}
-
 .menu-icon {
   background: #917ba4;
   border: none;
-  margin-bottom: -1px;
   font-size: 2em;
   color: white;
-  cursor: pointer;
-
+  cursor: pointer;
 }
-
