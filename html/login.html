@@ -12,15 +12,17 @@
   <header>
   <nav>
      <div class="logo">
+       <a href="Pagina_Inicial.html">
         <img src="/img/logoAvena.png" alt="Logo Avena" href="Pagina_Inicial.html">
+        </a>
       </div>
       <div class="menu">
         <button class="menu-icon" id="menu-btn">&#9776;</button>
       </div>  
   </nav>
 </header>
- <!--
-  <nav id="menu" class="hidden">
+ 
+  <nav id="menu-login" class="hidden">
     <ul>
       <li><a href="sobre.html"><span class="quemSomos">Quem somos<span></a></li>
       <li><a href="cadastro.html">Cadastrar-se</a></li>
@@ -29,25 +31,41 @@
       <li><a href="suporte.html">Suporte</a></li>
     </ul>
   </nav>
--->
 
-    <div class="cont">
-      <form>
-        <div>
-          <label>Email</label>
-          <input type="email" name="email">
+
+<main class="login-container">
+  <div class="login-card">
+        <div class="login-form">
+
+      <form >
+        <div class="mb-3">
+          <label for="email">E-mail</label>
+          <input type="email" name="email" id="email" class="form-control">
         </div>
-        <div>
-          <label>Password</label>
-          <input type="password" name="senha">
+        <div class="mb-3">
+          <label for="senha">Password</label>
+          <div class="input-group">
+          <input type="password" name="senha" id="senha" class="form-control">
+          
+         </div>
         </div>
-        <input type="submit"></input>
+        <a href="#" class="forgot">esqueceu sua senha? burro</a>
+        <button type="submit" class="btn-login">ENTRAR</button>
+        <p class="signup">ainda nao está no XXXXX? <a href="#">Crie uma Conta.</a></p>
       </form>
     </div>
 
+     <div class="login-image">
+        <img src="/img/mulher cabelo preto.jpeg" alt="Ilustração login">
+      </div>
+    </div>
+</main>
+
+ 
 
 </body>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
   integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
 
+<script src="/js/login.js"></script>
 </html>
