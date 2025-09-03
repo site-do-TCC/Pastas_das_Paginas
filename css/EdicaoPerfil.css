@@ -43,16 +43,11 @@
   font-family: "Mulish", sans-serif;
 }
 
-body {
-  background: #f5f5f5;
-  color: #545454;
-  padding-top: 90px; /* compensa altura do header fixo */
-  
-}
+
 
 /* ================= HEADER ================= */
 header {
-  position: fixed;
+
   top: 0;
   left: 0;
   width: 100%;
@@ -60,6 +55,7 @@ header {
   background: #917ba4;
   padding: 10px 40px;
   z-index: 1;
+  position: fixed;
   
 }
 
@@ -90,41 +86,45 @@ nav {
 }
 
 /* ================= PERFIL ================= */
+
+body {
+  background: #f5f5f5;
+  color: #545454;
+  
+  
+}
 .headerPerfil{
-  position: fixed;
-  background-color: #f5f5f5;
-  width: 100%;
-  height: 210px;
-  z-index: 1;
-  opacity: 95%;
+  margin-top:100px;
 }
 
 .meuPerfil img {
-  position: fixed;
-  top: 120px;   /* abaixo do header */
-  left: 48px;   /* alinhado à esquerda */
+
+  top: 10px;   
+  left: 48px; 
+  margin-left: 50px;  
   cursor: pointer;
   width: 140px;
   z-index: 2;
 }
 
 .adicionarFoto img {
-  position: fixed;
-  top: 120px;   /* alinhado verticalmente */
-  left: 50%;    /* centralizado */
-  transform: translateX(-50%);
-  width: 160px;
-  height: 160px;
+
+  
+  
+  width: 140px;
+  height: 140px;
   cursor: pointer;
   z-index: 3;
-
+  margin-left: 44.4%;
+  margin-bottom: 20px;
+  
 }
 
 .linha {
   
-  position: fixed;
-  top: 300px;   /* ajusta para ficar logo abaixo da foto */
-  left: 0;
+
+  top: 1100px;   /* ajusta para ficar logo abaixo da foto */
+
   width: 100%;  
   height: 1px;  
   background-color: #969191;
@@ -136,7 +136,7 @@ nav {
 .Formulario {
   
   padding: 20px;
-  background-color: #f7f7f7;
+  
   border-radius: 10px;
   max-width: 900px;
   margin: 60px auto 110px auto;
@@ -145,10 +145,11 @@ nav {
 }
 
 .form-container {
-  margin-top: 180px;
+  margin-top: 0px;
   display: flex;
   gap: 40px;
   justify-content: center;
+  margin-left: 8px;
   
 }
 
@@ -215,7 +216,7 @@ textarea {
 .botoes {
   display: flex;
   gap: 80px;
-  margin-left: 320px; 
+  margin-left: 342px; 
   font-family: "Inter";
   white-space: nowrap;
   height: 50px;
@@ -241,6 +242,7 @@ textarea {
   border-radius: 12px;
   cursor: pointer;
   font-weight: bold;
+  z-index: 0;
 }
 
 /* ================= SUAS FOTOS ================= */
@@ -261,7 +263,8 @@ textarea {
 
 .coluna-direita {
   flex: 1;
-  margin-top: -140px;
+  margin-top: -50px;
+  margin-left: -253px;
   font-family: "OpenSans-Bold";
 
 }
@@ -289,6 +292,7 @@ textarea {
   background: #b6a4c4;
   border-radius: 20px;
   position: relative;
+  cursor: pointer;
 }
 
 .lixeira {
@@ -300,5 +304,4 @@ textarea {
   color: #4b0055;
   font-weight: bold;
   z-index: 0;
-  
 }
