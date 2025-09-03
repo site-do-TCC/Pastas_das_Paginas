@@ -60,9 +60,9 @@
           
          </div>
         </div>
-        <a href="#" class="forgot">esqueceu sua senha? </a>
+        <a href="#" class="forgot">Esqueceu sua senha? </a>
         <button type="submit" class="btn-login">ENTRAR</button>
-        <p class="signup">ainda nao está no XXXXX? <a href="#">Crie uma Conta.</a></p>
+        <p class="signup">Ainda não está no XXXXX? <a href="cadastro.html">Crie uma Conta.</a></p>
       </form>
     </div>
 
