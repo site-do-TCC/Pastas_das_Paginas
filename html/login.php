@@ -48,20 +48,28 @@
 </div>
 
 -->
-      <form >
+      <form action=" \Programacao_TCC_Avena\php\validarLogin.php" method="POST">
         <div class="mb-3">
           <label for="email">E-mail</label>
-          <input type="email" name="email" id="email" class="form-control">
+          <input type="email" name="email" id="email" class="form-control" required>
         </div>
         <div class="mb-3">
           <label for="senha">Senha</label>
           <div class="input-group">
-          <input type="password" name="senha" id="senha" class="form-control">
+          <input type="password" name="senha" id="senha" class="form-control" required>
           
          </div>
+         
+        <label for="tipo">Entrar como</label>
+        <select id="tipo" name="tipo" required>
+          <option value="">Selecione...</option>
+          <option value="profissional">Profissional</option>
+          <option value="contratante">Contratante</option>
+        </select>
+
         </div>
         <a href="#" class="forgot">Esqueceu sua senha? </a>
-        <button type="submit" class="btn-login">ENTRAR</button>
+        <button type="submit" class="btn-login" name="submit" >ENTRAR</button>
         <p class="signup">Ainda não está no Avena? <a href="cadastro.php">Crie uma Conta.</a></p>
       </form>
     </div>
@@ -78,5 +86,5 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
   integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
 
-<script src="/js/login.js"></script>
+<script src="\Programacao_TCC_Avena\js\login.js"></script>
 </html>
