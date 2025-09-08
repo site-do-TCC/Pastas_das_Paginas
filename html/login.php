@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Esse é o login</title>
-  <link rel="stylesheet" href="\css\Login.css">
+  <link rel="stylesheet" href="\Programacao_TCC_Avena\css\Login.css">
 </head>
 
 <body>
@@ -13,7 +13,7 @@
   <nav>
      <div class="logo">
        <a href="Pagina_Inicial.html">
-        <img src="/img/logoAvena.png" alt="Logo Avena" href="Pagina_Inicial.html">
+        <img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena" href="Pagina_Inicial.html">
         </a>
       </div>
       <div class="menu">
@@ -62,12 +62,12 @@
         </div>
         <a href="#" class="forgot">Esqueceu sua senha? </a>
         <button type="submit" class="btn-login">ENTRAR</button>
-        <p class="signup">Ainda não está no XXXXX? <a href="cadastro.html">Crie uma Conta.</a></p>
+        <p class="signup">Ainda não está no Avena? <a href="cadastro.php">Crie uma Conta.</a></p>
       </form>
     </div>
 
      <div class="login-image">
-        <img src="/img/mulher cabelo preto.jpeg" alt="Ilustração login">
+        <img src="\Programacao_TCC_Avena\img\mulher cabelo preto.jpeg" alt="Ilustração login">
       </div>
     </div>
 </main>

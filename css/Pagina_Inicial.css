@@ -1,13 +1,13 @@
 @font-face {
   font-family: "Birthstone";
-  src: url("/fonts/paginaInicial/Birthstone/Birthstone-Regular.ttf") format("truetype");
+  src: url("/Programacao_TCC_Avena/fonts/paginaInicial/Birthstone/Birthstone-Regular.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Mulish";
-  src: url("/fonts/paginaInicial/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
+  src: url("/Programacao_TCC_Avena/fonts/paginaInicial/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }

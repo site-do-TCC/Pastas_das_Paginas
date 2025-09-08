@@ -10,7 +10,7 @@
 <body>
   <header>
     <div class="logo">
-      <a href="Pagina_Inicial.html"><img src="/img/logoAvena.png" alt="Logo Avena"></a>
+      <a href="Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
     </div>
   </header>
 
@@ -44,7 +44,7 @@
 
     <div class="image-section">
       
-      <img src="\img\imgCadastro.png" alt="Ilustração de cadastro">
+      <img src="\Programacao_TCC_Avena\img\imgCadastro.png" alt="Ilustração de cadastro">
     </div>
   </main>
 </body>
