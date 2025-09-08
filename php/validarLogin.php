@@ -26,6 +26,7 @@
                 unset($_SESSION['senha']);
                 print_r('Não existe');
             }else{
+                $_SESSION['tipo'] = 'profissional';
                 $_SESSION['email'] = $email;
                 $_SESSION['senha'] = $senha;
                 header('Location: \Programacao_TCC_Avena\html\bemVindoPrestadora.php');
@@ -42,6 +43,7 @@
                 unset($_SESSION['senha']);
                 print_r('Não existe');
             }else{
+                $_SESSION['tipo'] = 'cliente';
                 $_SESSION['email'] = $email;
                 $_SESSION['senha'] = $senha;
                 header('Location: \Programacao_TCC_Avena\html\bemVindoCliente.php');

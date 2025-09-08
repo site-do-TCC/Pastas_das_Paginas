@@ -1,14 +1,15 @@
 <?php
     session_start();
+    
     print_r($_SESSION);
 
-    if((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)){
+    if((!isset($_SESSION['email']) == true) || (!isset($_SESSION['senha']) == true || $_SESSION['tipo'] == 'profissional')){
         unset($_SESSION['email']);
         unset($_SESSION['senha']);
         header('Location: \Programacao_TCC_Avena\html\login.php');
-    }else{
-        $logado = $_SESSION['email'];
-    }
+        }else{
+            $logado = $_SESSION['email'];
+        }
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +20,14 @@
     <title>Bem vindo cliente</title>
 </head>
 <body>
+    <h1>Tela do cliente<h1>
+
+    <?php
     
+    echo "<h1>Bem vindo<ul>$logado</ul></h1>";
+    
+    ?>
+
+    <a href="\Programacao_TCC_Avena\php\sair.php">Deslogar</a>
 </body>
 </html>
