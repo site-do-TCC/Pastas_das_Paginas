@@ -1,14 +1,15 @@
 <?php
   if(isset($_POST['submit'])){
-    print_r('Nome: ' . $_POST['nome']);
-    print_r('<br>');
-    print_r('Email: ' . $_POST['email']);
-    print_r('<br>');
-    print_r('Senha: ' . $_POST['senha']);
-    print_r('<br>');
-    print_r('Tipo: ' . $_POST['tipo']);
-    print_r('<br>');
-    print_r('<hr>');
+    
+    //print_r('Nome: ' . $_POST['nome']);
+    //print_r('<br>');
+    //print_r('Email: ' . $_POST['email']);
+    //print_r('<br>');
+    //print_r('Senha: ' . $_POST['senha']);
+    //print_r('<br>');
+    //print_r('Tipo: ' . $_POST['tipo']);
+    //print_r('<br>');
+    //print_r('<hr>');
 
     //if ($_POST['tipo'] == 'profissional'){
     //  print_r('É profissional');
@@ -21,13 +22,38 @@
     $nome = $_POST['nome'];
     $email = $_POST['email'];
     $senha = $_POST['senha'];
-    print_r('Teste conexão: ' . $dbUsername);
+    //print_r('Teste conexão: ' . $dbUsername);
 
-    if ($_POST['tipo'] == 'profissional'){
-      $result = mysqli_query($conexao, "INSERT INTO prestadora(nome,email,senha) VALUES ('$nome','$email','$senha')");
-    }else{
-      $result = mysqli_query($conexao, "INSERT INTO cliente(nome,email,senha) VALUES ('$nome','$email','$senha')");
+    if ($_POST['tipo'] == 'profissional') {
+    // verifica se já existe email na tabela prestadora
+    $check = mysqli_query($conexao, "SELECT * FROM prestadora WHERE email = '$email'");
+
+    if (mysqli_num_rows($check) > 0) {
+        echo "Esse e-mail já está cadastrado!";
+    } else {
+        $result = mysqli_query($conexao, "INSERT INTO prestadora(nome,email,senha) VALUES ('$nome','$email','$senha')");
+        if ($result) {
+            echo "Cadastro realizado com sucesso!";
+        } else {
+            echo "Erro ao cadastrar.";
+        }
     }
+} else {
+    // verifica se já existe email na tabela cliente
+    $check = mysqli_query($conexao, "SELECT * FROM cliente WHERE email = '$email'");
+
+    if (mysqli_num_rows($check) > 0) {
+        echo "Esse e-mail já está cadastrado!";
+    } else {
+        $result = mysqli_query($conexao, "INSERT INTO cliente(nome,email,senha) VALUES ('$nome','$email','$senha')");
+        if ($result) {
+            echo "Cadastro realizado com sucesso!";
+        } else {
+            echo "Erro ao cadastrar.";
+        }
+    }
+}
+
   }
 ?>
 

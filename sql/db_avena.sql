@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 08-Set-2025 às 22:21
+-- Tempo de geração: 09-Set-2025 às 21:13
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -40,7 +40,8 @@ CREATE TABLE `cliente` (
 --
 
 INSERT INTO `cliente` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`) VALUES
-(1, 'Teste2', 'teste2@gmail.com', '123', '2025-09-08 16:46:58');
+(1, 'Teste2', 'teste2@gmail.com', '123', '2025-09-08 16:46:58'),
+(3, 'Teste3', 'teste3@gmail.com', '123', '2025-09-09 21:04:22');
 
 -- --------------------------------------------------------
 
@@ -89,7 +90,7 @@ ALTER TABLE `prestadora`
 -- AUTO_INCREMENT de tabela `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `prestadora`
