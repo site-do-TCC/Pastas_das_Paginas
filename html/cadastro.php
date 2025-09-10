@@ -16,7 +16,7 @@
     //  print_r('Não é profissional, é contratante!');
     //}
 
-    include_once('C:\usbwebserver_v8.6.5\usbwebserver\root\Programacao_TCC_Avena\php\conexao.php');
+    include_once('C:\USBWebserver\root\Programacao_TCC_Avena\php\conexao.php');
 
     $nome = $_POST['nome'];
     $email = $_POST['email'];
