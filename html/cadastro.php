@@ -33,7 +33,8 @@
     } else {
         $result = mysqli_query($conexao, "INSERT INTO prestadora(nome,email,senha) VALUES ('$nome','$email','$senha')");
         if ($result) {
-            echo "Cadastro realizado com sucesso!";
+            header('Location: \Programacao_TCC_Avena\html\login.php');
+            //echo "Cadastro realizado com sucesso!";
         } else {
             echo "Erro ao cadastrar.";
         }
@@ -47,7 +48,8 @@
     } else {
         $result = mysqli_query($conexao, "INSERT INTO cliente(nome,email,senha) VALUES ('$nome','$email','$senha')");
         if ($result) {
-            echo "Cadastro realizado com sucesso!";
+            header('Location: \Programacao_TCC_Avena\html\login.php');
+            //echo "Cadastro realizado com sucesso!";
         } else {
             echo "Erro ao cadastrar.";
         }

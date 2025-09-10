@@ -25,7 +25,7 @@
   <nav id="menu-login" class="hidden">
     <ul>
       <li><a href="sobre.html"><span class="quemSomos">Quem somos<span></a></li>
-      <li><a href="cadastro.html">Cadastrar-se</a></li>
+      <li><a href="cadastro.php">Cadastrar-se</a></li>
       <hr>
       <li><a href="contato.html">Seja um Parceiro</a></li>
       <li><a href="suporte.html">Suporte</a></li>
