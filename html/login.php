@@ -68,7 +68,7 @@
         </select>
 
         </div>
-        <a href="#" class="forgot">Esqueceu sua senha? </a>
+        <a href="\Programacao_TCC_Avena\html\recuperaSenha.php" class="forgot">Esqueceu sua senha? </a>
         <button type="submit" class="btn-login" name="submit" >ENTRAR</button>
         <p class="signup">Ainda não está no Avena? <a href="cadastro.php">Crie uma Conta.</a></p>
       </form>
