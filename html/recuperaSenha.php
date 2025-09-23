@@ -1,3 +1,45 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Senha</title>
+    <link rel="stylesheet" href="\Programacao_TCC_Avena\css\recuperaSenha.css">
+</head>
+<body>
+
+    <!-- Mensagem -->
+    <div id="modalErro" class="modal">
+        <div class="modal-content">
+            <p id="mensagemErro">E-mail não encontrado!</p>
+            <button onclick="fecharModal()">OK</button>
+        </div>
+    </div>
+
+    <form action="\Programacao_TCC_Avena\html\recuperaSenha.php" method="POST">
+        <div class="mb-3">
+          <label for="email">E-mail</label>
+          <input type="email" name="email" id="email" class="form-control" required>
+        </div>
+         
+        <label for="tipo">Tipo de cadastro</label>
+        <select id="tipo" name="tipo" required>
+          <option value="">Selecione...</option>
+          <option value="profissional">Profissional</option>
+          <option value="contratante">Contratante</option>
+        </select>
+
+        </div>
+        <button type="submit" class="btn-login" name="submit" >ENTRAR</button>
+        <p class="signup">Ainda não está no Avena? <a href="cadastro.php">Crie uma Conta.</a></p>
+      </form>
+</body>
+<script src="\Programacao_TCC_Avena\js\recuperaSenha.js"></script>
+</html>
+
 <?php
 
 error_reporting(E_ALL);
@@ -35,7 +77,7 @@ if (isset($_POST['submit'])) {
     }
 
     if ($update) {
-        echo "Senha atualizada com sucesso!<br>";
+        
 
         // Instância da classe PHPMailer
         $mail = new PHPMailer(true);
@@ -77,41 +119,13 @@ if (isset($_POST['submit'])) {
 
             // Enviar
             $mail->send();
-            echo 'A mensagem foi enviada!';
+            echo "<script>mostrarModal('Senha atualizada, verifique o e-mail para mais informações!');</script>";
+
         } catch (Exception $e) {
-            echo "Erro ao enviar mensagem: {$mail->ErrorInfo}";
+            echo "<script>mostrarModal('Esse e-mail não está cadastrado!');</script>";
         }
     } else {
-        echo "Esse e-mail não está cadastrado ou houve erro ao atualizar: " . mysqli_error($conexao);
+        echo "<script>mostrarModal('Esse e-mail não está cadastrado!');</script>";
     }
 }
 ?>
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperar Senha</title>
-</head>
-<body>
-    <form action="\Programacao_TCC_Avena\html\recuperaSenha.php" method="POST">
-        <div class="mb-3">
-          <label for="email">E-mail</label>
-          <input type="email" name="email" id="email" class="form-control" required>
-        </div>
-         
-        <label for="tipo">Tipo de cadastro</label>
-        <select id="tipo" name="tipo" required>
-          <option value="">Selecione...</option>
-          <option value="profissional">Profissional</option>
-          <option value="contratante">Contratante</option>
-        </select>
-
-        </div>
-        <button type="submit" class="btn-login" name="submit" >ENTRAR</button>
-        <p class="signup">Ainda não está no Avena? <a href="cadastro.php">Crie uma Conta.</a></p>
-      </form>
-</body>
-</html>
