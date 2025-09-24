@@ -1,4 +1,4 @@
-//Erro
+//Informação
 function mostrarModal(mensagem) {
   document.getElementById("mensagemErro").innerText = mensagem;
   document.getElementById("modalErro").style.display = "flex"; 
