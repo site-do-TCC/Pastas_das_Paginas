@@ -75,7 +75,7 @@
     }
     
     .menu-icon {
-      background: #ede7f3;
+      background: #ffffff00;
       border: none;
       font-size: 1.5em;
       color: rgb(227, 222, 222);
@@ -305,6 +305,7 @@
 
 /* Botão */
 .modal-content button {
+  display: inline-block; /* deixa o botão só no tamanho do conteúdo */
   padding: 12px 24px;
   border: none;
   border-radius: 10px;
@@ -314,6 +315,8 @@
   cursor: pointer;
   font-size: 15px;
   transition: background 0.3s;
+  width: auto; /* garante que não estique */
+  min-width: 100px; /* opcional: largura mínima pra não ficar pequeno demais */
 }
 
 .modal-content button:hover {

@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Esse é o login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
   <link rel="stylesheet" href="../css/Login.css">
 </head>
 <body>
@@ -30,7 +32,7 @@
   </nav>
 </header>
  
-  <nav id="menu-login" class="hidden">
+  <nav id="menulogin" class="hidden">
     <ul>
       <li><a href="sobre.html"><span class="quemSomos">Quem somos<span></a></li>
       <li><a href="cadastro.php">Cadastrar-se</a></li>
@@ -91,10 +93,22 @@
  
 
 </body>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
-  integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
 
 <script src="../js/login.js"></script>
+<script>
+    // Captura o parâmetro "erro" da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const erro = urlParams.get('erro');
 
+    if (erro === '1') {
+        // Login inválido
+        mostrarModal("Email ou senha inválidos!");
+    }
+    if (erro === '2') {
+        // Tentou acessar sem enviar formulário
+        mostrarModal("Acesso inválido, preencha os campos.");
+    }
+</script>
 </html>
 
