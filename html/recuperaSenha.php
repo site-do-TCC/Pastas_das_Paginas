@@ -52,7 +52,7 @@ require __DIR__ . '/../phpMailer/Exception.php';
 require __DIR__ . '/../phpMailer/PHPMailer.php';
 require __DIR__ . '/../phpMailer/SMTP.php';
 
-include_once('C:\usbwebserver_v8.6.5\usbwebserver\root\Programacao_TCC_Avena\php\conexao.php');
+include_once(__DIR__ . '/../php/conexao.php');
 
 if (isset($_POST['submit'])) {
     $email = mysqli_real_escape_string($conexao, $_POST['email']);
