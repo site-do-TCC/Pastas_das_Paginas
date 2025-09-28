@@ -1,69 +1,4 @@
-<?php
 
-
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1);
-
-
-  if(isset($_POST['submit'])){
-    
-    //print_r('Nome: ' . $_POST['nome']);
-    //print_r('<br>');
-    //print_r('Email: ' . $_POST['email']);
-    //print_r('<br>');
-    //print_r('Senha: ' . $_POST['senha']);
-    //print_r('<br>');
-    //print_r('Tipo: ' . $_POST['tipo']);
-    //print_r('<br>');
-    //print_r('<hr>');
-
-    //if ($_POST['tipo'] == 'profissional'){
-    //  print_r('É profissional');
-    //}else{
-    //  print_r('Não é profissional, é contratante!');
-    //}
-
-    include_once(__DIR__ . '/../php/conexao.php');
-
-    $nome = $_POST['nome'];
-    $email = $_POST['email'];
-    $senha = $_POST['senha'];
-    //print_r('Teste conexão: ' . $dbUsername);
-
-    if ($_POST['tipo'] == 'profissional') {
-    // verifica se já existe email na tabela prestadora
-    $check = mysqli_query($conexao, "SELECT * FROM prestadora WHERE email = '$email'");
-
-    if (mysqli_num_rows($check) > 0) {
-        echo "Esse e-mail já está cadastrado!";
-    } else {
-        $result = mysqli_query($conexao, "INSERT INTO prestadora(nome,email,senha) VALUES ('$nome','$email','$senha')");
-        if ($result) {
-            header('Location: \Programacao_TCC_Avena\html\login.php');
-            //echo "Cadastro realizado com sucesso!";
-        } else {
-            echo "Erro ao cadastrar.";
-        }
-    }
-} else {
-    // verifica se já existe email na tabela cliente
-    $check = mysqli_query($conexao, "SELECT * FROM cliente WHERE email = '$email'");
-
-    if (mysqli_num_rows($check) > 0) {
-        echo "Esse e-mail já está cadastrado!";
-    } else {
-        $result = mysqli_query($conexao, "INSERT INTO cliente(nome,email,senha) VALUES ('$nome','$email','$senha')");
-        if ($result) {
-            header('Location: \Programacao_TCC_Avena\html\login.php');
-            //echo "Cadastro realizado com sucesso!";
-        } else {
-            echo "Erro ao cadastrar.";
-        }
-    }
-}
-
-  }
-?>
 
 
 <!DOCTYPE html>
@@ -75,6 +10,15 @@
   <link rel="stylesheet" href="\Programacao_TCC_Avena\css\cadastro.css">
 </head>
 <body>
+
+  <!-- Mensagem -->
+    <div id="modalErro" class="modal">
+        <div class="modal-content">
+            <p id="mensagemErro">E-mail não encontrado!</p>
+            <button onclick="fecharModal()">OK</button>
+        </div>
+    </div>
+
   <header>
     <div class="logo">
       <a href="Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
@@ -115,5 +59,75 @@
     </div>
   </main>
 </body>
-  <script src="\js\cadastro.js"></script>
+  <script src="../js/cadastro.js"></script>
 </html>
+
+
+<?php
+
+
+  error_reporting(E_ALL);
+  ini_set('display_errors', 1);
+
+
+  if(isset($_POST['submit'])){
+    
+    //print_r('Nome: ' . $_POST['nome']);
+    //print_r('<br>');
+    //print_r('Email: ' . $_POST['email']);
+    //print_r('<br>');
+    //print_r('Senha: ' . $_POST['senha']);
+    //print_r('<br>');
+    //print_r('Tipo: ' . $_POST['tipo']);
+    //print_r('<br>');
+    //print_r('<hr>');
+
+    //if ($_POST['tipo'] == 'profissional'){
+    //  print_r('É profissional');
+    //}else{
+    //  print_r('Não é profissional, é contratante!');
+    //}
+
+    include_once(__DIR__ . '/../php/conexao.php');
+
+    $nome = $_POST['nome'];
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+    //print_r('Teste conexão: ' . $dbUsername);
+
+    if ($_POST['tipo'] == 'profissional') {
+    // verifica se já existe email na tabela prestadora
+    $check = mysqli_query($conexao, "SELECT * FROM prestadora WHERE email = '$email'");
+
+    if (mysqli_num_rows($check) > 0) {
+        echo "<script>mostrarModal('Esse e-mail já está cadastrado!');</script>";
+    } else {
+        $result = mysqli_query($conexao, "INSERT INTO prestadora(nome,email,senha) VALUES ('$nome','$email','$senha')");
+        if ($result) {
+            echo "<script>mostrarModal('Cadastro realizado com sucesso!');</script>";
+            header('Location: \Programacao_TCC_Avena\html\login.php'); 
+            //echo "Cadastro realizado com sucesso!";
+        } else {
+            echo "<script>mostrarModal('Erro ao cadastrar');</script>";
+        }
+    }
+} else {
+    // verifica se já existe email na tabela cliente
+    $check = mysqli_query($conexao, "SELECT * FROM cliente WHERE email = '$email'");
+
+    if (mysqli_num_rows($check) > 0) {
+        echo "<script>mostrarModal('Esse e-mail já está cadastrado!');</script>";
+    } else {
+        $result = mysqli_query($conexao, "INSERT INTO cliente(nome,email,senha) VALUES ('$nome','$email','$senha')");
+        if ($result) {
+            echo "<script>mostrarModal('Cadastro realizado com sucesso!');</script>";
+            header('Location: \Programacao_TCC_Avena\html\login.php'); 
+            //echo "Cadastro realizado com sucesso!";
+        } else {
+            echo "<script>mostrarModal('Erro ao cadastrar');</script>";
+        }
+    }
+}
+
+  }
+?>
