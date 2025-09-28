@@ -20,7 +20,7 @@ if(isset($_POST['submit']) && !empty($_POST['email']) && !empty($_POST['senha'])
             $_SESSION['tipo'] = 'profissional';
             $_SESSION['email'] = $email;
             $_SESSION['senha'] = $senha;
-            header('Location: /Programacao_TCC_Avena/html/bemVindoPrestadora.php');
+            header('Location: \Programacao_TCC_Avena\html\EdicaoPerfil.html');
             exit;
         }
     } else {

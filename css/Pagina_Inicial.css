@@ -1,21 +1,13 @@
 @font-face {
   font-family: "Birthstone";
-<<<<<<< HEAD
-  src: url("/fonts/paginaInicial/Birthstone/Birthstone-Regular.ttf") format("truetype");
-=======
   src: url("/Programacao_TCC_Avena/fonts/paginaInicial/Birthstone/Birthstone-Regular.ttf") format("truetype");
->>>>>>> Jacob-EdiçãoPerfil
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Mulish";
-<<<<<<< HEAD
-  src: url("/fonts/paginaInicial/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
-=======
   src: url("/Programacao_TCC_Avena/fonts/paginaInicial/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
->>>>>>> Jacob-EdiçãoPerfil
   font-weight: normal;
   font-style: normal;
 }
@@ -46,13 +38,10 @@ nav {
 .logo img {
   cursor: pointer;
   height: 50px;
-<<<<<<< HEAD
-=======
   transition: 1s ease;
 }
 .logo img:hover{
   height: 60px;
->>>>>>> Jacob-EdiçãoPerfil
 }
 
 .menu {
@@ -70,15 +59,12 @@ nav {
   padding: 8px 20px;
   cursor: pointer;
   font-size: 1.5em;
-<<<<<<< HEAD
-=======
   transition: 0.7s ease;
 }
 .btnEntrar:hover{
   font-weight: bolder;
   font-size: 1.9em;
   background: #ff616a;
->>>>>>> Jacob-EdiçãoPerfil
 }
 
 .menu-icon {
@@ -89,10 +75,6 @@ nav {
   color: white;
   cursor: pointer;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> Jacob-EdiçãoPerfil
 /* Hero section */
 .hero {
   display: flex;
@@ -104,10 +86,7 @@ nav {
 }
 
 .texto {
-<<<<<<< HEAD
-=======
   cursor: default;
->>>>>>> Jacob-EdiçãoPerfil
   flex: 1;
 }
 
@@ -116,14 +95,11 @@ nav {
   font-size: 45px;
   margin-bottom: 10px;
   font-weight: normal;
-<<<<<<< HEAD
-=======
   transition: 1s ease;
 }
 
 h2:hover{
   font-size: 50px;
->>>>>>> Jacob-EdiçãoPerfil
 }
 
 .texto h1 {
@@ -134,13 +110,10 @@ h2:hover{
   font-size: 150px;
   font-style: italic;
   font-weight: bold;
-<<<<<<< HEAD
-=======
   transition: 1s ease;
 }
 h1:hover{
     font-size: 160px;
->>>>>>> Jacob-EdiçãoPerfil
 }
 
 .imagem {
@@ -148,34 +121,16 @@ h1:hover{
   display: flex;
   justify-content: flex-end;
   margin-left: auto;
-<<<<<<< HEAD
-=======
   transition: 1s ease;
->>>>>>> Jacob-EdiçãoPerfil
 }
 .imagem img {
   width: 100%;
   max-width: 1000px;
   height: auto;
   display: block;
-<<<<<<< HEAD
-  animation: imgAnimationvolta 10s ease forwards;
-}
-@keyframes imgAnimation {
-  from {
-    transform: translateY(20px);
-  }
-  to {
-    transform: translateY(0px);
-  }
-}
-.imagem img:hover{
-  animation: imgAnimation 2s ease forwards;
-=======
 }
 .imagem img:hover{
   z-index: 0;
->>>>>>> Jacob-EdiçãoPerfil
 }
 
 
@@ -224,10 +179,7 @@ h1:hover{
   }
 }
 .show {
-<<<<<<< HEAD
-=======
   z-index: 1;
->>>>>>> Jacob-EdiçãoPerfil
   animation: fadeInUp 1s ease forwards;
   margin-left: 84%;
   border-radius: 10%;
