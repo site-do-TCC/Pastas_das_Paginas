@@ -37,17 +37,24 @@
         </div>
 
         <div class="adicionarFoto">
-            <img src="\Programacao_TCC_Avena\img\adicionarFoto.png" alt="Adicionar Foto">
-            <div class="inputFoto"><input type="file"></div>
+            <!-- Input escondido -->
+            <input type="file" id="fotoPerfil" name="fotoPerfil" accept="image/*" hidden>
+
+            <!-- Círculo clicável -->
+            <label for="fotoPerfil" class="circuloUpload">
+                <img id="previewFoto" src="/Programacao_TCC_Avena/img/adicionarFoto.png" alt="Adicionar Foto">
+            </label>
 
             <div class="linha"></div>
         </div>
+
+
     </div>
     <!-- Container principal do formulário -->
     <div class="Formulario">
 
         <!-- Início do formulário -->
-        <form>
+        <form method="POST" enctype="multipart/form-data">
 
             <!-- Duas colunas: esquerda e direita -->
             <div class="form-container" style="display: flex; gap: 40px;">

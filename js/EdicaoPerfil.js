@@ -15,3 +15,19 @@ function mudarOlho(img){
     }
     img.src = "/Pastas_das_Paginas-Jacob-Edi-oPerfil/img/logoAvena.png"
 }
+
+const inputFoto = document.getElementById('fotoPerfil');
+const previewFoto = document.getElementById('previewFoto');
+
+if (inputFoto && previewFoto) {
+  inputFoto.addEventListener('change', function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        previewFoto.src = e.target.result; // substitui pela foto escolhida
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
