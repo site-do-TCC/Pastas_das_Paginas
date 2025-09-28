@@ -167,7 +167,7 @@ body {
 label {
   
   font-weight: bold;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
   margin-left: 2px;
   display: block;
   font-family: "OpenSans-Bold";
@@ -175,7 +175,7 @@ label {
 }
 
 input {
-  
+  margin-bottom: 8px;
   width: 500px;
   padding: 10px;
   border: 1px solid #999;
@@ -185,16 +185,10 @@ input {
 }
 
 /* Campo senha com ícone de olho */
-.olhoSenha img {
-  cursor: pointer;
-  width: 24px;
-  height: 22px;
-  margin-left: 472px;
-  margin-bottom: 100px;
-}
+
 
 .campoSenha {
-  margin-top: -130px;
+
 }
 
 /* ================= ÁREA DE TEXTO ================= */
@@ -282,6 +276,7 @@ textarea {
   grid-template-rows: repeat(2, 100px);    
   top: 300px;
   gap: 20px; 
+  margin-bottom: 50px;
   justify-content: start; 
 }
 
@@ -304,4 +299,8 @@ textarea {
   color: #4b0055;
   font-weight: bold;
   z-index: 0;
+}
+.inputFoto{
+  
+
 }
