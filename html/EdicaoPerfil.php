@@ -125,8 +125,8 @@
             <textarea id="servicos" name="servicos"></textarea>
 
             <div class="botoes">
-                <button class="btn-excluir">EXCLUIR CONTA</button>
-                <button class="btn-salvar">SALVAR ALTERAÇÕES</button>
+                <button class="btn-excluir" name="excluir" id="excluir">EXCLUIR CONTA</button>
+                <button class="btn-salvar" name="salvar" id="salvar">SALVAR ALTERAÇÕES</button>
             </div>
         </div>
 
@@ -152,3 +152,7 @@
 <script rel="stylesheet" src="\Programacao_TCC_Avena\js\EdicaoPerfil.js"></script>
 
 </html>
+
+<?php
+    if ( ! isset("submit"))
+?>
