@@ -36,6 +36,8 @@
             <img src="\Programacao_TCC_Avena\img\meuPerfil.png" alt="Meu Perfil">
         </div>
 
+
+
         <div class="adicionarFoto">
             <!-- Input escondido -->
             <input type="file" id="fotoPerfil" name="fotoPerfil" accept="image/*" hidden>
@@ -47,7 +49,6 @@
 
             <div class="linha"></div>
         </div>
-
 
     </div>
     <!-- Container principal do formulário -->
@@ -124,8 +125,8 @@
             <textarea id="servicos" name="servicos"></textarea>
 
             <div class="botoes">
-                <button class="btn-excluir">EXCLUIR CONTA</button>
-                <button class="btn-salvar">SALVAR ALTERAÇÕES</button>
+                <button class="btn-excluir" name="excluir" id="excluir">EXCLUIR CONTA</button>
+                <button class="btn-salvar" name="salvar" id="salvar">SALVAR ALTERAÇÕES</button>
             </div>
         </div>
 
@@ -148,6 +149,10 @@
     <br>
 </body>
 
-<link rel="stylesheet" href="\Programacao_TCC_Avena\js\EdicaoPerfil.js">
+<script rel="stylesheet" src="\Programacao_TCC_Avena\js\EdicaoPerfil.js"></script>
 
 </html>
+
+<?php
+    
+?>

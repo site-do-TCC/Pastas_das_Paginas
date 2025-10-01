@@ -1,3 +1,5 @@
+console.log("JS carregado!");
+
 // Pegar o botão e o menu
 const menuBtn = document.getElementById("menu-btn");
 const menu = document.getElementById("menu");
@@ -16,6 +18,8 @@ function mudarOlho(img){
     img.src = "/Pastas_das_Paginas-Jacob-Edi-oPerfil/img/logoAvena.png"
 }
 
+
+
 const inputFoto = document.getElementById('fotoPerfil');
 const previewFoto = document.getElementById('previewFoto');
 
@@ -31,3 +35,6 @@ if (inputFoto && previewFoto) {
     }
   });
 }
+    
+
+    
