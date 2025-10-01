@@ -9,17 +9,8 @@ menuBtn.addEventListener("click", () => {
   menu.classList.toggle("show");
 });
 
-function mudarOlho(img){
- if (img.src.includes("/Pastas_das_Paginas-Jacob-Edi-oPerfil/img/olhoSenhaFechado.png")) {
-        img.src = "/Pastas_das_Paginas-Jacob-Edi-oPerfil/img/olhoSenhaAberto.png";
-    } else {
-        img.src = "/Pastas_das_Paginas-Jacob-Edi-oPerfil/img/olhoSenhaFechado.png";
-    }
-    img.src = "/Pastas_das_Paginas-Jacob-Edi-oPerfil/img/logoAvena.png"
-}
 
-
-
+//Imagens do Perfil
 const inputFoto = document.getElementById('fotoPerfil');
 const previewFoto = document.getElementById('previewFoto');
 
@@ -36,6 +27,7 @@ if (inputFoto && previewFoto) {
   });
 }
 
+//Imagem do banner
 function previewImagem(inputId, previewId) {
   const input = document.getElementById(inputId);
   const preview = document.getElementById(previewId);
@@ -69,6 +61,3 @@ document.querySelectorAll(".foto .lixeira").forEach((lixeira, index) => {
     input.value = ""; // limpa input
   });
 });
-    
-
-    
