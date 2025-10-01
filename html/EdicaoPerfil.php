@@ -154,5 +154,5 @@
 </html>
 
 <?php
-    if ( ! isset("submit"))
+    
 ?>
