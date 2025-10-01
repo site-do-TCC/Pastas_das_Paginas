@@ -14,8 +14,8 @@
 <header>
     <nav>
         <div class="logo">
-            <img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"
-                href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">
+            <img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena" 
+            href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">
         </div>
         <div class="menu">
 
@@ -134,9 +134,26 @@
         <div class="coluna-direita">
             <h4>Suas Fotos</h4>
             <div class="fotos">
-                <div class="foto"><span class="lixeira">🗑</span></div>
-                <div class="foto"><span class="lixeira">🗑</span></div>
-                <div class="foto"><span class="lixeira">🗑</span></div>
+                <!-- Banner 1 -->
+                <input type="file" id="Banner1" name="Banner1" accept="image/*" hidden>
+                <label for="Banner1" class="foto">
+                  <img id="previewBanner1" src="" alt="Banner 1" style="display:none;">
+                  <span class="lixeira">🗑</span>
+                </label>
+                
+                <!-- Banner 2 -->
+                <input type="file" id="Banner2" name="Banner2" accept="image/*" hidden>
+                <label for="Banner2" class="foto">
+                  <img id="previewBanner2" src="" alt="Banner 2" style="display:none;">
+                  <span class="lixeira">🗑</span>
+                </label>
+                
+                <!-- Banner 3 -->
+                <input type="file" id="Banner3" name="Banner3" accept="image/*" hidden>
+                <label for="Banner3" class="foto">
+                  <img id="previewBanner3" src="" alt="Banner 3" style="display:none;">
+                  <span class="lixeira">🗑</span>
+                </label>
             </div>
         </div>
 
@@ -154,5 +171,23 @@
 </html>
 
 <?php
-    
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+
+
+    if(isset($_POST['salvar'])){
+
+        include_once(__DIR__ . '/../php/conexao.php');
+        
+        $nome = $_POST['nome'];
+        $telefone = $_POST['telefone'];
+        $email = $_POST['email'];
+        $senha = $_POST['senha'];
+        $localizacao = $_POST['localizacao'];
+        $facebook = $_POST['facebook'];
+        $instagram = $_POST['instagram'];
+        $biografia = $_POST['biografia'];
+        $servicos = $_POST['servicos'];
+
+    }
 ?>
