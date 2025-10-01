@@ -137,21 +137,21 @@
                 <!-- Banner 1 -->
                 <input type="file" id="Banner1" name="Banner1" accept="image/*" hidden>
                 <label for="Banner1" class="foto">
-                  <img id="previewBanner1" src="" alt="Banner 1" style="display:none;">
+                  <img id="Banner1" src="" alt="Banner 1" style="display:none;">
                   <span class="lixeira">🗑</span>
                 </label>
-                
+
                 <!-- Banner 2 -->
                 <input type="file" id="Banner2" name="Banner2" accept="image/*" hidden>
                 <label for="Banner2" class="foto">
-                  <img id="previewBanner2" src="" alt="Banner 2" style="display:none;">
+                  <img id="Banner2" src="" alt="Banner 2" style="display:none;">
                   <span class="lixeira">🗑</span>
                 </label>
-                
+
                 <!-- Banner 3 -->
                 <input type="file" id="Banner3" name="Banner3" accept="image/*" hidden>
                 <label for="Banner3" class="foto">
-                  <img id="previewBanner3" src="" alt="Banner 3" style="display:none;">
+                  <img id="Banner3" src="" alt="Banner 3" style="display:none;">
                   <span class="lixeira">🗑</span>
                 </label>
             </div>
@@ -188,6 +188,8 @@
         $instagram = $_POST['instagram'];
         $biografia = $_POST['biografia'];
         $servicos = $_POST['servicos'];
-
     }
+
+
+
 ?>
