@@ -214,7 +214,7 @@ if (isset($_POST['salvar'])) {
         echo "Usuário não encontrado.";
     }
 
-        
+    //Salvamento da imagem de perfil
     if (isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil']['name'])) {
 
     $extensao = pathinfo($_FILES['fotoPerfil']['name'], PATHINFO_EXTENSION);
@@ -232,21 +232,9 @@ if (isset($_POST['salvar'])) {
     }
    }
 
-   if (isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil']['name'])) {
-
-    $extensao = pathinfo($_FILES['fotoPerfil']['name'], PATHINFO_EXTENSION);
-    $nomeArquivo = "perfil_" . $id_usuario . "." . $extensao;
-    $caminhoDestino = "../ImgPerfilPrestadoras/" . $nomeArquivo;
 
 
-    // Move o arquivo
-    $resultado = move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $caminhoDestino);
-
-    if ($resultado) {
-        echo "Upload realizado com sucesso!";
-    } else {
-        echo "Erro no upload";
-    }
+   
 
     
 }
