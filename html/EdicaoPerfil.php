@@ -1,3 +1,9 @@
+
+<?php
+session_start();
+?>
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -161,6 +167,7 @@
         <span class="lixeira">🗑</span>
     </label>
     </form>
+    <a href="\Programacao_TCC_Avena\php\sair.php">Deslogar</a>
     
   </div>
 </div>
@@ -184,37 +191,83 @@
     ini_set('display_errors', 1);
 
 
-    if(isset($_POST['salvar'])){
-
-        include_once(__DIR__ . '/../php/conexao.php');
-        
-        if(isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil'])){
-            $arquivoTemp = $_FILES["fotoPerfil"]["tmp_name"];
-            $nomeArquivo = basename($_FILES["fotoPerfil"]["name"]);
-            $caminhoDestino = "../ImgPerfilPrestadoras/" . $nomeArquivo;
-
-            if (move_uploaded_file($arquivoTemp, $caminhoDestino)) {
-                echo "Upload realizado com sucesso!";
-            } else {
-                echo "Erro ao fazer upload da imagem.";
-            }
-        }
-        
 
 
+if (isset($_POST['salvar'])) {
+    include_once(__DIR__ . '/../php/conexao.php');
 
+    // Recupera da sessão
+    $email = $_SESSION['email'];
+    $senha = $_SESSION['senha'];
 
+    // Busca o ID do usuário logado
+    $sql = "SELECT id_usuario FROM prestadora WHERE email = '$email' AND senha = '$senha'";
+    $result = $conexao->query($sql);
 
-        $nome = $_POST['nome'];
-        $telefone = $_POST['telefone'];
-        $email = $_POST['email'];
-        $senha = $_POST['senha'];
-        $localizacao = $_POST['localizacao'];
-        $facebook = $_POST['facebook'];
-        $instagram = $_POST['instagram'];
-        $biografia = $_POST['biografia'];
-        $servicos = $_POST['servicos'];
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $id_usuario = $row['id_usuario'];
+
+        echo "ID do usuário logado: " . $id_usuario;
+        // Agora você pode usar esse $id_usuario pra salvar imagem, atualizar perfil etc.
+    } else {
+        echo "Usuário não encontrado.";
     }
+
+        
+    if (isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil']['name'])) {
+
+    $extensao = pathinfo($_FILES['fotoPerfil']['name'], PATHINFO_EXTENSION);
+    $nomeArquivo = "perfil_" . $id_usuario . "." . $extensao;
+    $caminhoDestino = "../ImgPerfilPrestadoras/" . $nomeArquivo;
+
+
+    // Move o arquivo
+    $resultado = move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $caminhoDestino);
+
+    if ($resultado) {
+        echo "Upload realizado com sucesso!";
+    } else {
+        echo "Erro no upload";
+    }
+   }
+
+   if (isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil']['name'])) {
+
+    $extensao = pathinfo($_FILES['fotoPerfil']['name'], PATHINFO_EXTENSION);
+    $nomeArquivo = "perfil_" . $id_usuario . "." . $extensao;
+    $caminhoDestino = "../ImgPerfilPrestadoras/" . $nomeArquivo;
+
+
+    // Move o arquivo
+    $resultado = move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $caminhoDestino);
+
+    if ($resultado) {
+        echo "Upload realizado com sucesso!";
+    } else {
+        echo "Erro no upload";
+    }
+
+    
+}
+         
+        
+        
+
+
+
+
+
+        //$nome = $_POST['nome'];
+        //$telefone = $_POST['telefone'];
+        //$email = $_POST['email'];
+        //$senha = $_POST['senha'];
+        //$localizacao = $_POST['localizacao'];
+        //$facebook = $_POST['facebook'];
+        //$instagram = $_POST['instagram'];
+        //$biografia = $_POST['biografia'];
+        //$servicos = $_POST['servicos'];
+    
 
 
 
