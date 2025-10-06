@@ -191,7 +191,7 @@
         if(isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil'])){
             $arquivoTemp = $_FILES["fotoPerfil"]["tmp_name"];
             $nomeArquivo = basename($_FILES["fotoPerfil"]["name"]);
-            $caminhoDestino = "../ImagensPrestadoras/" . $nomeArquivo;
+            $caminhoDestino = "../ImgPerfilPrestadoras/" . $nomeArquivo;
 
             if (move_uploaded_file($arquivoTemp, $caminhoDestino)) {
                 echo "Upload realizado com sucesso!";
