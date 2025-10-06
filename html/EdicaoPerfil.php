@@ -36,6 +36,8 @@
             <img src="\Programacao_TCC_Avena\img\meuPerfil.png" alt="Meu Perfil">
         </div>
 
+    <form method="POST" enctype="multipart/form-data" action="EdicaoPerfil.php">
+
 
 
         <div class="adicionarFoto">
@@ -50,12 +52,14 @@
             <div class="linha"></div>
         </div>
 
+
+
     </div>
     <!-- Container principal do formulário -->
     <div class="Formulario">
 
         <!-- Início do formulário -->
-        <form method="POST" enctype="multipart/form-data">
+        
 
             <!-- Duas colunas: esquerda e direita -->
             <div class="form-container" style="display: flex; gap: 40px;">
@@ -111,7 +115,7 @@
 
             </div> <!-- Fim das colunas -->
 
-        </form>
+        
 
     </div>
     <div class="container">
@@ -156,6 +160,7 @@
         <img id="previewBanner3" src="" alt="Banner 3" style="display:none;">
         <span class="lixeira">🗑</span>
     </label>
+    </form>
     
   </div>
 </div>
@@ -183,6 +188,23 @@
 
         include_once(__DIR__ . '/../php/conexao.php');
         
+        if(isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil'])){
+            $arquivoTemp = $_FILES["fotoPerfil"]["tmp_name"];
+            $nomeArquivo = basename($_FILES["fotoPerfil"]["name"]);
+            $caminhoDestino = "../ImagensPrestadoras/" . $nomeArquivo;
+
+            if (move_uploaded_file($arquivoTemp, $caminhoDestino)) {
+                echo "Upload realizado com sucesso!";
+            } else {
+                echo "Erro ao fazer upload da imagem.";
+            }
+        }
+        
+
+
+
+
+
         $nome = $_POST['nome'];
         $telefone = $_POST['telefone'];
         $email = $_POST['email'];
