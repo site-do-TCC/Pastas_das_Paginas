@@ -1,6 +1,7 @@
 
 <?php
 session_start();
+
 ?>
 
 
@@ -180,6 +181,8 @@ session_start();
     <br>
     <br>
     <br>
+    <img src="<?php echo $; ?>" alt="Foto de perfil"> 
+
 </body>
 
 <script rel="stylesheet" src="\Programacao_TCC_Avena\js\EdicaoPerfil.js"></script>
@@ -226,12 +229,28 @@ if (isset($_POST['salvar'])) {
     $resultado = move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $caminhoDestino);
 
     if ($resultado) {
+
+
+        //Salva o arquivo no banco de dados
         echo "Upload realizado com sucesso!";
-    } else {
-        echo "Erro no upload";
+        $caminhoBanco = $caminhoDestino;
+        $sqlUpdate = "UPDATE prestadora SET imgperfil = '$caminhoBanco' WHERE id_usuario = '$id_usuario'";
+
+
+        if ($conexao->query($sqlUpdate)) {
+            echo "Caminho salvo no banco com sucesso!";
+        } else {
+            echo "Erro ao salvar no banco: " . $conexao->error;
+            // FIM do salva o arquivo no banco de dados
+        }
+    }else {
+            echo "Erro no upload";
     }
    }
    //Fim do salvamento da imagem de perfil
+
+
+//-----------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -240,11 +259,45 @@ if (isset($_POST['salvar'])) {
 
     $extensao = pathinfo($_FILES['Banner1']['name'], PATHINFO_EXTENSION);
     $nomeArquivo = "banner1_id_" . $id_usuario . "." . $extensao;
-    $caminhoDestino = "../ImgPerfilPrestadoras/" . $nomeArquivo;
+    $caminhoDestino = "../ImgBannersPrestadoras/" . $nomeArquivo;
 
 
     // Move o arquivo
     $resultado = move_uploaded_file($_FILES['Banner1']['tmp_name'], $caminhoDestino);
+
+    if ($resultado) {
+
+
+        //Salva o arquivo no banco de dados
+        echo "Upload realizado com sucesso!";
+        $caminhoBanco = $caminhoDestino;
+        $sqlUpdate = "UPDATE prestadora SET banner1 = '$caminhoBanco' WHERE id_usuario = '$id_usuario'";
+
+
+        if ($conexao->query($sqlUpdate)) {
+            echo "Caminho salvo no banco com sucesso!";
+        } else {
+            echo "Erro ao salvar no banco: " . $conexao->error;
+            // FIM do salva o arquivo no banco de dados
+        }
+    } else {
+        echo "Erro no upload";
+    }
+   }
+    //Fim do salvamento do banner 1
+
+//-----------------------------------------------------------------------------------------------------------------//
+
+   //Salvamento do banner 2
+    if (isset($_FILES['Banner2']) && !empty($_FILES['Banner2']['name'])) {
+
+    $extensao = pathinfo($_FILES['Banner2']['name'], PATHINFO_EXTENSION);
+    $nomeArquivo = "banner2_id_" . $id_usuario . "." . $extensao;
+    $caminhoDestino = "../ImgBannersPrestadoras/" . $nomeArquivo;
+
+
+    // Move o arquivo
+    $resultado = move_uploaded_file($_FILES['Banner2']['tmp_name'], $caminhoDestino);
 
     if ($resultado) {
         echo "Upload realizado com sucesso!";
@@ -252,9 +305,32 @@ if (isset($_POST['salvar'])) {
         echo "Erro no upload";
     }
    }
+   //Fim do salvamento do banner 2
+
+//-----------------------------------------------------------------------------------------------------------------//
 
 
+   //Salvamento do banner 3
+    if (isset($_FILES['Banner3']) && !empty($_FILES['Banner3']['name'])) {
 
+    $extensao = pathinfo($_FILES['Banner3']['name'], PATHINFO_EXTENSION);
+    $nomeArquivo = "banner3_id_" . $id_usuario . "." . $extensao;
+    $caminhoDestino = "../ImgBannersPrestadoras/" . $nomeArquivo;
+
+
+    // Move o arquivo
+    $resultado = move_uploaded_file($_FILES['Banner3']['tmp_name'], $caminhoDestino);
+
+    if ($resultado) {
+        echo "Upload realizado com sucesso!";
+    } else {
+        echo "Erro no upload";
+    }
+   }
+   //Fim do salvamento do banner 3
+
+
+//-----------------------------------------------------------------------------------------------------------------//
 
 
 
