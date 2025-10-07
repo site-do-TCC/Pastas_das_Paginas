@@ -48,7 +48,7 @@ session_start();
 
         <div class="adicionarFoto">
             <!-- Input escondido -->
-            <input type="file" id="fotoPerfil" name="fotoPerfil" accept="image/*" hidden>
+            <input type="file" id="fotoPerfil" name="fotoPerfil" accept="image/*" hidden required>
 
             <!-- Círculo clicável -->
             <label for="fotoPerfil" class="circuloUpload">
@@ -148,13 +148,13 @@ session_start();
   <div class="fotos-container">  
     
     <label for="Banner1" class="foto">
-      <input type="file" id="Banner1" name="Banner1" accept="image/*" hidden>
+      <input type="file" id="Banner1" name="Banner1" accept="image/*" required hidden>
       <img id="previewBanner1" src="" alt="Banner 1" style="display:none;">
       <span class="lixeira">🗑</span>
     </label>
     <!-- Banner 2 -->
     <label for="Banner2" class="foto">
-      <input type="file" id="Banner2" name="Banner2" accept="image/*" hidden>
+      <input type="file" id="Banner2" name="Banner2" accept="image/*" required hidden>
       <img id="previewBanner2" src="" alt="Banner 2" style="display:none;">
       <span class="lixeira">🗑</span>
     </label>
@@ -162,7 +162,7 @@ session_start();
     <!-- Banner 3 -->
     
         <label for="Banner3" class="foto" id="banner3">
-        <input type="file" id="Banner3" name="Banner3" accept="image/*" hidden>
+        <input type="file" id="Banner3" name="Banner3" accept="image/*" required hidden>
         <img id="previewBanner3" src="" alt="Banner 3" style="display:none;">
         <span class="lixeira">🗑</span>
     </label>
@@ -231,6 +231,32 @@ if (isset($_POST['salvar'])) {
         echo "Erro no upload";
     }
    }
+   //Fim do salvamento da imagem de perfil
+
+
+
+   //Salvamento do banner 1
+    if (isset($_FILES['Banner1']) && !empty($_FILES['Banner1']['name'])) {
+
+    $extensao = pathinfo($_FILES['Banner1']['name'], PATHINFO_EXTENSION);
+    $nomeArquivo = "banner1_id_" . $id_usuario . "." . $extensao;
+    $caminhoDestino = "../ImgPerfilPrestadoras/" . $nomeArquivo;
+
+
+    // Move o arquivo
+    $resultado = move_uploaded_file($_FILES['Banner1']['tmp_name'], $caminhoDestino);
+
+    if ($resultado) {
+        echo "Upload realizado com sucesso!";
+    } else {
+        echo "Erro no upload";
+    }
+   }
+
+
+
+
+
 
 
 
