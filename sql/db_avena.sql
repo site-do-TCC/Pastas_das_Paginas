@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 23-Set-2025 às 16:36
+-- Tempo de geração: 07-Out-2025 às 22:56
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -55,16 +55,20 @@ CREATE TABLE `prestadora` (
   `nome` varchar(100) NOT NULL,
   `email` varchar(320) NOT NULL,
   `senha` varchar(255) NOT NULL,
-  `criado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `criado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `imgperfil` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `banner1` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `banner2` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `banner3` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `prestadora`
 --
 
-INSERT INTO `prestadora` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`) VALUES
-(1, 'Teste', 'teste@gmail.com', '123', '2025-09-08 16:46:37'),
-(2, 'Mulittle', 'muriloalves.fonseca08@gmail.com', 'EFlSs', '2025-09-23 16:28:15');
+INSERT INTO `prestadora` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`, `imgperfil`, `banner1`, `banner2`, `banner3`) VALUES
+(1, 'Teste', 'teste@gmail.com', '123', '2025-10-07 18:06:27', NULL, NULL, NULL, NULL),
+(2, 'Mulittle', 'muriloalves.fonseca08@gmail.com', 'EFlSs', '2025-10-07 22:50:55', NULL, NULL, NULL, NULL);
 
 --
 -- Índices para tabelas despejadas
