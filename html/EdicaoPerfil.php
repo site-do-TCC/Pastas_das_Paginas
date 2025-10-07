@@ -1,7 +1,6 @@
 
 <?php
 session_start();
-
 ?>
 
 
@@ -181,7 +180,7 @@ session_start();
     <br>
     <br>
     <br>
-    <img src="<?php echo $; ?>" alt="Foto de perfil"> 
+    
 
 </body>
 
@@ -190,9 +189,9 @@ session_start();
 </html>
 
 <?php
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-
+    
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 
 
@@ -230,19 +229,20 @@ if (isset($_POST['salvar'])) {
 
     if ($resultado) {
 
-
         //Salva o arquivo no banco de dados
         echo "Upload realizado com sucesso!";
+        // Caminho salvo no banco (ajuste conforme a estrutura do seu projeto)
         $caminhoBanco = $caminhoDestino;
+
         $sqlUpdate = "UPDATE prestadora SET imgperfil = '$caminhoBanco' WHERE id_usuario = '$id_usuario'";
-
-
         if ($conexao->query($sqlUpdate)) {
             echo "Caminho salvo no banco com sucesso!";
         } else {
             echo "Erro ao salvar no banco: " . $conexao->error;
-            // FIM do salva o arquivo no banco de dados
         }
+        // FIM -----------------------------------------
+
+
     }else {
             echo "Erro no upload";
     }
@@ -250,7 +250,7 @@ if (isset($_POST['salvar'])) {
    //Fim do salvamento da imagem de perfil
 
 
-//-----------------------------------------------------------------------------------------------------------------//
+//-----------------------------------------------------------------------------------------------------------------
 
 
 
@@ -266,27 +266,25 @@ if (isset($_POST['salvar'])) {
     $resultado = move_uploaded_file($_FILES['Banner1']['tmp_name'], $caminhoDestino);
 
     if ($resultado) {
-
-
-        //Salva o arquivo no banco de dados
+         //Salva o arquivo no banco de dados
         echo "Upload realizado com sucesso!";
+        // Caminho salvo no banco (ajuste conforme a estrutura do seu projeto)
         $caminhoBanco = $caminhoDestino;
+
         $sqlUpdate = "UPDATE prestadora SET banner1 = '$caminhoBanco' WHERE id_usuario = '$id_usuario'";
-
-
         if ($conexao->query($sqlUpdate)) {
             echo "Caminho salvo no banco com sucesso!";
         } else {
             echo "Erro ao salvar no banco: " . $conexao->error;
-            // FIM do salva o arquivo no banco de dados
         }
+        // FIM -----------------------------------------
     } else {
         echo "Erro no upload";
     }
    }
     //Fim do salvamento do banner 1
 
-//-----------------------------------------------------------------------------------------------------------------//
+//-----------------------------------------------------------------------------------------------------------------
 
    //Salvamento do banner 2
     if (isset($_FILES['Banner2']) && !empty($_FILES['Banner2']['name'])) {
@@ -298,16 +296,26 @@ if (isset($_POST['salvar'])) {
 
     // Move o arquivo
     $resultado = move_uploaded_file($_FILES['Banner2']['tmp_name'], $caminhoDestino);
-
     if ($resultado) {
+         //Salva o arquivo no banco de dados
         echo "Upload realizado com sucesso!";
+        // Caminho salvo no banco (ajuste conforme a estrutura do seu projeto)
+        $caminhoBanco = $caminhoDestino;
+
+        $sqlUpdate = "UPDATE prestadora SET banner2 = '$caminhoBanco' WHERE id_usuario = '$id_usuario'";
+        if ($conexao->query($sqlUpdate)) {
+            echo "Caminho salvo no banco com sucesso!";
+        } else {
+            echo "Erro ao salvar no banco: " . $conexao->error;
+        }
+        // FIM -----------------------------------------
     } else {
         echo "Erro no upload";
     }
    }
    //Fim do salvamento do banner 2
 
-//-----------------------------------------------------------------------------------------------------------------//
+//-----------------------------------------------------------------------------------------------------------------
 
 
    //Salvamento do banner 3
@@ -317,29 +325,33 @@ if (isset($_POST['salvar'])) {
     $nomeArquivo = "banner3_id_" . $id_usuario . "." . $extensao;
     $caminhoDestino = "../ImgBannersPrestadoras/" . $nomeArquivo;
 
-
     // Move o arquivo
     $resultado = move_uploaded_file($_FILES['Banner3']['tmp_name'], $caminhoDestino);
 
     if ($resultado) {
+         //Salva o arquivo no banco de dados
         echo "Upload realizado com sucesso!";
+        // Caminho salvo no banco (ajuste conforme a estrutura do seu projeto)
+        $caminhoBanco = $caminhoDestino;
+
+        $sqlUpdate = "UPDATE prestadora SET banner3 = '$caminhoBanco' WHERE id_usuario = '$id_usuario'";
+        if ($conexao->query($sqlUpdate)) {
+            echo "Caminho salvo no banco com sucesso!";
+        } else {
+            echo "Erro ao salvar no banco: " . $conexao->error;
+        }
+        // FIM -----------------------------------------
+        
     } else {
         echo "Erro no upload";
     }
-   }
+}
+}
    //Fim do salvamento do banner 3
 
 
-//-----------------------------------------------------------------------------------------------------------------//
+//-----------------------------------------------------------------------------------------------------------------
 
-
-
-
-
-   
-
-    
-}
          
         
         
