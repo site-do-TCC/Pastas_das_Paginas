@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 07-Out-2025 às 22:56
+-- Tempo de geração: 08-Out-2025 às 23:19
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -59,16 +59,24 @@ CREATE TABLE `prestadora` (
   `imgperfil` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
   `banner1` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
   `banner2` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `banner3` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL
+  `banner3` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `empresa_nome` varchar(100) NOT NULL,
+  `empresa_telefone` varchar(20) NOT NULL,
+  `empresa_email` varchar(100) NOT NULL,
+  `empresa_localizacao` varchar(150) NOT NULL,
+  `empresa_facebook` varchar(150) DEFAULT NULL,
+  `empresa_instagram` varchar(150) DEFAULT NULL,
+  `empresa_biografia` text NOT NULL,
+  `empresa_servicos` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `prestadora`
 --
 
-INSERT INTO `prestadora` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`, `imgperfil`, `banner1`, `banner2`, `banner3`) VALUES
-(1, 'Teste', 'teste@gmail.com', '123', '2025-10-07 18:06:27', NULL, NULL, NULL, NULL),
-(2, 'Mulittle', 'muriloalves.fonseca08@gmail.com', 'EFlSs', '2025-10-07 22:50:55', NULL, NULL, NULL, NULL);
+INSERT INTO `prestadora` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`, `imgperfil`, `banner1`, `banner2`, `banner3`, `empresa_nome`, `empresa_telefone`, `empresa_email`, `empresa_localizacao`, `empresa_facebook`, `empresa_instagram`, `empresa_biografia`, `empresa_servicos`) VALUES
+(1, 'Teste', 'teste@gmail.com', '123', '2025-10-07 18:06:27', NULL, NULL, NULL, NULL, '', '', '', '', '', NULL, '', ''),
+(2, 'Mulittle', 'muriloalves.fonseca08@gmail.com', 'EFlSs', '2025-10-07 22:50:55', NULL, NULL, NULL, NULL, '', '', '', '', '', NULL, '', '');
 
 --
 -- Índices para tabelas despejadas

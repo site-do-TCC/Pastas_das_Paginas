@@ -1,6 +1,8 @@
 
 <?php
 session_start();
+
+include_once(__DIR__ . '/../php/conexao.php');
 ?>
 
 
@@ -75,27 +77,24 @@ session_start();
 
                     <div class="campo">
                         <label for="nome">Nome</label>
-                        <input type="text" id="nome" name="nome" required>
+                        <input type="text" id="nome" name="nome" placeholder="Nome de sua empresa" required>
                     </div>
 
                     <div class="campo">
                         <label for="telefone">Telefone</label>
-                        <input type="tel" id="telefone" name="telefone" required>
+                        <input type="tel" id="telefone" name="telefone" placeholder="Contato da empresa" required>
                     </div>
 
                     <div class="campo">
                         <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" placeholder="Email da empresa" required>
                     </div>
 
 
 
 
 
-                    <div class="campoSenha">
-                        <label for="senha">Senha</label>
-                        <input type="password" id="senha" name="senha" required>
-                    </div>
+
 
                 </div>
 
@@ -104,17 +103,17 @@ session_start();
 
                     <div class="campo">
                         <label for="localizacao">Localização</label>
-                        <input type="text" id="localizacao" name="localizacao" required>
+                        <input type="text" id="localizacao" name="localizacao" placeholder="Sua região de atuação" required>
                     </div>
 
                     <div class="campo">
                         <label for="facebook">Facebook</label>
-                        <input type="url" id="facebook" name="facebook">
+                        <input type="url" id="facebook" name="facebook" placeholder="Coloque a url da conta">
                     </div>
 
                     <div class="campo">
                         <label for="instagram">Instagram</label>
-                        <input type="url" id="instagram" name="instagram">
+                        <input type="text" id="instagram" name="instagram" placeholder="Coloque se @ ou a url">
                     </div>
 
                 </div>
@@ -129,10 +128,10 @@ session_start();
         <!-- Coluna da esquerda -->
         <div class="coluna-esquerda">
             <label for="biografia">Biografia</label>
-            <textarea id="biografia" name="biografia"></textarea>
+            <textarea id="biografia" name="biografia" placeholder="Descrição do seu serviço, local de atuação, observações, etc..."></textarea>
 
             <label for="servicos">Serviços e Valores</label>
-            <textarea id="servicos" name="servicos"></textarea>
+            <textarea id="servicos" name="servicos" placeholder="Pequeno detalhamento dos serviços prestados e valores a serem cobrados"></textarea>
 
             <div class="botoes">
                 <button class="btn-excluir" name="excluir" id="excluir">EXCLUIR CONTA</button>
@@ -346,7 +345,7 @@ if (isset($_POST['salvar'])) {
         echo "Erro no upload";
     }
 }
-}
+
    //Fim do salvamento do banner 3
 
 
@@ -360,17 +359,17 @@ if (isset($_POST['salvar'])) {
 
 
 
-        //$nome = $_POST['nome'];
-        //$telefone = $_POST['telefone'];
-        //$email = $_POST['email'];
-        //$senha = $_POST['senha'];
-        //$localizacao = $_POST['localizacao'];
-        //$facebook = $_POST['facebook'];
-        //$instagram = $_POST['instagram'];
-        //$biografia = $_POST['biografia'];
-        //$servicos = $_POST['servicos'];
+        $empresa_nome = $_POST['nome'];
+        $empresa_telefone = $_POST['telefone'];
+        $empresa_email = $_POST['email'];
+        $empresa_localizacao = $_POST['localizacao'];
+        $empresa_facebook = $_POST['facebook'];
+        $empresa_instagram = $_POST['instagram'];
+        $empresa_biografia = $_POST['biografia'];
+        $empresa_servicos = $_POST['servicos'];
     
 
-
+        $check = mysqli_query($conexao, "SELECT * FROM prestadora WHERE empresa_email = '$empresa_email'");
+}
 
 ?>
