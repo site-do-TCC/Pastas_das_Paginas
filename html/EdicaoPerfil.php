@@ -182,7 +182,7 @@ include_once(__DIR__ . '/../php/conexao.php');
     
 
 </body>
-
+<script src="../js/cadastro.js"></script>
 <script rel="stylesheet" src="\Programacao_TCC_Avena\js\EdicaoPerfil.js"></script>
 
 </html>
@@ -352,7 +352,7 @@ if (isset($_POST['salvar'])) {
 //-----------------------------------------------------------------------------------------------------------------
 
          
-        
+
         
 
 
@@ -370,6 +370,14 @@ if (isset($_POST['salvar'])) {
     
 
         $check = mysqli_query($conexao, "SELECT * FROM prestadora WHERE empresa_email = '$empresa_email'");
+
+        
+        if (mysqli_num_rows($check) > 0) {
+            $result = mysqli_query($conexao, "INSERT INTO prestadora(empresa_nome,empresa_telefone, empresa_email, empresa_localizacao, empresa_facebook, empresa_instagram, empresa_biografia, empresa_servicos) VALUES ('$empresa_nome','$empresa_telefone','$empresa_email', '$empresa_localizacao', '$empresa_facebook', '$empresa_instagram', '$empresa_biografia', '$empresa_servicos')");
+            if ($result){
+                echo "<script>mostrarModal('Erro ao cadastrar');</script>";
+            }
+        }    
 }
 
 ?>
