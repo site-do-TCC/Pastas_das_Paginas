@@ -266,8 +266,9 @@ if (isset($_POST['salvar'])) {
 
     if ($resultado) {
          //Salva o arquivo no banco de dados
-        echo "Upload realizado com sucesso!";
+        //echo "Upload realizado com sucesso!";
         // Caminho salvo no banco (ajuste conforme a estrutura do seu projeto)
+        
         $caminhoBanco = $caminhoDestino;
 
         $sqlUpdate = "UPDATE prestadora SET banner1 = '$caminhoBanco' WHERE id_usuario = '$id_usuario'";
@@ -297,7 +298,7 @@ if (isset($_POST['salvar'])) {
     $resultado = move_uploaded_file($_FILES['Banner2']['tmp_name'], $caminhoDestino);
     if ($resultado) {
          //Salva o arquivo no banco de dados
-        echo "Upload realizado com sucesso!";
+        //echo "Upload realizado com sucesso!";
         // Caminho salvo no banco (ajuste conforme a estrutura do seu projeto)
         $caminhoBanco = $caminhoDestino;
 
@@ -329,15 +330,15 @@ if (isset($_POST['salvar'])) {
 
     if ($resultado) {
          //Salva o arquivo no banco de dados
-        echo "Upload realizado com sucesso!";
+        //echo "Upload realizado com sucesso!";
         // Caminho salvo no banco (ajuste conforme a estrutura do seu projeto)
         $caminhoBanco = $caminhoDestino;
 
         $sqlUpdate = "UPDATE prestadora SET banner3 = '$caminhoBanco' WHERE id_usuario = '$id_usuario'";
         if ($conexao->query($sqlUpdate)) {
-            echo "Caminho salvo no banco com sucesso!";
+            //echo "Caminho salvo no banco com sucesso!";
         } else {
-            echo "Erro ao salvar no banco: " . $conexao->error;
+            //echo "Erro ao salvar no banco: " . $conexao->error;
         }
         // FIM -----------------------------------------
         
@@ -370,14 +371,14 @@ if (isset($_POST['salvar'])) {
     
 
         $check = mysqli_query($conexao, "SELECT * FROM prestadora WHERE empresa_email = '$empresa_email'");
-
         
-        if (mysqli_num_rows($check) > 0) {
+        if (mysqli_num_rows($check) >= 0) {
             $result = mysqli_query($conexao, "INSERT INTO prestadora(empresa_nome,empresa_telefone, empresa_email, empresa_localizacao, empresa_facebook, empresa_instagram, empresa_biografia, empresa_servicos) VALUES ('$empresa_nome','$empresa_telefone','$empresa_email', '$empresa_localizacao', '$empresa_facebook', '$empresa_instagram', '$empresa_biografia', '$empresa_servicos')");
             if ($result){
-                echo "<script>mostrarModal('Erro ao cadastrar');</script>";
+                echo "Deu certo";
             }
         }    
+    
 }
 
 ?>
