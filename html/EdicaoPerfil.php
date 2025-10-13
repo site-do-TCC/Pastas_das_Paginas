@@ -361,23 +361,32 @@ if (isset($_POST['salvar'])) {
 
 
         $empresa_nome = $_POST['nome'];
-        $empresa_telefone = $_POST['telefone'];
-        $empresa_email = $_POST['email'];
-        $empresa_localizacao = $_POST['localizacao'];
-        $empresa_facebook = $_POST['facebook'];
-        $empresa_instagram = $_POST['instagram'];
-        $empresa_biografia = $_POST['biografia'];
-        $empresa_servicos = $_POST['servicos'];
-    
+$empresa_telefone = $_POST['telefone'];
+$empresa_email = $_POST['email'];
+$empresa_localizacao = $_POST['localizacao'];
+$empresa_facebook = $_POST['facebook'];
+$empresa_instagram = $_POST['instagram'];
+$empresa_biografia = $_POST['biografia'];
+$empresa_servicos = $_POST['servicos'];
 
-        $check = mysqli_query($conexao, "SELECT * FROM prestadora WHERE empresa_email = '$empresa_email'");
-        
-        if (mysqli_num_rows($check) >= 0) {
-            $result = mysqli_query($conexao, "INSERT INTO prestadora(empresa_nome,empresa_telefone, empresa_email, empresa_localizacao, empresa_facebook, empresa_instagram, empresa_biografia, empresa_servicos) VALUES ('$empresa_nome','$empresa_telefone','$empresa_email', '$empresa_localizacao', '$empresa_facebook', '$empresa_instagram', '$empresa_biografia', '$empresa_servicos')");
-            if ($result){
-                echo "Deu certo";
-            }
-        }    
+
+
+$sql = "UPDATE prestadora SET 
+            empresa_nome='$empresa_nome',
+            empresa_telefone='$empresa_telefone',
+            empresa_email='$empresa_email',
+            empresa_localizacao='$empresa_localizacao',
+            empresa_facebook='$empresa_facebook',
+            empresa_instagram='$empresa_instagram',
+            empresa_biografia='$empresa_biografia',
+            empresa_servicos='$empresa_servicos'
+        WHERE id_usuario='$id_usuario'";
+
+if (mysqli_query($conexao, $sql)) {
+    echo "Dados da empresa atualizados com sucesso!";
+} else {
+    echo "Erro ao atualizar: " . mysqli_error($conexao);
+}
     
 }
 
