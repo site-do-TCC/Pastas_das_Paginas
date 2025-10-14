@@ -1,14 +1,15 @@
 /* ================= FONTS ================= */
 @font-face {
   font-family: "Birthstone";
-  src: url("/fonts/paginaInicial/Birthstone/Birthstone-Regular.ttf") format("truetype");
+  src: url("/fonts/edicaoPerfil/Birthstone/Birthstone-Regular.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
+  
 }
 
 @font-face {
   font-family: "Mulish";
-  src: url("/fonts/paginaInicial/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
+  src: url("/fonts/edicaoPerfil/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -264,42 +265,44 @@ textarea {
   flex: 1;
   margin-left: -20px;
   margin-top: -50px;
-  
 }
 
 .coluna-direita {
   flex: 1;
   margin-top: -50px;
-  margin-left: -253px;
   font-family: "OpenSans-Bold";
-
 }
 
+/* Mantém o título */
 .coluna-direita h4 {
   margin-bottom: 15px;
-  align-items: center;
-  z-index: 0;
   font-family: "OpenSans-Bold";
 }
 
-.fotos {
+/* Área das fotos organizada em grid */
+.coluna-direita .fotos-container {
   display: grid;
-  grid-template-columns: repeat(2, 150px); 
-  grid-template-rows: repeat(2, 100px);    
-  top: 300px;
-  gap: 20px; 
-  margin-bottom: 50px;
-  justify-content: start; 
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
 }
 
-
 .foto {
-  width: 150px;
-  height: 100px;
+  width: 200px;
+  height: 120px;
   background: #b6a4c4;
   border-radius: 20px;
   position: relative;
   cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .lixeira {
@@ -310,14 +313,8 @@ textarea {
   cursor: pointer;
   color: #4b0055;
   font-weight: bold;
-  z-index: 0;
 }
-
-
-
-/*
-.inputFoto{
-  
-
+#banner3{
+  margin-top: -148.2%;
+  margin-left: 140%;
 }
-*/
