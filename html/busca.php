@@ -10,7 +10,7 @@
   <!-- Cabeçalho -->
   <header class="header">
     <div class="logo">
-      <img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena">
+      <img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena" href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">
     </div>
     <div class="search-bar">
       <input type="text" placeholder="Manicure" class="search-input">
@@ -22,7 +22,7 @@
 
   <!-- Caminho de navegação -->
   <nav class="breadcrumb">
-    <a href="#">Home</a> / 
+    <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">Início  </a> / 
     <a href="#">Busca</a>
   </nav>
 
@@ -50,7 +50,8 @@
           </div>
           <div class="card-info">
             <h3><?= $prof['nome'] ?></h3>
-            <p><?= $prof['cidade'] ?>, <?= $prof['estado'] ?></p>
+            <p><?= $prof['empresa_localizacao'] ?>    <?= $prof['estado'] ?></p>
+            <p><?= $prof['empresa_servicos'] ?>    <?= $prof['servicos'] ?></p>
             <div class="stars"><?= str_repeat('⭐', $prof['avaliacao']) ?></div>
           </div>
         </div>
@@ -59,7 +60,6 @@
   </main>
 
   <script>
-    // Exemplo simples: animação e troca do like
     document.addEventListener("DOMContentLoaded", () => {
       const hearts = document.querySelectorAll(".heart-btn");
       hearts.forEach(btn => {
