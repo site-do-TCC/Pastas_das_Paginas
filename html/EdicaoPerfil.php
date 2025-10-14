@@ -384,7 +384,7 @@ $sql = "UPDATE prestadora SET
 
 if (mysqli_query($conexao, $sql)) {
     echo "Dados da empresa atualizados com sucesso!";
-    header('Local: ');
+    
 } else {
     echo "Erro ao atualizar: " . mysqli_error($conexao);
 }
