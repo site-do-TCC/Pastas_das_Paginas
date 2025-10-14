@@ -4,14 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profissionais Próximas | Avena</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="\Programacao_TCC_Avena\css\busca.css">
 </head>
 <body>
   <!-- Cabeçalho -->
   <header class="header">
     <div class="logo">
-      <img src="logo-avena.png" alt="Logo Avena">
-      <h1>AVENA</h1>
+      <img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena">
     </div>
     <div class="search-bar">
       <input type="text" placeholder="Manicure" class="search-input">
@@ -27,54 +26,48 @@
     <a href="#">Busca</a>
   </nav>
 
-  <!-- Conteúdo principal -->
   <main class="container">
+    <?php
+      include_once(__DIR__ . '/../php/conexao.php');
+      $sql = "SELECT * FROM prestadora";
+      $resultado = mysqli_query($conexao, $sql);
+      $total = mysqli_num_rows($resultado);
+    ?>
+
     <div class="header-section">
       <h2>PROFISSIONAIS PRÓXIMAS</h2>
-      <span class="count">180 Profissionais</span>
+      <span class="count"><?= $total ?> Profissionais</span>
       <button class="filter-btn">⚙️ Filtros</button>
     </div>
 
-    <!-- Lista de profissionais (gerada dinamicamente) -->
+    <!-- Cards dinâmicos -->
     <section class="cards-container">
-      <!-- Exemplo de card - será gerado via loop -->
-      <div class="card">
-        <div class="card-img">
-          <img src="img/studio.jpg" alt="Studio Geisa">
-          <span class="heart">❤️</span>
+      <?php while ($prof = mysqli_fetch_assoc($resultado)) { ?>
+        <div class="card">
+          <div class="card-img">
+            <img src="<?= $prof['banner1'] ?>" alt="<?= $prof['nome'] ?>">
+            <button class="heart-btn">🤍</button>
+          </div>
+          <div class="card-info">
+            <h3><?= $prof['nome'] ?></h3>
+            <p><?= $prof['cidade'] ?>, <?= $prof['estado'] ?></p>
+            <div class="stars"><?= str_repeat('⭐', $prof['avaliacao']) ?></div>
+          </div>
         </div>
-        <div class="card-info">
-          <h3>Studio Geisa</h3>
-          <p>Itaquaquecetuba, São Paulo</p>
-          <div class="stars">⭐⭐⭐⭐☆</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-img">
-          <img src="img/rayssa.jpg" alt="Rayssa Nails">
-          <span class="heart">🤍</span>
-        </div>
-        <div class="card-info">
-          <h3>Rayssa Nails</h3>
-          <p>Suzano, São Paulo</p>
-          <div class="stars">⭐⭐⭐☆☆</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-img">
-          <img src="img/rosana.jpg" alt="Rosana Style">
-          <span class="heart">🤍</span>
-        </div>
-        <div class="card-info">
-          <h3>Rosana Style</h3>
-          <p>Arujá, São Paulo</p>
-          <div class="stars">⭐⭐⭐☆☆</div>
-        </div>
-      </div>
-      <!-- Mais cards gerados automaticamente -->
+      <?php } ?>
     </section>
   </main>
+
+  <script>
+    // Exemplo simples: animação e troca do like
+    document.addEventListener("DOMContentLoaded", () => {
+      const hearts = document.querySelectorAll(".heart-btn");
+      hearts.forEach(btn => {
+        btn.addEventListener("click", () => {
+          btn.textContent = btn.textContent === "🤍" ? "❤️" : "🤍";
+        });
+      });
+    });
+  </script>
 </body>
 </html>

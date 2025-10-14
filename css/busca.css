@@ -1,4 +1,4 @@
-/* Reset básico */
+/* Reset e base */
 * {
   margin: 0;
   padding: 0;
@@ -20,14 +20,8 @@ body {
   padding: 15px 40px;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .logo img {
-  width: 40px;
+  height: 40px;
 }
 
 .search-bar {
@@ -63,6 +57,11 @@ body {
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  transition: 0.2s;
+}
+
+.login-btn:hover {
+  background-color: #ff6262;
 }
 
 /* Breadcrumb */
@@ -110,7 +109,7 @@ body {
   cursor: pointer;
 }
 
-/* Cards dinâmicos */
+/* Cards */
 .cards-container {
   display: flex;
   flex-wrap: wrap;
@@ -141,11 +140,20 @@ body {
   object-fit: cover;
 }
 
-.heart {
+/* Botão de coração */
+.heart-btn {
   position: absolute;
   top: 10px;
   right: 15px;
   font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.heart-btn:hover {
+  transform: scale(1.2);
 }
 
 .card-info {
@@ -168,3 +176,28 @@ body {
   color: #ffb400;
   font-size: 16px;
 }
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .search-bar {
+    display: none;
+  }
+
+  .cards-container {
+    justify-content: center;
+  }
+
+  .card {
+    width: 90%;
+  }
+
+  .header-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-btn {
+    margin-top: 10px;
+  }
+}
+    
