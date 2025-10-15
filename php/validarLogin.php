@@ -8,7 +8,7 @@ if(isset($_POST['submit']) && !empty($_POST['email']) && !empty($_POST['senha'])
     include_once('conexao.php');
     $email = $_POST['email'];
     $senha = $_POST['senha'];
-    $sql = "SELECT * FROM prestadora WHERE empresa_email = '$email' AND senha = '$senha'";
+    $sql = "SELECT * FROM prestadora WHERE email = '$email' AND senha = '$senha'";
     $result = mysqli_query($conexao, $sql);
     $usuario = mysqli_fetch_assoc($result);
     

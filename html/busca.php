@@ -1,4 +1,9 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+session_start();
 include_once(__DIR__ . '/../php/conexao.php');
 
 // Pega os valores enviados pela URL
@@ -86,6 +91,7 @@ $total = mysqli_num_rows($resultado);
     <section class="cards-container">
       <?php if ($total > 0) { ?>
         <?php while ($prof = mysqli_fetch_assoc($resultado)) { ?>
+          <a href="\Programacao_TCC_Avena\html\servico.php?id_usuario=<?= $prof['id_usuario']?>" class="cards-link">
           <div class="card">
             <div class="card-img">
               <img src="<?= $prof['banner1'] ?>" alt="<?= $prof['nome'] ?>">
@@ -98,15 +104,15 @@ $total = mysqli_num_rows($resultado);
               <div class="stars"><?= str_repeat('⭐', $prof['avaliacao']) ?></div>
             </div>
           </div>
+        </a>
         <?php } ?>
       <?php } else { ?>
         <p style="text-align:center; margin-top:30px;">Nenhum profissional encontrado 😔</p>
-      <?php } ?>
+      <?php } ?>  
     </section>
   </main>
 
   <script>
-    // Coração ❤️
     document.addEventListener("DOMContentLoaded", () => {
       const hearts = document.querySelectorAll(".heart-btn");
       hearts.forEach(btn => {
