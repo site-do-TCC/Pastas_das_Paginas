@@ -17,7 +17,7 @@ body {
   align-items: center;
   justify-content: space-between;
   background-color: #b49fcc;
-  padding: 15px 40px;
+  padding: 15px 40px; 
 }
 
 .logo img {
@@ -27,6 +27,7 @@ body {
 .search-bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background: white;
   border-radius: 30px;
   padding: 8px 15px;
@@ -49,20 +50,27 @@ body {
   margin: 0 10px;
 }
 
-.login-btn {
+.pesquisa-btn {
   background-color: #ff7e7e;
   border: none;
   color: white;
   padding: 10px 25px;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: bolder;
   transition: 0.2s;
+
 }
 
-.login-btn:hover {
+.pesquisa-btn:hover {
   background-color: #ff6262;
 }
+.pesquisa-btn:active {
+  padding: 11px 27px;
+  background-color: #ff7e7e;
+  transition: 0.1s ease-in-out;
+}
+
 
 /* Breadcrumb */
 .breadcrumb {
@@ -96,7 +104,7 @@ body {
 .count {
   color: #7a5fa3;
   font-weight: 500;
-  margin-left: 10px;
+  margin-left: 60%;
 }
 
 .filter-btn {
