@@ -133,10 +133,12 @@ include_once(__DIR__ . '/../php/conexao.php');
             <label for="servicos">Serviços e Valores</label>
             <textarea id="servicos" name="servicos" placeholder="Pequeno detalhamento dos serviços prestados e valores a serem cobrados"></textarea>
 
-            <div class="botoes">
-                <button class="btn-excluir" name="excluir" id="excluir">EXCLUIR CONTA</button>
-                <button class="btn-salvar" name="salvar" id="salvar">SALVAR ALTERAÇÕES</button>
-            </div>
+<div class="botoes">
+    <button class="btn-excluir" name="excluir" id="excluir">EXCLUIR CONTA</button>
+    <button class="btn-salvar" name="salvar" id="salvar">SALVAR ALTERAÇÕES</button>
+</div>
+
+<a href="\Programacao_TCC_Avena\php\sair.php" class="btn-deslogar">DESLOGAR</a>
         </div>
 
         <!-- Coluna da direitaa -->
@@ -166,7 +168,7 @@ include_once(__DIR__ . '/../php/conexao.php');
         <span class="lixeira">🗑</span>
     </label>
     </form>
-    <a href="\Programacao_TCC_Avena\php\sair.php">Deslogar</a>
+    
     
   </div>
 </div>
