@@ -1,86 +1,49 @@
 /* ================= FONTS ================= */
 @font-face {
   font-family: "Birthstone";
-<<<<<<< HEAD
-  src: url("/fonts/paginaInicial/Birthstone/Birthstone-Regular.ttf") format("truetype");
-  font-weight: bold;
-=======
   src: url("../fonts/edicaoPerfil/Birthstone/Birthstone-Regular.ttf") format("truetype");
   font-weight: normal;
->>>>>>> origin/master
   font-style: normal;
 }
 
 @font-face {
   font-family: "Mulish";
-<<<<<<< HEAD
-  src: url("/fonts/paginaInicial/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
-=======
   src: url("../fonts/edicaoPerfil/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
->>>>>>> origin/master
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Poppins";
-<<<<<<< HEAD
-  src: url("/fonts/edicaoPerfil/Poppins/Poppins-Regular.ttf") format("truetype");
-  font-weight: bold;
-=======
   src: url("../fonts/edicaoPerfil/Poppins/Poppins-Regular.ttf") format("truetype");
   font-weight: normal;
->>>>>>> origin/master
   font-style: normal;
 }
 
 @font-face {
   font-family: "OpenSans-Bold";
-<<<<<<< HEAD
-  src: url("/fonts/edicaoPerfil/Open_Sans/static/OpenSans-Bold.ttf") format("truetype");
-=======
   src: url("../fonts/edicaoPerfil/Open_Sans/OpenSans-Bold.ttf") format("truetype");
->>>>>>> origin/master
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Inter";
-<<<<<<< HEAD
-  src: url("/fonts/edicaoPerfil/Inter/static/Inter_18pt-Bold.ttf") format("truetype");
-=======
   src: url("../fonts/edicaoPerfil/Inter/static/Inter_18pt-Bold.ttf") format("truetype");
->>>>>>> origin/master
   font-weight: bold;
   font-style: normal;
 }
 
 /* ================= RESET ================== */
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-<<<<<<< HEAD
-  font-family: "Mulish", sans-serif;
-}
-
-
-
-/* ================= HEADER ================= */
-header {
-
-=======
   font-family: "Inter", sans-serif;
 }
 
 /* ================= HEADER ================= */
 header {
->>>>>>> origin/master
   top: 0;
   left: 0;
   width: 100%;
@@ -89,10 +52,6 @@ header {
   padding: 10px 40px;
   z-index: 1;
   position: fixed;
-<<<<<<< HEAD
-  
-=======
->>>>>>> origin/master
 }
 
 nav {
@@ -122,24 +81,6 @@ nav {
 }
 
 /* ================= PERFIL ================= */
-<<<<<<< HEAD
-
-body {
-  background: #f5f5f5;
-  color: #545454;
-  
-  
-}
-.headerPerfil{
-  margin-top:100px;
-}
-
-.meuPerfil img {
-
-  top: 10px;   
-  left: 48px; 
-  margin-left: 50px;  
-=======
 body {
   background: #f5f5f5;
   color: #545454;
@@ -154,34 +95,14 @@ body {
   top: 10px;
   left: 48px;
   margin-left: 50px;
->>>>>>> origin/master
   cursor: pointer;
   width: 140px;
   z-index: 2;
+  margin-top: 10px;
+  margin-bottom: -10px;
+
 }
 
-<<<<<<< HEAD
-.adicionarFoto img {
-
-  
-  
-  width: 140px;
-  height: 140px;
-  cursor: pointer;
-  z-index: 3;
-  margin-left: 44.4%;
-  margin-bottom: 20px;
-  
-}
-
-.linha {
-  
-
-  top: 1100px;   /* ajusta para ficar logo abaixo da foto */
-
-  width: 100%;  
-  height: 1px;  
-=======
 .circuloUpload {
   width: 140px;
   height: 140px;
@@ -206,23 +127,13 @@ body {
 .linha {
   width: 100%;
   height: 1px;
->>>>>>> origin/master
   background-color: #969191;
   opacity: 50%;
 }
 
-<<<<<<< HEAD
-
-/* ================= FORMULÁRIO ================= */
-.Formulario {
-  
-  padding: 20px;
-  
-=======
 /* ================= FORMULÁRIO ================= */
 .Formulario {
   padding: 20px;
->>>>>>> origin/master
   border-radius: 10px;
   max-width: 900px;
   margin: 60px auto 110px auto;
@@ -255,7 +166,6 @@ label {
   font-family: "OpenSans-Bold";
   color: #545454;
 }
-
 input {
   margin-bottom: 8px;
   width: 500px;
@@ -268,7 +178,7 @@ input {
 
 /* ================= ÁREA DE TEXTO ================= */
 textarea {
-  width: 60%;
+  width: 66%;
   height: 100px;
   border-radius: 8px;
   border: 1px solid #999;
@@ -298,6 +208,7 @@ textarea {
   border-radius: 12px;
   cursor: pointer;
   font-weight: bold;
+
 }
 
 .btn-salvar {
@@ -309,6 +220,7 @@ textarea {
   cursor: pointer;
   font-weight: bold;
   z-index: 0;
+  
 }
 
 /* ================= BOTÃO DESLOGAR ================= */
@@ -327,7 +239,8 @@ textarea {
   font-family: "Inter";
   width: fit-content;
   margin-left: auto;
-  margin-right: auto;
+  margin-right: 170px;
+
 }
 
 /* ================= SUAS FOTOS ================= */
@@ -337,23 +250,21 @@ textarea {
   gap: 60px;
   max-width: 1000px;
   margin: auto;
+  
 }
 
 .coluna-esquerda {
   flex: 1;
   margin-left: -20px;
   margin-top: -50px;
-<<<<<<< HEAD
-  
-=======
->>>>>>> origin/master
 }
 
 .coluna-direita {
   flex: 1;
   margin-top: -50px;
   font-family: "OpenSans-Bold";
-  margin-left: -120px;
+  margin-left: -280px;
+  
 }
 
 .coluna-direita h4 {
@@ -364,7 +275,7 @@ textarea {
 
 .coluna-direita .fotos-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
   gap: 20px;
   justify-items: start;
 }
