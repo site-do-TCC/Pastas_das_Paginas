@@ -23,7 +23,7 @@ if (mysqli_num_rows($resultado) == 0) {
 }
 
 $prof = mysqli_fetch_assoc($resultado);
-$logado = isset($_SESSION['id_usuario']);
+$logado = isset($_SESSION['email']);
 ?>
 
 <!DOCTYPE html>
@@ -35,11 +35,19 @@ $logado = isset($_SESSION['id_usuario']);
   <link rel="stylesheet" href="\Programacao_TCC_Avena\css\servico.css">
 </head>
 <body>
+  <!-- Mensagem -->
+    <div id="modalErro" class="modal">
+        <div class="modal-content">
+            <p id="mensagemErro">E-mail ou senha incorretos</p>
+            <button onclick="fecharModal()">OK</button>
+        </div>
+    </div>
+
   <header class="header">
     <div class="logo">
       <img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena" href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">
     </div>
-    <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html" class="btn-entrar">ENTRAR</a>
+    <a onclick="btnEntrar()" class="btn-entrar">ENTRAR</a>
   </header>
 
   <nav class="breadcrumb">
@@ -100,14 +108,22 @@ $logado = isset($_SESSION['id_usuario']);
       </div>
     </section>
   </main>
-
+  <script src="../js/login.js"></script>
   <script>
     function solicitarServico() {
       const logado = <?= json_encode($logado) ?>;
       if (!logado) {
-        window.location.href = "/Programacao_TCC_Avena/html/login.html";
+        window.location.href = "login.php";
       } else {
-        alert("Serviço solicitado com sucesso! (aqui entra a função que você vai definir)");
+        mostrarModal("Serviço solicitado com sucesso! (aqui entra a função que você vai definir)");
+      }
+    }
+    function btnEntrar() {
+      const logado = <?= json_encode($logado) ?>;
+      if (!logado) {
+        window.location.href = "login.php";
+      } else {
+        mostrarModal("Você já esta logado.");
       }
     }
   </script>

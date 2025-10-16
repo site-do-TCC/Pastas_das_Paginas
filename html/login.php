@@ -47,17 +47,8 @@
   <div class="login-card">
         <div class="login-form">
 
-<!-- tela de erro
 
-<div id="alertaErro" class="alerta">
-  <div class="alerta-box">
-    <p>E-mail ou senha inválidos.<br>
-    <strong>Verifique seus dados e tente novamente!</strong></p>
-    <button id="fecharAlerta">OK</button>
-  </div>
-</div>
 
--->
       <form action="../php/validarLogin.php" method="POST">
         <div class="mb-3">
           <label for="email">E-mail</label>
