@@ -84,7 +84,6 @@ $total = mysqli_num_rows($resultado);
     <div class="header-section">
       <h2>PROFISSIONAIS PRÓXIMAS</h2>
       <span class="count"><?= $total ?> Profissionais</span>
-      <button class="filter-btn">⚙️ Filtros</button>
     </div>
 
     <!-- Cards dinâmicos -->
