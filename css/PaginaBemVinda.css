@@ -28,8 +28,8 @@
 
 @font-face {
   font-family: "Inter";
-  src: url("/fonts/edicaoPerfil/Inter/static/Inter_18pt-Bold.ttf") format("truetype");
-  font-weight: bold;
+  src: url("/fonts/edicaoPerfil/Inter/static/Inter_18pt-Medium") format("truetype");
+  font-weight: normal;
   font-style: normal;
 }
 
@@ -106,9 +106,11 @@ body {
 }
 
 .texto h1 {
+  font-family: "Inter";
   font-size: 1.8rem;
   margin-bottom: 20px;
   color: #333;
+  
 }
 
 .BemVinda h1 {
@@ -116,6 +118,7 @@ body {
   font-weight: bold;
   margin-bottom: 15px;
   color: #333;
+  font-family: "Poppins";
 }
 
 .botoes {
@@ -123,6 +126,7 @@ body {
   gap: 20px;
   margin-top: 20px;
   flex-wrap: wrap;
+
 }
 
 .botoes button {
