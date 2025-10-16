@@ -43,7 +43,7 @@ $logado = isset($_SESSION['id_usuario']);
   </header>
 
   <nav class="breadcrumb">
-    <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">🏠</a> /
+    <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"></a> /
     <a href="busca.php" style="text-decoration:none;">Busca</a> /
     <span><?= htmlspecialchars($prof['nome']) ?></span>
   </nav>
@@ -52,7 +52,7 @@ $logado = isset($_SESSION['id_usuario']);
     <section class="info">
     <div class="abaixo-img">
       <div class="perfil">
-        <img src="<?= htmlspecialchars($prof['imgperfil'] ?? '/Programacao_TCC_Avena/img/padrao.jpg') ?>" class="foto-perfil" alt="<?= htmlspecialchars($prof['nome']) ?>">
+        <img src="<?= htmlspecialchars($prof['imgperfil'] or '\Programacao_TCC_Avena\img\adicionarFoto.png') ?>" class="foto-perfil" alt="<?= htmlspecialchars($prof['nome']) ?>">
         <h3>Sobre <?= htmlspecialchars($prof['nome']) ?></h3>
         <h2><?= htmlspecialchars($prof['nome']) ?></h2>
       </div>
@@ -68,7 +68,7 @@ $logado = isset($_SESSION['id_usuario']);
         -->
         
             
-            <p><?= nl2br(htmlspecialchars($prof['empresa_biografia'] ?? 'Descrição não informada.')) ?></p>
+            <p><?= nl2br(htmlspecialchars($prof['empresa_biografia'] or 'Descrição não informada.')) ?></p>
 
             <p><strong>Contato:</strong> <?= htmlspecialchars($prof['empresa_telefone']) ?></p>
 
