@@ -108,3 +108,19 @@ body p, h1, h2, h3 {
 .abaixo-img{
   flex-direction: column; 
 } 
+.perfil {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.topo {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* espaço entre imagem e nome */
+}
+
+.lado-img h1 {
+  font-size: 2em;
+  margin: 0;
+}

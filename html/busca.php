@@ -77,7 +77,7 @@ $total = mysqli_num_rows($resultado);
         <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z"/>
       </svg>
     </a> / 
-    <a href="#">Busca</a>
+    <a href="\Programacao_TCC_Avena\html\busca.php">Busca</a>
   </nav>
 
   <main class="container">
