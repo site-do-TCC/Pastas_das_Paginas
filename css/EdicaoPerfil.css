@@ -1,45 +1,71 @@
 /* ================= FONTS ================= */
 @font-face {
   font-family: "Birthstone";
+<<<<<<< HEAD
   src: url("/fonts/paginaInicial/Birthstone/Birthstone-Regular.ttf") format("truetype");
   font-weight: bold;
+=======
+  src: url("../fonts/edicaoPerfil/Birthstone/Birthstone-Regular.ttf") format("truetype");
+  font-weight: normal;
+>>>>>>> origin/master
   font-style: normal;
 }
 
 @font-face {
   font-family: "Mulish";
+<<<<<<< HEAD
   src: url("/fonts/paginaInicial/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
+=======
+  src: url("../fonts/edicaoPerfil/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
+>>>>>>> origin/master
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Poppins";
+<<<<<<< HEAD
   src: url("/fonts/edicaoPerfil/Poppins/Poppins-Regular.ttf") format("truetype");
   font-weight: bold;
+=======
+  src: url("../fonts/edicaoPerfil/Poppins/Poppins-Regular.ttf") format("truetype");
+  font-weight: normal;
+>>>>>>> origin/master
   font-style: normal;
 }
 
 @font-face {
   font-family: "OpenSans-Bold";
+<<<<<<< HEAD
   src: url("/fonts/edicaoPerfil/Open_Sans/static/OpenSans-Bold.ttf") format("truetype");
+=======
+  src: url("../fonts/edicaoPerfil/Open_Sans/OpenSans-Bold.ttf") format("truetype");
+>>>>>>> origin/master
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Inter";
+<<<<<<< HEAD
   src: url("/fonts/edicaoPerfil/Inter/static/Inter_18pt-Bold.ttf") format("truetype");
+=======
+  src: url("../fonts/edicaoPerfil/Inter/static/Inter_18pt-Bold.ttf") format("truetype");
+>>>>>>> origin/master
   font-weight: bold;
   font-style: normal;
 }
 
 /* ================= RESET ================== */
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+<<<<<<< HEAD
   font-family: "Mulish", sans-serif;
 }
 
@@ -48,6 +74,13 @@
 /* ================= HEADER ================= */
 header {
 
+=======
+  font-family: "Inter", sans-serif;
+}
+
+/* ================= HEADER ================= */
+header {
+>>>>>>> origin/master
   top: 0;
   left: 0;
   width: 100%;
@@ -56,7 +89,10 @@ header {
   padding: 10px 40px;
   z-index: 1;
   position: fixed;
+<<<<<<< HEAD
   
+=======
+>>>>>>> origin/master
 }
 
 nav {
@@ -86,6 +122,7 @@ nav {
 }
 
 /* ================= PERFIL ================= */
+<<<<<<< HEAD
 
 body {
   background: #f5f5f5;
@@ -102,11 +139,28 @@ body {
   top: 10px;   
   left: 48px; 
   margin-left: 50px;  
+=======
+body {
+  background: #f5f5f5;
+  color: #545454;
+  font-family: "Inter", sans-serif;
+}
+
+.headerPerfil {
+  margin-top: 100px;
+}
+
+.meuPerfil img {
+  top: 10px;
+  left: 48px;
+  margin-left: 50px;
+>>>>>>> origin/master
   cursor: pointer;
   width: 140px;
   z-index: 2;
 }
 
+<<<<<<< HEAD
 .adicionarFoto img {
 
   
@@ -127,16 +181,48 @@ body {
 
   width: 100%;  
   height: 1px;  
+=======
+.circuloUpload {
+  width: 140px;
+  height: 140px;
+  border: 2px solid #917ba4;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  cursor: pointer;
+  margin: 0 auto 20px auto;
+  visibility: hidden;
+}
+
+.circuloUpload img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  visibility: visible;
+}
+
+.linha {
+  width: 100%;
+  height: 1px;
+>>>>>>> origin/master
   background-color: #969191;
   opacity: 50%;
 }
 
+<<<<<<< HEAD
 
 /* ================= FORMULÁRIO ================= */
 .Formulario {
   
   padding: 20px;
   
+=======
+/* ================= FORMULÁRIO ================= */
+.Formulario {
+  padding: 20px;
+>>>>>>> origin/master
   border-radius: 10px;
   max-width: 900px;
   margin: 60px auto 110px auto;
@@ -150,24 +236,20 @@ body {
   gap: 40px;
   justify-content: center;
   margin-left: 8px;
-  
+  font-family: "OpenSans-Bold";
 }
 
 .colunaForm {
-  
   flex: 1;
-  
 }
 
 .campo {
   margin-bottom: 20px;
-  
 }
 
 label {
-  
   font-weight: bold;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
   margin-left: 2px;
   display: block;
   font-family: "OpenSans-Bold";
@@ -175,7 +257,7 @@ label {
 }
 
 input {
-  
+  margin-bottom: 8px;
   width: 500px;
   padding: 10px;
   border: 1px solid #999;
@@ -184,22 +266,8 @@ input {
   color: #545454;
 }
 
-/* Campo senha com ícone de olho */
-.olhoSenha img {
-  cursor: pointer;
-  width: 24px;
-  height: 22px;
-  margin-left: 472px;
-  margin-bottom: 100px;
-}
-
-.campoSenha {
-  margin-top: -130px;
-}
-
 /* ================= ÁREA DE TEXTO ================= */
 textarea {
-  
   width: 60%;
   height: 100px;
   border-radius: 8px;
@@ -207,22 +275,20 @@ textarea {
   padding: 10px;
   resize: none;
   margin-bottom: 25px;
- 
   font-size: 14px;
-  background-color: transparent; /* pode trocar pra transparent */
+  background-color: transparent;
 }
 
 /* ================= BOTÕES ================= */
 .botoes {
   display: flex;
   gap: 80px;
-  margin-left: 342px; 
+  margin-left: 342px;
   font-family: "Inter";
   white-space: nowrap;
   height: 50px;
   margin-top: 50px;
 }
-
 
 .btn-excluir {
   background: transparent;
@@ -245,6 +311,25 @@ textarea {
   z-index: 0;
 }
 
+/* ================= BOTÃO DESLOGAR ================= */
+.btn-deslogar {
+  background: transparent;
+  color: #4b0055;
+  border: 1px solid #4b0055;
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 20px;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  font-family: "Inter";
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* ================= SUAS FOTOS ================= */
 .container {
   display: flex;
@@ -258,41 +343,49 @@ textarea {
   flex: 1;
   margin-left: -20px;
   margin-top: -50px;
+<<<<<<< HEAD
   
+=======
+>>>>>>> origin/master
 }
 
 .coluna-direita {
   flex: 1;
   margin-top: -50px;
-  margin-left: -253px;
   font-family: "OpenSans-Bold";
-
+  margin-left: -120px;
 }
 
 .coluna-direita h4 {
   margin-bottom: 15px;
-  align-items: center;
-  z-index: 0;
   font-family: "OpenSans-Bold";
+  text-align: left;
 }
 
-.fotos {
+.coluna-direita .fotos-container {
   display: grid;
-  grid-template-columns: repeat(2, 150px); 
-  grid-template-rows: repeat(2, 100px);    
-  top: 300px;
-  gap: 20px; 
-  justify-content: start; 
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  justify-items: start;
 }
-
 
 .foto {
-  width: 150px;
-  height: 100px;
+  width: 200px;
+  height: 120px;
   background: #b6a4c4;
   border-radius: 20px;
   position: relative;
   cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .lixeira {
@@ -303,5 +396,4 @@ textarea {
   cursor: pointer;
   color: #4b0055;
   font-weight: bold;
-  z-index: 0;
 }

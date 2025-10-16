@@ -1,118 +1,85 @@
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Mulish", sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-  background: #f5f5f5;
-  color: #333;
-}
-
-/* Cabeçalho */
-header {
-  background: #917ba4;
-  padding: 15px 40px;
-}
-
-.logo img {
-  height: 50px;
-}
-
-/* Layout principal */
-.container {
+  background-color: #f8f9fa;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 40px 8%;
-  gap: 10%;
-}
-
-/* Formulário */
-.form-section {
-  flex: 1;
-  max-width: 450px;
+  height: 100vh;
 }
 
 form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  background: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 380px;
+}
+
+form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 label {
+  display: block;
+  margin-bottom: 6px;
   font-weight: bold;
-  font-size: 14px;
-  margin-bottom: 5px;
+  color: #555;
 }
 
 input, select {
-  padding: 12px;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 18px;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 5px;
   outline: none;
-  transition: border 0.3s ease;
+  transition: border 0.3s;
 }
 
 input:focus, select:focus {
-  border: 1px solid #917ba4;
+  border-color: #7a57d1; /* Roxo da sua paleta */
 }
 
-/* Checkbox */
-.termos {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  background: #917ba4;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-login:hover {
+  background: #5a3fa6;
+}
+
+.signup {
+  margin-top: 15px;
+  text-align: center;
   font-size: 14px;
   color: #555;
 }
 
-/* Botão */
-.btn-cadastrar {
-  background: #ff7f86;
-  color: white;
+.signup a {
+  text-decoration: none;
   font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  padding: 15px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background 0.3s ease;
+  color: #7a57d1;
 }
 
-.btn-cadastrar:hover {
-  background: #ff616a;
-}
-
-/* Imagem */
-.image-section {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.image-section img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Responsividade */
-@media (max-width: 900px) {
-  .container {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .form-section {
-    max-width: 100%;
-  }
-
-  .image-section {
-    margin-top: 30px;
-  }
+.signup a:hover {
+  text-decoration: underline;
 }
 
 /* Fundo escuro transparente */
