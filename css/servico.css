@@ -59,8 +59,14 @@ body p, h1, h2, h3 {
 
 .dados p {
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
-
+.dados{
+  position: static; 
+  max-width: 500px; 
+  word-wrap: break-word; 
+}
 
 .solicitar-btn {
   background-color: #ff6b6b;

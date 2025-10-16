@@ -99,8 +99,8 @@ $total = mysqli_num_rows($resultado);
             </div>
             <div class="card-info">
               <h3><?= $prof['nome'] ?></h3>
-              <p><?= $prof['empresa_localizacao'] ?> <?= $prof['empresa_localizacao'] ?></p>
-              <p><?= $prof['empresa_servicos'] ?> <?= $prof['empresa_servicos'] ?></p>
+              <p><?= $prof['empresa_localizacao'] ?> </p>
+              <p><?= $prof['empresa_servicos'] ?> </p>
         <!-- 
               <div class="stars"></div>
         -->

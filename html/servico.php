@@ -52,7 +52,7 @@ $logado = isset($_SESSION['id_usuario']);
     <section class="info">
     <div class="abaixo-img">
       <div class="perfil">
-        <img src="<?= htmlspecialchars($prof['imgperfil'] or '\Programacao_TCC_Avena\img\adicionarFoto.png') ?>" class="foto-perfil" alt="<?= htmlspecialchars($prof['nome']) ?>">
+        <img src="<?= htmlspecialchars($prof['imgperfil'] ) ?>" class="foto-perfil" alt="<?= htmlspecialchars($prof['nome']) ?>">
         <h3>Sobre <?= htmlspecialchars($prof['nome']) ?></h3>
         <h2><?= htmlspecialchars($prof['nome']) ?></h2>
       </div>
@@ -68,7 +68,7 @@ $logado = isset($_SESSION['id_usuario']);
         -->
         
             
-            <p><?= nl2br(htmlspecialchars($prof['empresa_biografia'] or 'Descrição não informada.')) ?></p>
+            <p><?= nl2br(htmlspecialchars($prof['empresa_biografia'])) ?></p>
 
             <p><strong>Contato:</strong> <?= htmlspecialchars($prof['empresa_telefone']) ?></p>
 
