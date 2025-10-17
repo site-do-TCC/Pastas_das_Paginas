@@ -27,7 +27,7 @@
     echo "<h1>Bem vindo<ul>$logado</ul></h1>";
     
     ?>
-
+    <a href="\Programacao_TCC_Avena\html\busca.php">Busca</a>
     <a href="\Programacao_TCC_Avena\php\sair.php">Deslogar</a>
 </body>
 </html>
