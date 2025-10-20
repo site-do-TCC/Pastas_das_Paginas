@@ -338,6 +338,7 @@ if (isset($_POST['salvar'])) {
 
         $sqlUpdate = "UPDATE prestadora SET banner3 = '$caminhoBanco' WHERE id_usuario = '$id_usuario'";
         if ($conexao->query($sqlUpdate)) {
+            
             //echo "Caminho salvo no banco com sucesso!";
         } else {
             //echo "Erro ao salvar no banco: " . $conexao->error;
@@ -362,7 +363,7 @@ if (isset($_POST['salvar'])) {
 
 
 
-        $empresa_nome = $_POST['nome'];
+$empresa_nome = $_POST['nome'];
 $empresa_telefone = $_POST['telefone'];
 $empresa_email = $_POST['email'];
 $empresa_localizacao = $_POST['localizacao'];
@@ -385,8 +386,8 @@ $sql = "UPDATE prestadora SET
         WHERE id_usuario='$id_usuario'";
 
 if (mysqli_query($conexao, $sql)) {
-    echo "Dados da empresa atualizados com sucesso!";
-    
+    $sql = "UPDATE prestadora SET passou_cadastro = 1 WHERE id_usuario = $id_usuario";
+    mysqli_query($conexao, $sql);
 } else {
     echo "Erro ao atualizar: " . mysqli_error($conexao);
 }
