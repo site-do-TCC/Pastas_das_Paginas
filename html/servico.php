@@ -16,7 +16,7 @@ $id_usuario = intval($_GET['id_usuario']);
 $sql = "SELECT * FROM prestadora WHERE id_usuario = $id_usuario";
 $resultado = mysqli_query($conexao, $sql);
 
- //Se não encontrar, redireciona
+ //Se não encontrar, redireciona  
 if (mysqli_num_rows($resultado) == 0) {
   header("Location: busca.php");
   exit;
