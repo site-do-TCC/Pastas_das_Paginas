@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 15-Out-2025 às 23:42
+-- Tempo de geração: 20-Out-2025 às 20:26
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -43,6 +43,22 @@ INSERT INTO `cliente` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`) VALU
 (1, 'Teste2', 'teste2@gmail.com', 'CtibT', '2025-09-21 23:39:28'),
 (3, 'Teste3', 'teste3@gmail.com', '123', '2025-09-09 21:04:22'),
 (4, 'Mulittle', 'muriloalves.fonseca08@gmail.com', '3RIPn', '2025-09-23 14:54:45');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `curso`
+--
+
+CREATE TABLE `curso` (
+  `id_curso` int(11) NOT NULL,
+  `Nome` varchar(150) NOT NULL,
+  `DescricaoGeral` varchar(500) NOT NULL,
+  `Aprender` varchar(255) NOT NULL,
+  `TempoTotal` int(2) NOT NULL,
+  `Nivel` varchar(40) NOT NULL,
+  `video` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -92,6 +108,12 @@ ALTER TABLE `cliente`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Índices para tabela `curso`
+--
+ALTER TABLE `curso`
+  ADD PRIMARY KEY (`id_curso`);
+
+--
 -- Índices para tabela `prestadora`
 --
 ALTER TABLE `prestadora`
@@ -107,6 +129,12 @@ ALTER TABLE `prestadora`
 --
 ALTER TABLE `cliente`
   MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de tabela `curso`
+--
+ALTER TABLE `curso`
+  MODIFY `id_curso` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `prestadora`
