@@ -40,7 +40,7 @@ $logado = isset($_SESSION['email']);
     </header>
 
     <main class="container">
-        <h2><?= htmlspecialchars($prof['Nome']) ?></h2>
+        <h2><?=$prof['Nome'] ?></h2>
 
         <section class="conteudo">
             <div class="caixa">
