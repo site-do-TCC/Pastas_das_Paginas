@@ -48,28 +48,28 @@
                     <img src="../img/gestao-tempo.jpeg" alt="Gestão de Tempo">
                     <h3>Gestão de Tempo</h3>
                     <p>Diga adeus à bagunça! Gerencie seus horários com eficiência e produtividade.</p>
-                    <button><a href='cursosDetalhes.php?id_curso=1' style="text-decoration:none; color:#fff">Ver Detalhes</a></button>
+                    <button><a href='#' style="text-decoration:none; color:#fff">Ver Detalhes</a></button>
                 </div>
 
                 <div class="card">
                     <img src="../img/marketing-digital.jpg" alt="Marketing Digital">
                     <h3>Marketing Digital</h3>
                     <p>Aprenda estratégias práticas para atrair novos clientes e fortalecer sua presença online.</p>
-                    <button><a href='cursosDetalhes.php?id_curso=2' style="text-decoration:none; color:#fff">Ver Detalhes</a></button>
+                    <button><a href='#' style="text-decoration:none; color:#fff">Ver Detalhes</a></button>
                 </div>
 
                 <div class="card">
                     <img src="../img/atendimento-cliente.jpg" alt="Atendimento ao Cliente">
                     <h3>Atendimento ao Cliente</h3>
                     <p>Encante cada cliente com comunicação eficaz e postura profissional diferenciada.</p>
-                    <button><a href='cursosDetalhes.php?id_curso=3' style="text-decoration:none; color:#fff">Ver Detalhes</a></button>
+                    <button><a href='#' style="text-decoration:none; color:#fff">Ver Detalhes</a></button>
                 </div>
 
                 <div class="card">
                     <img src="../img/gestao-financeira.jpeg" alt="Gestão Financeira">
                     <h3>Gestão Financeira</h3>
                     <p>Organize seus ganhos, controle seus gastos e conquiste estabilidade financeira.</p>
-                    <button><a href='cursosDetalhes.php?id_curso=4' style="text-decoration:none; color:#fff">Ver Detalhes</a></button>
+                    <button><a href='#' style="text-decoration:none; color:#fff">Ver Detalhes</a></button>
                 </div>
             </div>
         </section>

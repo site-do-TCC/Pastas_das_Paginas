@@ -31,7 +31,6 @@ $logado = isset($_SESSION['email']);
     <header class="topo">
         <div class="logo">
             <img src="../imagens/logo-avena.png" alt="Logo Avena">
-            <h1>AVENA</h1>
         </div>
         <div class="perfil">
             <span>Geisa</span>
