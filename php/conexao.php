@@ -8,7 +8,11 @@
 
     $conexao = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName);
 
-    date_default_timezone_set
+    date_default_timezone_set('America/Sao_Paulo')
+    $globalData = date("d/m/Y")
+    $globalHora = date("H:i")
+    $showNome = false;
+    
     //if ($conexao->connect_errno){
     //   echo 'Erro na conexão';
     //} else {
