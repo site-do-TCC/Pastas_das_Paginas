@@ -46,7 +46,7 @@
 
         <div class="termos">
           <input id="termos" type="checkbox" id="termos" required>
-          <label for="termos">Termos de Privacidade</label>
+          <label for="termos"><a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" style="text-decoration:none;">Termos de Privacidade</a></label>
         </div>
 
         <button id="btnSubmit" type="submit" name="submit" class="btn-cadastrar">CADASTRAR-SE</button>
