@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve([
-          { id: "c1", name: "Chat", photo: "../img/SemFoto.jpg", lastMessage: "..", online: true },
+          { id: "c1", name: "Chat", photo: "../img/SemFoto.jpg", lastMessage: "", online: true, horario: "2025-10-21 10:45:32"},
 
         ]);
       }, 200);
@@ -50,8 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         const sample = {
           c1: [
-            { id: "m1", from: "them", text: "Exemplo" },
-            { id: "m2", from: "them", text: "OIII" },
+            { id: "m1", from: "them", text: "Oi" },
           ],
 
         };
@@ -196,3 +195,4 @@ document.addEventListener("DOMContentLoaded", () => {
     get state() { return { chats, activeChatId, chatHistories }; }
   };
 });
+

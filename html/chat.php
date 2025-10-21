@@ -1,11 +1,19 @@
+<?php
+session_start();
+include(__DIR__ . '/../php/conexao.php');
+include(__DIR__ . '/../php/settings.php');
+
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat</title>
   <link rel="stylesheet" href="../css/Chat.css">
 </head>
+
 <body>
   <header>
     <nav>
@@ -62,12 +70,12 @@
 
       <div class="chat-input">
         <button class="attach-btn" id="attach-btn" title="Anexar">
-            <div class="botaoUploadImg"><img src="../img/botaoUpload.png"></div>
+          <div class="botaoUploadImg"><img src="../img/botaoUpload.png"></div>
         </button>
         <input id="message-input" type="text" placeholder="Digite uma mensagem...">
-        <button class="send-btn" id="send-btn" title="Enviar">
-            <div class="botaoMandarImg"><img src="../img/botaoMandar.png"></div>
-            
+        <button class="send-btn" id="send-btn" value="send-value" title="Enviar">
+          <div class="botaoMandarImg"><img src="../img/botaoMandar.png"></div>
+
         </button>
       </div>
     </section>
@@ -75,4 +83,5 @@
 
   <script src="../js/chat.js"></script>
 </body>
+
 </html>
