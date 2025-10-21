@@ -8,6 +8,7 @@
 
     $conexao = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName);
 
+    date_default_timezone_set
     //if ($conexao->connect_errno){
     //   echo 'Erro na conexão';
     //} else {
