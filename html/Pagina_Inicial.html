@@ -95,7 +95,7 @@
  
     const userConsent = localStorage.getItem("cookieConsent");
  
-    if (userConsent) {
+    if (!userConsent) {
       cookieBanner.style.display = "block";
     }
  

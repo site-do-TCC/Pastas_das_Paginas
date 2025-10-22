@@ -11,6 +11,26 @@
 </head>
 <body>
 
+<!-- ===============================
+     Banner de Consentimento de Cookies - Singularity Solutions
+     =============================== -->
+     <div id="cookie-banner" class="cookie-banner">
+  <div class="cookie-content">
+  <h4>Privacidade e Cookies</h4>
+  <p>
+        A Singularity Solutions utiliza cookies para oferecer uma experiência mais personalizada,
+        melhorar o desempenho da plataforma e garantir o funcionamento seguro dos serviços.
+        Ao aceitar, você concorda com o uso de cookies conforme nossa
+  <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">Política de Privacidade</a>.
+  </p>
+  <div class="cookie-buttons">
+  <button id="accept-cookies" class="cookie-btn accept">Aceitar</button>
+  <button id="decline-cookies" class="cookie-btn decline">Recusar</button>
+  </div>
+  </div>
+  </div>
+
+
   <!-- Mensagem -->
     <div id="modalErro" class="modal">
         <div class="modal-content">
@@ -101,5 +121,32 @@
         mostrarModal("Acesso inválido, preencha os campos.");
     }
 </script>
+
+<script>
+  // ======== Script de Consentimento de Cookies ========
+  document.addEventListener("DOMContentLoaded", () => {
+    const cookieBanner = document.getElementById("cookie-banner");
+    const acceptBtn = document.getElementById("accept-cookies");
+    const declineBtn = document.getElementById("decline-cookies");
+ 
+    const userConsent = localStorage.getItem("cookieConsent");
+ 
+    if (!userConsent) {
+      cookieBanner.style.display = "block";
+    }
+ 
+    acceptBtn.addEventListener("click", () => {
+      localStorage.setItem("cookieConsent", "accepted");
+      cookieBanner.style.display = "none";
+    });
+ 
+    declineBtn.addEventListener("click", () => {
+      localStorage.setItem("cookieConsent", "declined");
+      cookieBanner.style.display = "none";
+    });
+  });
+</script>
+
+
 </html>
 
