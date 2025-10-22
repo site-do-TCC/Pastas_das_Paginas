@@ -211,4 +211,77 @@ body {
 .cards-link{
   text-decoration: none;
 }
+.cookie-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background-color: #ffffff;
+  border: 1px solid #cfd8dc;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  border-radius: 16px;
+  padding: 20px;
+  z-index: 9999;
+  max-width: 480px;
+  margin: auto;
+  font-family: 'Poppins', sans-serif;
+  display: none;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.cookie-content h4 {
+  color: #004aad;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.cookie-content p {
+  color: #333;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.cookie-content a {
+  color: #004aad;
+  text-decoration: underline;
+}
+
+.cookie-buttons {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.cookie-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.cookie-btn.accept {
+  background-color: #004aad;
+  color: #fff;
+}
+
+.cookie-btn.accept:hover {
+  background-color: #003b88;
+}
+
+.cookie-btn.decline {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.cookie-btn.decline:hover {
+  background-color: #cfd8dc;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
     

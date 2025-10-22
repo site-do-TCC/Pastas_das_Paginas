@@ -121,31 +121,8 @@
         mostrarModal("Acesso inválido, preencha os campos.");
     }
 </script>
+<script src="\Programacao_TCC_Avena\js\cookies.js"></script>
 
-<script>
-  // ======== Script de Consentimento de Cookies ========
-  document.addEventListener("DOMContentLoaded", () => {
-    const cookieBanner = document.getElementById("cookie-banner");
-    const acceptBtn = document.getElementById("accept-cookies");
-    const declineBtn = document.getElementById("decline-cookies");
- 
-    const userConsent = localStorage.getItem("cookieConsent");
- 
-    if (!userConsent) {
-      cookieBanner.style.display = "block";
-    }
- 
-    acceptBtn.addEventListener("click", () => {
-      localStorage.setItem("cookieConsent", "accepted");
-      cookieBanner.style.display = "none";
-    });
- 
-    declineBtn.addEventListener("click", () => {
-      localStorage.setItem("cookieConsent", "declined");
-      cookieBanner.style.display = "none";
-    });
-  });
-</script>
 
 
 </html>

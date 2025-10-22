@@ -36,6 +36,26 @@ $total = mysqli_num_rows($resultado);
   <link rel="stylesheet" href="\Programacao_TCC_Avena\css\busca.css">
 </head>
 <body>
+
+    <!-- ===============================
+     Banner de Consentimento de Cookies - Singularity Solutions
+     =============================== -->
+     <div id="cookie-banner" class="cookie-banner">
+  <div class="cookie-content">
+  <h4>Privacidade e Cookies</h4>
+  <p>
+        A Singularity Solutions utiliza cookies para oferecer uma experiência mais personalizada,
+        melhorar o desempenho da plataforma e garantir o funcionamento seguro dos serviços.
+        Ao aceitar, você concorda com o uso de cookies conforme nossa
+  <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">Política de Privacidade</a>.
+  </p>
+  <div class="cookie-buttons">
+  <button id="accept-cookies" class="cookie-btn accept">Aceitar</button>
+  <button id="decline-cookies" class="cookie-btn decline">Recusar</button>
+  </div>
+  </div>
+  </div>
+
   <!-- Cabeçalho -->
   <header class="header">
     <div class="logo">
@@ -140,4 +160,5 @@ $total = mysqli_num_rows($resultado);
     }
   </script>
 </body>
+<script src="\Programacao_TCC_Avena\js\cookies.js"></script>
 </html>

@@ -1,15 +1,3 @@
-//Informação
-function mostrarModal(mensagem) {
-  document.getElementById("mensagemErro").innerText = mensagem;
-  document.getElementById("modalErro").style.display = "flex"; 
-}
-
-
-function fecharModal() {
-  document.getElementById("modalErro").style.display = "none";
-}
-
-
 document.addEventListener("DOMContentLoaded", () => {
   const cookieBanner = document.getElementById("cookie-banner");
   const acceptBtn = document.getElementById("accept-cookies");
