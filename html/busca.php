@@ -59,7 +59,7 @@ $total = mysqli_num_rows($resultado);
   <!-- Cabeçalho -->
   <header class="header">
     <div class="logo">
-      <img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena" href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">
+      <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena" href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"></a>
     </div>
     <div class="search-bar">
       <div>

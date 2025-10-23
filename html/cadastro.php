@@ -8,21 +8,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro - Avena</title>
   <link rel="stylesheet" href="\Programacao_TCC_Avena\css\cadastro.css">
+
 </head>
 <body>
 
-  <!-- Mensagem -->
-    <div id="modalErro" class="modal">
+ <!-- Mensagem -->
+ <div id="modalErro" class="modal">
         <div class="modal-content">
             <p id="mensagemErro">E-mail não encontrado!</p>
             <button onclick="fecharModal()">OK</button>
         </div>
-    </div>
+  </div>
+
+  <!-- Menu -->
+  <nav id="menu" class="hidden">
+    <ul>
+      <li><a href="#">Quem somos</a></li>
+      <li><a href="\Programacao_TCC_Avena\html\cadastro.php"><span class="Cadastro">Cadastrar-se</span></a></li>
+      <hr>
+      <li><a href="#">Seja um Parceiro</a></li>
+      <li><a href="#">Suporte</a></li>
+    </ul>
+  </nav>
 
   <header>
-    <div class="logo">
-      <a href="Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
-    </div>
+    <nav>
+      <div class="logo">
+        <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
+      </div>
+      <div class="menu">
+        <a class="btnEntrar" href="\Programacao_TCC_Avena\html\login.php" >Entrar</a>
+        <button class="menu-icon" id="menu-btn">&#9776;</button>
+      </div>
+    </nav>
   </header>
 
   <!-- ===============================
@@ -77,8 +95,9 @@
       <img src="\Programacao_TCC_Avena\img\imgCadastro.png" alt="Ilustração de cadastro">
     </div>
   </main>
-</body>
   <script src="../js/cadastro.js"></script>
+</body>
+  
 </html>
 
 
@@ -152,7 +171,7 @@
 ?>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => { 
   const cookieBanner = document.getElementById("cookie-banner");
   const acceptBtn = document.getElementById("accept-cookies");
   const declineBtn = document.getElementById("decline-cookies");
