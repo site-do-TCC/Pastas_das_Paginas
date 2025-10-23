@@ -189,45 +189,30 @@
   }
 }
 .show {
+  margin-top:5%;
   z-index: 1;
   animation: fadeInUp 1s ease forwards;
-  margin-left: 86.5%;
-  margin-bottom: 90%;
+  margin-left: 84%;
   border-radius: 10%;
+  padding:2%;
   position: absolute;
   opacity: 70%;
-  background-color: rgba(181, 166, 192, 0.79);
-  display: flex;               /* FLEXBOX */
-  flex-direction: column;      /* deixa os links em coluna */
-  justify-content: center;     /* centraliza vertical */
-  align-items: center;         /* centraliza horizontal */
-  height: 35%;
-  width: 12%;
+  background-color: #f5f5f5;
+  display: block;
 }
-
-.show a {
+.show a{
   color: #4a4a4a;
-  font-size: 0.85em;   /* ↓ texto menor (ajustado) */
+  font-size: 1.2em;
   text-decoration: none;
 }
-
-.show ul {
-  margin: 0;                   /* remove margem extra */
-  padding: 0;                  /* remove padding extra */
-  list-style: none;            /* tira bolinhas */
-  width: 100%;                 /* ocupa toda largura */
-  text-align: center;          /* centraliza o texto */
+.show ul{
+  text-align:center;
 }
-
-.show li {
-  padding: 7px 0;
+.show li{
+  padding: 12px 15px;
+  list-style: none;
 }
-
-
-
-
-
-.quemSomos{
+.Cadastro{
   font-weight: bolder;
 }
 
