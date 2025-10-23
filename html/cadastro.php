@@ -23,7 +23,7 @@
   <!-- Menu -->
   <nav id="menu" class="hidden">
     <ul>
-      <li><a href="#">Quem somos</a></li>
+      <li><a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">Quem somos</a></li>
       <li><a href="\Programacao_TCC_Avena\html\cadastro.php"><span class="Cadastro">Cadastrar-se</span></a></li>
       <hr>
       <li><a href="#">Seja um Parceiro</a></li>
