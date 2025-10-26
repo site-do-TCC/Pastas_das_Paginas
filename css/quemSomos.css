@@ -13,20 +13,15 @@
 }
 
 
-
-/* Reset */
-* {
+body {
+  font-family: 'Mulish', sans-serif;
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  background-color: #f7f7f7;
 }
 
-/* Cabeçalho */
 header {
-  background-color: #8b75b5;
-  color: white;
-  padding: 10px 40px;
+  background-color: #9b86b7;
+  padding: 15px 5%;
 }
 
 .navbar {
@@ -39,159 +34,111 @@ header {
   height: 40px;
 }
 
-.menu {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
 .btn-entrar {
-  background-color: #ff6e80;
+  background-color: #ff7e8f;
   border: none;
   color: white;
-  padding: 8px 20px;
-  border-radius: 10px;
   font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: 0.3s;
 }
 
 .btn-entrar:hover {
-  background-color: #ff546a;
+  background-color: #ff5b76;
 }
-
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* espaço entre o botão e o ícone */
+}
 .menu-icon {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 24px;
+  width: 25px;
   height: 18px;
   cursor: pointer;
+  margin-left: 5px; /* reduz pra não afastar tanto do botão */
 }
 
 .menu-icon div {
-  width: 100%;
-  height: 3px;
   background-color: white;
-  border-radius: 2px;
+  height: 3px;
+  border-radius: 3px;
 }
 
-/* Breadcrumb */
+.conteudo {
+  padding: 40px 10%;
+}
+
 .breadcrumb {
-  font-size: 14px;
-  color: #917ba4;
-  margin: 20px 50px;
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 40px;
+  margin-right: 50%;
 }
 
-.icon-home {
+.breadcrumb svg {
   margin-right: 5px;
 }
 
-/* Título */
-.titulo {
-  transform: translateY(65px);
-  color: #741f89;
-  font-family: 'Birthstone', cursive;
-  font-size: 7em;
-  text-align: center;
+.quem-somos h1 {
+  position: relative;
+  top: 40px; /* move pra baixo sem criar espaço falso */
   margin-right: 50%;
-  letter-spacing: 1px;
+  text-align: left;
+  font-family: 'Birthstone', cursive;
+  color: #7e3a8b;
+  font-size: 7em;
+  margin-bottom: 20px;
 }
 
-/* Imagens */
-.imagens {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 9%;
-  margin: 30px 0;
+
+.banner img {
+  width: 100%;
+  height: 350px;
+  border-radius: 12px;
+  margin-bottom: 25px;
 }
 
-.imagens img {
-  width: 190px;
-  height: 190px;
-  border-radius: 50%;
-  object-fit: cover;
-  background-color: #f0f0f0;
-}
-
-/* Seção do formulário e texto */
-.form-texto {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 20%;
-  margin: 40px auto;
-  max-width: 1200px;
-}
-
-.form-parceiro {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.form-parceiro input,
-.form-parceiro textarea {
-  width: 370px;
-  Height: 100px; 
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  font-weight: 600;
-  color: #999;
-  resize: none;
-}
-
-.btn-enviar {
-  background-color: #741f89;
-  color: white;
-  font-weight: 600;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  cursor: pointer;
-  margin-top: 5px;
-  transition: background 0.3s;
-}
-
-.btn-enviar:hover {
-  background-color: #6422a5;
-}
-
-.texto {
-  max-width: 600px;
-  font-size: 20px;
+.texto p {
+  margin-bottom: 20px;
   color: #333;
-  line-height: 1.6;
+  line-height: 1.7;
+  font-size: 1em;
+  text-align: justify;
 }
 
-.texto strong {
-  font-weight: 700;
+.imagem-final {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 25px;
 }
 
-/* Responsividade */
-@media (max-width: 850px) {
-  .form-texto {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+.imagem-final img {
+  width: 250px;
+  border-radius: 10px;
+}
+
+/* Ajuste responsivo */
+@media (max-width: 768px) {
+  .conteudo {
+    padding: 30px 6%;
   }
 
-  .texto {
-    max-width: 90%;
+  .imagem-final {
+    justify-content: center;
   }
 
-  .form-parceiro input,
-  .form-parceiro textarea {
+  .imagem-final img {
     width: 90%;
   }
-
-  .imagens {
-    flex-wrap: wrap;
-    gap: 20%;
-  }
 }
+
 
 .modal {
   display: none; /* começa escondido */
@@ -323,4 +270,27 @@ header {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+/* Remove espaçamentos desnecessários */
+main.conteudo {
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove espaço do breadcrumb */
+.breadcrumb {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* Ajusta o bloco principal da seção */
+section.quem-somos {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Garante que o texto fique encostado na imagem */
+section.quem-somos h1,
+section.quem-somos h2 {
+  margin-top: 10px; /* ajusta conforme quiser */
 }

@@ -46,7 +46,7 @@ input, select {
 }
 
 input:focus, select:focus {
-  border-color: #7a57d1; /* Roxo da sua paleta */
+  border-color: #7a57d1; 
 }
 
 .btn-login {
