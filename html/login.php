@@ -94,7 +94,6 @@
         <p class="signup">Ainda não está no Avena? <a href="cadastro.php">Crie uma Conta.</a></p>
       </form>
     </div>
-
      <div class="login-image">
         <img src="\Programacao_TCC_Avena\img\mulher cabelo preto.jpeg" alt="Ilustração login">
       </div>

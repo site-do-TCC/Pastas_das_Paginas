@@ -42,6 +42,10 @@
       </div>
     </nav>
   </header>
+  
+  <main class="container">
+  <div class="login-card">
+  <div class="login-form">
 
   <!-- ===============================
      Banner de Consentimento de Cookies - Singularity Solutions
@@ -62,7 +66,8 @@
   </div>
   </div>
 
-  <main class="container">
+
+
     <div class="form-section">
       <form action="cadastro.php" method="POST">
         <label for="nome">Nome</label>
@@ -88,14 +93,17 @@
 
         <button id="btnSubmit" type="submit" name="submit" class="btn-cadastrar">CADASTRAR-SE</button>
       </form>
-    </div>
-
+    
     <div class="image-section">
-      
       <img src="\Programacao_TCC_Avena\img\imgCadastro.png" alt="Ilustração de cadastro">
     </div>
-  </main>
+    </div>
+
+  
   <script src="../js/cadastro.js"></script>
+  </div>
+</div>
+</main>
 </body>
   
 </html>
