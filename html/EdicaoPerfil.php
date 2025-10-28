@@ -22,8 +22,7 @@ include_once(__DIR__ . '/../php/conexao.php');
 <header>
     <nav>
         <div class="logo">
-            <img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena" 
-            href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">
+            <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
         </div>
         <div class="menu">
 
@@ -203,9 +202,9 @@ include_once(__DIR__ . '/../php/conexao.php');
     
 
 </body>
+<script rel="preload" src="\Programacao_TCC_Avena\js\EdicaoPerfil.js"></script>
 <script src="../js/cadastro.js"></script>
-<script rel="stylesheet" src="\Programacao_TCC_Avena\js\EdicaoPerfil.js"></script>
-<script src="\Programacao_TCC_Avena\js\cookies.js"></script>
+<script src="\Programacao_TCC_Avena\js\cookies.js"></script> 
 </html>
 
 <?php

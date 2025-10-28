@@ -4,13 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quem Somos - Avena</title>
-  <link rel="stylesheet" href="\Programacao_TCC_Avena\css\quemSomos.css">
+  <link rel="stylesheet" href="../css/quemSomos.css">
 </head>
 <body>
 
-  <!-- ===============================
-     Banner de Consentimento de Cookies
-     =============================== -->
+  <!-- Banner de Cookies -->
   <div id="cookie-banner" class="cookie-banner">
     <div class="cookie-content">
       <h4>Privacidade e Cookies</h4>
@@ -18,7 +16,7 @@
         A Singularity Solutions utiliza cookies para oferecer uma experiência mais personalizada,
         melhorar o desempenho da plataforma e garantir o funcionamento seguro dos serviços.
         Ao aceitar, você concorda com o uso de cookies conforme nossa
-        <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">Política de Privacidade</a>.
+        <a href="../img/AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">Política de Privacidade</a>.
       </p>
       <div class="cookie-buttons">
         <button id="accept-cookies" class="cookie-btn accept">Aceitar</button>
@@ -27,40 +25,56 @@
     </div>
   </div>
 
-  <header>
+  <!-- ===============================
+       Menu Lateral
+       =============================== -->
+  <nav id="menu" class="hidden">
+    <ul>
+      <li><a href=".\quemSomos.php"><span class="quemSomos">Quem somos</span></a></li>
+      <li><a href=".\cadastro.php">Cadastrar-se</a></li>
+      <hr>
+      <li><a href=".\sejaParceiro.php">Seja um Parceiro</a></li>
+      <li><a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">Home</a></li>
+    </ul>
+  </nav>
+
+  <!-- Cabeçalho -->
+  <header class="header">
     <nav class="navbar">
       <div class="logo">
-        <img src="../img/logoAvena.png" alt="Logo Avena">
+        <a href=".\Pagina_Inicial.html"><img src="../img/logoAvena.png" alt="Logo Avena"></a>
       </div>
+
       <div class="menu">
-        <button class="btn-entrar">ENTRAR</button>
-        <div class="menu-icon">
-          <div></div>
-          <div></div>
-          <div></div>
+        <a href=".\login.php"><button class="btn-entrar">ENTRAR</button></a>
+        <div class="menu">
+          <button class="menu-icon" id="menu-btn">&#9776;</button>
         </div>
       </div>
     </nav>
   </header>
 
+  <!-- Conteúdo -->
   <main class="conteudo">
     <div class="breadcrumb">
-      <a href="Pagina_Inicial.html" style="text-decoration:none;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
+      <a href="Pagina_Inicial.html" class="home-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
           <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
           <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z"/>
         </svg>
       </a>
-      <span> / Quem Somos</span>
+      <span>/ Quem Somos</span>
     </div>
 
     <section class="quem-somos">
+      <div class= "titulo-img">
       <h1>Quem Somos</h1>
 
       <div class="banner">
-        <img src="../img/gestao-tempo.jpeg" alt="Imagem decorativa Quem Somos">
+        <img src="../img/gestao-tempo.jpeg" alt="Imagem decorativa">
       </div>
-
+    </div>
+<div class="sobre-container">
       <div class="texto">
         <p>
           A <strong>Avena</strong> é uma plataforma criada pela Singularity Solutions para
@@ -80,11 +94,13 @@
       </div>
 
       <div class="imagem-final">
-        <img src="../img/gestao-tempo.jpeg" alt="Imagem ilustrativa">
+        <img src="../img/gestao-tempo.jpeg" alt="Imagem ilustrativa" class="img-lado">
       </div>
+</div>
     </section>
   </main>
 
+  <script src="../js/cookies.js"></script>
+  <script src="../js/cadastro.js"></script>
 </body>
-<script src="\Programacao_TCC_Avena\js\cookies.js"></script>
 </html>

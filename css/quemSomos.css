@@ -12,22 +12,26 @@
   font-style: normal;
 }
 
-
 body {
   font-family: 'Mulish', sans-serif;
   margin: 0;
   background-color: #f7f7f7;
+  overflow-x: hidden;
 }
 
+/* ======= HEADER ======= */
 header {
-  background-color: #9b86b7;
-  padding: 15px 5%;
+  background-color: #917ba4;
+  padding: 15px 3%;
 }
+
+
 
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap:80%;
 }
 
 .logo img {
@@ -48,100 +52,169 @@ header {
 .btn-entrar:hover {
   background-color: #ff5b76;
 }
+
 .menu {
   display: flex;
   align-items: center;
-  gap: 15px; /* espaço entre o botão e o ícone */
+  gap: 15px;
 }
+
 .menu-icon {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 25px;
-  height: 18px;
-  cursor: pointer;
-  margin-left: 5px; /* reduz pra não afastar tanto do botão */
+      background: #ffffff00;
+      border: none;
+      font-size: 1.6em;
+      color: rgb(227, 222, 222);
+      cursor: pointer;
+      height: 25px;
+      transform: translateY(-8px);
 }
 
-.menu-icon div {
-  background-color: white;
-  height: 3px;
-  border-radius: 3px;
-}
-
+/* ======= CONTEÚDO ======= */
 .conteudo {
-  padding: 40px 10%;
+  padding: 40px 5%;
 }
 
 .breadcrumb {
+  transform: translateX(-30px);
   display: flex;
   align-items: center;
   font-size: 0.9em;
   color: #666;
-  margin-bottom: 40px;
-  margin-right: 50%;
+  margin-bottom: 20px;
 }
 
 .breadcrumb svg {
   margin-right: 5px;
 }
 
-.quem-somos h1 {
-  position: relative;
-  top: 40px; /* move pra baixo sem criar espaço falso */
-  margin-right: 50%;
-  text-align: left;
-  font-family: 'Birthstone', cursive;
-  color: #7e3a8b;
-  font-size: 7em;
-  margin-bottom: 20px;
+/* ======= SEÇÃO QUEM SOMOS ======= */
+.quem-somos {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
 }
 
+/* ---- Banner grande ---- */
+.banner {
+  width: 100%;
+  height: 350px;
+  overflow: hidden;
+  border-radius: 15px;
+  
+}
 
 .banner img {
   width: 100%;
-  height: 350px;
-  border-radius: 12px;
-  margin-bottom: 25px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.texto {
+  width:150%;
+}
+
+/* ---- Bloco texto + imagem lateral ---- */
+.texto-imagem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.texto-imagem .texto {
+  flex: 2;
+  font-size: 1em;
+  color: #333;
+  line-height: 1.7;
+  text-align: justify;
+}
+.img-lado {
+    width: 70%;   /* tamanho menor */
+    height: auto;
+    border-radius: 10px; /* opcional */
+    margin-left:30%;
 }
 
 .texto p {
-  margin-bottom: 20px;
-  color: #333;
-  line-height: 1.7;
-  font-size: 1em;
-  text-align: justify;
+  font-size: 1.3em;
 }
 
-.imagem-final {
+.texto-imagem .imagem-lateral {
+  flex: 1;
   display: flex;
   justify-content: flex-end;
-  margin-top: 25px;
 }
 
-.imagem-final img {
-  width: 250px;
-  border-radius: 10px;
+.texto-imagem .imagem-lateral img {
+  width: 100%;
+  max-width: 280px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
 }
 
-/* Ajuste responsivo */
-@media (max-width: 768px) {
-  .conteudo {
-    padding: 30px 6%;
-  }
+/* ---- Título "Quem Somos" ---- */
+.quem-somos h1 {
+  transform: translate(5%, 30%);
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  font-family: 'Birthstone', cursive;
+  color: #741f89;
+  font-size: 6em;
+  text-align: left;
+}
 
-  .imagem-final {
-    justify-content: center;
-  }
+.hidden {
+  display: none;
+}
 
-  .imagem-final img {
-    width: 90%;
+/* Quando ativo */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(0px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(20px);
   }
 }
 
-
+.show {
+  margin-top:5%;
+  z-index: 1;
+  animation: fadeInUp 1s ease forwards;
+  margin-left: 85%;
+  border-radius: 10%;
+  padding:2%;
+  position: absolute;
+  opacity: 70%;
+  background-color: #f5f5f5;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  display: block;
+}
+.show a{
+  color: #4a4a4a;
+  font-size: 1.2em;
+  text-decoration: none;
+}
+.show ul{
+  padding:4% 9%;
+  text-align:center;
+}
+.show li{
+  padding: 12px 15px;
+  list-style: none;
+}
+.quemSomos{
+  font-weight: bolder;
+}
+/* ======= MODAL ======= */
 .modal {
-  display: none; /* começa escondido */
+  display: none;
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -153,7 +226,6 @@ header {
   align-items: center;
 }
 
-/* Caixa do modal */
 .modal-content {
   background: #f9f8f2;
   padding: 30px;
@@ -164,18 +236,12 @@ header {
   animation: fadeIn 0.3s ease;
 }
 
-/* Mensagem */
 .modal-content p {
   margin-bottom: 20px;
   font-size: 16px;
   color: #333;
 }
 
-.modal-content p b {
-  font-weight: bold;
-}
-
-/* Botão */
 .modal-content button {
   padding: 12px 24px;
   border: none;
@@ -192,12 +258,7 @@ header {
   background: #e05555;
 }
 
-/* Animação de entrada */
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
+/* ======= COOKIES ======= */
 .cookie-banner {
   position: fixed;
   bottom: 20px;
@@ -267,30 +328,40 @@ header {
   background-color: #cfd8dc;
 }
 
+/* ======= ANIMAÇÕES ======= */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-/* Remove espaçamentos desnecessários */
-main.conteudo {
-  margin: 0;
-  padding: 0;
-}
 
-/* Remove espaço do breadcrumb */
-.breadcrumb {
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
+/* ======= RESPONSIVIDADE ======= */
+@media (max-width: 900px) {
+  .texto-imagem {
+    flex-direction: column;
+    align-items: center;
+  }
 
-/* Ajusta o bloco principal da seção */
-section.quem-somos {
-  margin-top: 0;
-  padding-top: 0;
-}
+  .texto-imagem .imagem-lateral {
+    justify-content: center;
+    margin-top: 20px;
+  }
 
-/* Garante que o texto fique encostado na imagem */
-section.quem-somos h1,
-section.quem-somos h2 {
-  margin-top: 10px; /* ajusta conforme quiser */
+  .texto-imagem .imagem-lateral img {
+    width: 80%;
+    max-width: none;
+  }
+
+  .quem-somos h1 {
+    font-size: 4em;
+    text-align: center;
+  }
+
+  .banner {
+    height: 250px;
+  }
+}
+.sobre-container {
+    display: flex;
+    align-items: center; /* centraliza verticalmente */
+    justify-content: space-between;
 }

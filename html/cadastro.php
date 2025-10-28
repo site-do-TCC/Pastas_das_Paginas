@@ -12,98 +12,117 @@
 </head>
 <body>
 
- <!-- Mensagem -->
- <div id="modalErro" class="modal">
-        <div class="modal-content">
-            <p id="mensagemErro">E-mail não encontrado!</p>
-            <button onclick="fecharModal()">OK</button>
-        </div>
+  <!-- ===============================
+       Modal de Erro
+       =============================== -->
+  <div id="modalErro" class="modal">
+    <div class="modal-content">
+      <p id="mensagemErro">E-mail não encontrado!</p>
+      <button onclick="fecharModal()">OK</button>
+    </div>
   </div>
 
-  <!-- Menu -->
+  <!-- ===============================
+       Menu Lateral
+       =============================== -->
   <nav id="menu" class="hidden">
     <ul>
-      <li><a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">Quem somos</a></li>
-      <li><a href="\Programacao_TCC_Avena\html\cadastro.php"><span class="Cadastro">Cadastrar-se</span></a></li>
+      <li><a href=".\quemSomos.php">Quem somos</a></li>
+      <li><a href=".\cadastro.php"><span class="Cadastro">Cadastrar-se</span></a></li>
       <hr>
       <li><a href="#">Seja um Parceiro</a></li>
-      <li><a href="#">Suporte</a></li>
+      <li><a href=".\Pagina_Inicial.html">Home</a></li>
     </ul>
   </nav>
 
+  <!-- ===============================
+       Header
+       =============================== -->
   <header>
     <nav>
       <div class="logo">
-        <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
+        <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">
+          <img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena">
+        </a>
       </div>
       <div class="menu">
-        <a class="btnEntrar" href="\Programacao_TCC_Avena\html\login.php" >Entrar</a>
+        <a class="btnEntrar" href="\Programacao_TCC_Avena\html\login.php">Entrar</a>
         <button class="menu-icon" id="menu-btn">&#9776;</button>
       </div>
     </nav>
   </header>
-  
-  <main class="container">
-  <div class="login-card">
-  <div class="login-form">
 
   <!-- ===============================
-     Banner de Consentimento de Cookies - Singularity Solutions
-     =============================== -->
-<div id="cookie-banner" class="cookie-banner">
-  <div class="cookie-content">
-  <h4>Privacidade e Cookies</h4>
-  <p>
+       Banner de Consentimento de Cookies
+       =============================== -->
+  <div id="cookie-banner" class="cookie-banner">
+    <div class="cookie-content">
+      <h4>Privacidade e Cookies</h4>
+      <p>
         A Singularity Solutions utiliza cookies para oferecer uma experiência mais personalizada,
         melhorar o desempenho da plataforma e garantir o funcionamento seguro dos serviços.
         Ao aceitar, você concorda com o uso de cookies conforme nossa
-  <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">Política de Privacidade</a>.
-  </p>
-  <div class="cookie-buttons">
-  <button id="accept-cookies" class="cookie-btn accept">Aceitar</button>
-  <button id="decline-cookies" class="cookie-btn decline">Recusar</button>
+        <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">
+          Política de Privacidade
+        </a>.
+      </p>
+      <div class="cookie-buttons">
+        <button id="accept-cookies" class="cookie-btn accept">Aceitar</button>
+        <button id="decline-cookies" class="cookie-btn decline">Recusar</button>
+      </div>
+    </div>
   </div>
-  </div>
-  </div>
 
+  <!-- ===============================
+       Conteúdo Principal (Cadastro)
+       =============================== -->
+  <main class="container">
+    <div class="login-card">
+      <div class="form-section">
+        <!-- Formulário -->
+        <div class="login-form">
+          <form action="cadastro.php" method="POST">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" required>
 
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" required>
 
-    <div class="form-section">
-      <form action="cadastro.php" method="POST">
-        <label for="nome">Nome</label>
-        <input type="text" id="nome" name="nome" required>
+            <label for="senha">Crie uma senha</label>
+            <input type="password" id="senha" name="senha" required>
 
-        <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" required>
+            <label for="tipo">Entrar como</label>
+            <select id="tipo" name="tipo" required>
+              <option value="">Selecione...</option>
+              <option value="profissional">Profissional</option>
+              <option value="contratante">Contratante</option>
+            </select>
 
-        <label for="senha">Crie uma senha</label>
-        <input type="password" id="senha" name="senha" required>
+            <div class="termos">
+              <input id="termos" type="checkbox" required>
+              <label for="termos">
+                <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf"
+                   style="text-decoration:none;" target="_blank">Termos de Privacidade</a>
+              </label>
+            </div>
 
-        <label for="tipo">Entrar como</label>
-        <select id="tipo" name="tipo" required>
-          <option value="">Selecione...</option>
-          <option value="profissional">Profissional</option>
-          <option value="contratante">Contratante</option>
-        </select>
-
-        <div class="termos">
-          <input id="termos" type="checkbox" id="termos" required>
-          <label for="termos"><a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" style="text-decoration:none;" target="_blank">Termos de Privacidade</a></label>
+            <button id="btnSubmit" type="submit" name="submit" class="btn-cadastrar">CADASTRAR-SE</button>
+          </form>
         </div>
 
-        <button id="btnSubmit" type="submit" name="submit" class="btn-cadastrar">CADASTRAR-SE</button>
-      </form>
-    
-    <div class="image-section">
-      <img src="\Programacao_TCC_Avena\img\imgCadastro.png" alt="Ilustração de cadastro">
+        <!-- Imagem -->
+        <div class="image-section">
+          <img src="\Programacao_TCC_Avena\img\imgCadastro.png" alt="Ilustração de cadastro">
+        </div>
+      </div>
     </div>
-    </div>
+  </main>
 
-  
+  <!-- ===============================
+       Scripts
+       =============================== -->
   <script src="../js/cadastro.js"></script>
-  </div>
-</div>
-</main>
+
 </body>
   
 </html>

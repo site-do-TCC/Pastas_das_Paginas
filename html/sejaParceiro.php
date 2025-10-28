@@ -28,6 +28,17 @@
   </div>
   </div>
 
+   <!-- Menu -->
+  <nav id="menu" class="hidden">
+    <ul>
+      <li><a href=".\quemSomos.php">Quem somos</a></li>
+      <li><a href=".\cadastro.php">Cadastrar-se</a></li>
+      <hr>
+      <li><a href=".\sejaParceiro.php"><span class="sejaParceiro">Seja um Parceiro</span></a></li>
+      <li><a href=".\Pagina_Inicial.html">Home</a></li>
+    </ul>
+  </nav>
+
 
     <!-- Mensagem -->
     <div id="modalErro" class="modal">
@@ -43,10 +54,7 @@
       </div>
       <div class="menu">
         <button class="btn-entrar">ENTRAR</button>
-        <div class="menu-icon">
-          <div></div>
-          <div></div>
-          <div></div>
+          <button class="menu-icon" id="menu-btn">&#9776;</button>
         </div>
       </div>
     </nav>
@@ -81,7 +89,6 @@
         <textarea placeholder="DIGITE SUA MENSAGEM" rows="5" name="mensagem" required></textarea>
         <button type="submit" class="btn-enviar" name="submit">ENVIAR</button>
       </form>
-
       <div class="texto">
         <p>Na <strong>Avena</strong>, acreditamos que grandes mudanças nascem da colaboração.</p>
 
@@ -94,6 +101,7 @@
 </body>
 <script src="\Programacao_TCC_Avena\js\recuperaSenha.js"></script>
 <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
+<script src="../js/cadastro.js"></script>
 </html>
 
 <?php
