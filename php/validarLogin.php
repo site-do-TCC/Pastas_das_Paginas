@@ -1,59 +1,56 @@
 <?php
 session_start();
+include_once('conexao.php'); // inclui a conexão
 
 if(isset($_POST['submit']) && !empty($_POST['email']) && !empty($_POST['senha'])) {
 
-    
-    
-    include_once('conexao.php');
-    $email = $_POST['email'];
-    $senha = $_POST['senha'];
-    $sql = "SELECT * FROM prestadora WHERE email = '$email' AND senha = '$senha'";
-    $result = mysqli_query($conexao, $sql);
-    $usuario = mysqli_fetch_assoc($result);
-    
+    $email = trim($_POST['email']);
+    $senha = trim($_POST['senha']);
+    $tipo = $_POST['tipo']; // 'cliente', 'contratante' ou 'profissional'
 
-    if ($_POST['tipo'] == 'profissional'){  
-        $sql = "SELECT * FROM prestadora WHERE email = '$email' and senha = '$senha'";
-        $result = $conexao->query($sql);
+    if($tipo === 'profissional') {
+        $stmt = $conexao->prepare("SELECT * FROM prestadora WHERE email = ? AND senha = ?");
+        $stmt->bind_param("ss", $email, $senha);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-        if(mysqli_num_rows($result) < 1){
-            unset($_SESSION['email']);
-            unset($_SESSION['senha']);
-            header('Location: /Programacao_TCC_Avena/html/login.php?erro=1');
+        if($result->num_rows < 1){
+            header('Location: ../html/login.php?erro=1');
             exit;
         } else {
+            $dados = $result->fetch_assoc();
+            $_SESSION['id_prestadora'] = $dados['id_prestadora'];
             $_SESSION['tipo'] = 'profissional';
             $_SESSION['email'] = $email;
-            $_SESSION['senha'] = $senha;
-            if ($usuario['passou_cadastro'] == 1) {
-                header("Location: \Programacao_TCC_Avena\html\busca.php");
-                exit;
-            } else {
-                header("Location: \Programacao_TCC_Avena\html\EdicaoPerfil.php");
-                exit;
-            }
+            header('Location: ../html/EdicaoPerfil.php');
+            exit;
         }
-    } else {
-        $sql = "SELECT * FROM cliente WHERE email = '$email' and senha = '$senha'";
-        $result = $conexao->query($sql);
 
-        if(mysqli_num_rows($result) < 1){
-            unset($_SESSION['email']);
-            unset($_SESSION['senha']);
-            header('Location: /Programacao_TCC_Avena/html/login.php?erro=1');
+    } elseif($tipo === 'cliente' || $tipo === 'contratante') {
+        $stmt = $conexao->prepare("SELECT * FROM cliente WHERE email = ? AND senha = ?");
+        $stmt->bind_param("ss", $email, $senha);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if($result->num_rows < 1){
+            header('Location: ../html/login.php?erro=1');
             exit;
         } else {
+            $dados = $result->fetch_assoc();
+            $_SESSION['id_cliente'] = $dados['id_usuario']; // CORRIGIDO para id_usuario
             $_SESSION['tipo'] = 'cliente';
             $_SESSION['email'] = $email;
-            $_SESSION['senha'] = $senha;
-            header('Location: /Programacao_TCC_Avena/html/bemVindoCliente.php');
+            header('Location: ../html/bemVindoCliente.php');
             exit;
         }
+
+    } else {
+        header('Location: ../html/login.php?erro=3');
+        exit;
     }
 
 } else {
-    header('Location: /Programacao_TCC_Avena/html/login.php?erro=2');
+    header('Location: ../html/login.php?erro=2');
     exit;
 }
 ?>
