@@ -39,18 +39,28 @@ header {
 }
 
 .btn-entrar {
-  background-color: #ff7e8f;
+  transform: translateY(-11px);
+  background: #ff7f86;
+  color: #fff;
   border: none;
-  color: white;
-  font-weight: 600;
-  padding: 8px 18px;
-  border-radius: 10px;
+  padding: 12px;
+  width: 100%;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-top: 20px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: transform 0.2s ease, background 0.3s ease;
 }
 
 .btn-entrar:hover {
-  background-color: #ff5b76;
+  background: #e45c5c;
+  transform: scale(1.05); 
+}
+a{
+  text-decoration: none;
+}
+.btn-entrar:active {
+  transform: scale(0.95); 
 }
 
 .menu {
@@ -66,7 +76,7 @@ header {
       color: rgb(227, 222, 222);
       cursor: pointer;
       height: 25px;
-      transform: translateY(-8px);
+      transform: translateY(-10px);
 }
 
 /* ======= CONTEÚDO ======= */

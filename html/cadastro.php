@@ -30,7 +30,7 @@
       <li><a href=".\quemSomos.php">Quem somos</a></li>
       <li><a href=".\cadastro.php"><span class="Cadastro">Cadastrar-se</span></a></li>
       <hr>
-      <li><a href="#">Seja um Parceiro</a></li>
+      <li><a href=".\sejaParceiro.php">Seja um Parceiro</a></li>
       <li><a href=".\Pagina_Inicial.html">Home</a></li>
     </ul>
   </nav>

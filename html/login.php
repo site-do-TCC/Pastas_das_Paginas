@@ -55,7 +55,7 @@
   <nav id="menulogin" class="hidden">
     <ul>
       <li><a href=".\quemSomos.php">Quem somos</a></li>
-      <li><a href=".\cadastro.php"><span class="cadastro">Cadastrar-se</span></a></li>
+      <li><a href=".\cadastro.php">Cadastrar-se</a></li>
       <hr>
       <li><a href=".\sejaParceiro.php">Seja um Parceiro</a></li>
       <li><a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">Home</a></li>

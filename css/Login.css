@@ -193,13 +193,12 @@
     transform: translateY(20px);
   }
 }
-
 .show {
   margin-top:1%;
   z-index: 1;
   animation: fadeInUp 1s ease forwards;
-  margin-left: 85%;
-  height: auto;
+  margin-left: 84%;
+  height:auto;
   border-radius: 10%;
   padding:2%;
   position: absolute;
@@ -214,16 +213,14 @@
   text-decoration: none;
 }
 .show ul{
-  padding:4% 9%;
+  padding:1% 1%;
   text-align:center;
 }
 .show li{
   padding: 12px 15px;
   list-style: none;
 }
-.cadastro{
-  font-weight: bolder;
-}
+
 
  /*  css da tela de erro nao sei se ta certo 
 .alerta {

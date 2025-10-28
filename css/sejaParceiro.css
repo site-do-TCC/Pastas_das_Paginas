@@ -55,18 +55,28 @@ header {
 }
 
 .btn-entrar {
-  background-color: #ff6e80;
+  transform: translateY(-11px);
+  background: #ff7f86;
+  color: #fff;
   border: none;
-  color: white;
-  padding: 8px 20px;
-  border-radius: 10px;
-  font-weight: 600;
+  padding: 12px;
+  width: 100%;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-top: 20px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: transform 0.2s ease, background 0.3s ease;
 }
 
 .btn-entrar:hover {
-  background-color: #ff546a;
+  background: #e45c5c;
+  transform: scale(1.05); 
+}
+a{
+  text-decoration: none;
+}
+.btn-entrar:active {
+  transform: scale(0.95); 
 }
 
 .menu-icon {
