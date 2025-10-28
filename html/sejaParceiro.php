@@ -53,7 +53,7 @@
         <img src="../img/logoAvena.png" alt="Logo Avena">
       </div>
       <div class="menu">
-        <button class="btn-entrar">ENTRAR</button>
+        <a href=".\login.php" class="btn-entrar">Entrar</a>
           <button class="menu-icon" id="menu-btn">&#9776;</button>
         </div>
       </div>

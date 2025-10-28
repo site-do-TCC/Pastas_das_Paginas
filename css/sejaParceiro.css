@@ -14,17 +14,16 @@
 
 
 
-/* Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Mulish', sans-serif;
 }
 
 /* Cabeçalho */
 header {
-  background-color: #8b75b5;
+  background-color: #917ba4;
   color: white;
   padding: 10px 40px;
 }

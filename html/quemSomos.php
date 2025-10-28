@@ -46,8 +46,8 @@
       </div>
 
       <div class="menu">
-        <a href=".\login.php"><button class="btn-entrar">ENTRAR</button></a>
-        <div class="menu">
+        <a href=".\login.php" class="btn-entrar">Entrar</a>
+
           <button class="menu-icon" id="menu-btn">&#9776;</button>
         </div>
       </div>
