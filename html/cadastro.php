@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -124,17 +121,10 @@
   <script src="../js/cadastro.js"></script>
 
 </body>
-  
 </html>
-
-
 <?php
-
-
   error_reporting(E_ALL);
   ini_set('display_errors', 1);
-
-
   if(isset($_POST['submit'])){
     
     //print_r('Nome: ' . $_POST['nome']);
@@ -169,9 +159,8 @@
     } else {
         $result = mysqli_query($conexao, "INSERT INTO prestadora(nome,email,senha) VALUES ('$nome','$email','$senha')");
         if ($result) {
-            echo "<script>mostrarModal('Cadastro realizado com sucesso!');</script>";
-            header('Location: \Programacao_TCC_Avena\html\login.php'); 
-            //echo "Cadastro realizado com sucesso!";
+            echo "<script>window.location.href='../html/EdicaoPerfil.php';</script>";
+            exit;
         } else {
             echo "<script>mostrarModal('Erro ao cadastrar');</script>";
         }
@@ -185,9 +174,8 @@
     } else {
         $result = mysqli_query($conexao, "INSERT INTO cliente(nome,email,senha) VALUES ('$nome','$email','$senha')");
         if ($result) {
-            echo "<script>mostrarModal('Cadastro realizado com sucesso!');</script>";
-            header('Location: \Programacao_TCC_Avena\html\login.php'); 
-            //echo "Cadastro realizado com sucesso!";
+            echo "<script>mostrarModal('Email cadastrado com sucesso!');</script>";
+            exit;
         } else {
             echo "<script>mostrarModal('Erro ao cadastrar');</script>";
         }
