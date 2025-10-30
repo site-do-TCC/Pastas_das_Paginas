@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 15-Out-2025 às 23:42
+-- Tempo de geração: 30-Out-2025 às 19:38
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -20,6 +20,26 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `db_avena`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `chat`
+--
+
+CREATE TABLE `chat` (
+  `id_chat` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `id_prestadora` int(11) NOT NULL,
+  `criado_em` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `chat`
+--
+
+INSERT INTO `chat` (`id_chat`, `id_cliente`, `id_prestadora`, `criado_em`) VALUES
+(1, 1, 2, '2025-10-22 23:35:06');
 
 -- --------------------------------------------------------
 
@@ -47,6 +67,29 @@ INSERT INTO `cliente` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`) VALU
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `mensagem`
+--
+
+CREATE TABLE `mensagem` (
+  `id_mensagem` int(11) NOT NULL,
+  `id_chat` int(11) NOT NULL,
+  `id_de` int(11) NOT NULL,
+  `conteudo` text NOT NULL,
+  `enviado_em` datetime DEFAULT CURRENT_TIMESTAMP,
+  `id_para` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `mensagem`
+--
+
+INSERT INTO `mensagem` (`id_mensagem`, `id_chat`, `id_de`, `conteudo`, `enviado_em`, `id_para`) VALUES
+(2, 1, 1, 'a', '2025-10-22 23:35:10', 0),
+(4, 1, 1, 'aaaaaa', '2025-10-23 05:29:27', 0);
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `prestadora`
 --
 
@@ -60,29 +103,35 @@ CREATE TABLE `prestadora` (
   `banner1` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
   `banner2` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
   `banner3` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `empresa_nome` varchar(100) DEFAULT NULL,
-  `empresa_telefone` varchar(20) DEFAULT NULL,
-  `empresa_email` varchar(100) DEFAULT NULL,
-  `empresa_localizacao` varchar(150) DEFAULT NULL,
+  `empresa_nome` varchar(100) NOT NULL,
+  `empresa_telefone` varchar(20) NOT NULL,
+  `empresa_email` varchar(100) NOT NULL,
+  `empresa_localizacao` varchar(150) NOT NULL,
   `empresa_facebook` varchar(150) DEFAULT NULL,
   `empresa_instagram` varchar(150) DEFAULT NULL,
-  `empresa_biografia` text,
-  `empresa_servicos` text,
-  `passou_cadastro` tinyint(1) DEFAULT '0'
+  `empresa_biografia` text NOT NULL,
+  `empresa_servicos` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `prestadora`
 --
 
-INSERT INTO `prestadora` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`, `imgperfil`, `banner1`, `banner2`, `banner3`, `empresa_nome`, `empresa_telefone`, `empresa_email`, `empresa_localizacao`, `empresa_facebook`, `empresa_instagram`, `empresa_biografia`, `empresa_servicos`, `passou_cadastro`) VALUES
-(1, 'Teste', 'teste@gmail.com', '123', '2025-10-14 22:01:16', '../ImgPerfilPrestadoras/perfil_1.webp', '../ImgBannersPrestadoras/banner1_id_1.jpg', '../ImgBannersPrestadoras/banner2_id_1.jpg', '../ImgBannersPrestadoras/banner3_id_1.jpg', 'Teste', '12345', 'teste@gmail.com', 'Sp', 'http://localhost/Programacao_TCC_Avena/html/EdicaoPerfil.php', 'teste@gmail.com', 'testetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetesteteste', 'etestetesteaaa aaaaa\naaaaaaaaaaaaaaaaaaaa aaaaaaaaaa', 1),
-(2, 'Mulittle', 'muriloalves.fonseca08@gmail.com', 'EFlSs', '2025-10-14 20:41:03', '../ImgPerfilPrestadoras/perfil_2.png', '../ImgBannersPrestadoras/banner1_id_2.jpg', '../ImgBannersPrestadoras/banner2_id_2.webp', '../ImgBannersPrestadoras/banner3_id_2.png', 'Mulittle', '(11)9722075060', 'muriloalves.fonseca08@gmail.com', 'Sp - Ferraz de Vasconcelos', 'http://FoiBanidoessapembra.com', 'murilimodeiocolica@gmail', 'Odeio Colica Odeio Colica Odeio ColicaOdeio Colica Odeio Colica Odeio Colica', 'Odeio Colica Odeio Colica Odeio Colica Odeio Colica Odeio Colica', 1),
-(3, 'Amanda', 'amanda3capa@gmail.com', '123', '2025-10-14 22:57:37', '../ImgPerfilPrestadoras/perfil_3.webp', '../ImgBannersPrestadoras/banner1_id_3.png', '../ImgBannersPrestadoras/banner2_id_3.png', '../ImgBannersPrestadoras/banner3_id_3.png', 'Amanda', '(11)74882532', 'amanda3capa@gmail.com', 'Kalahari', 'http://FoiBanidoessapembra.com', 'amandinha@arroba', 'sou a amandinha, gostu de fri fairi', 'sou a amandinha, gostu de fri fairi, jogo fri fai9ri, dou 3 capas na tropinha do free fairei', 1);
+INSERT INTO `prestadora` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`, `imgperfil`, `banner1`, `banner2`, `banner3`, `empresa_nome`, `empresa_telefone`, `empresa_email`, `empresa_localizacao`, `empresa_facebook`, `empresa_instagram`, `empresa_biografia`, `empresa_servicos`) VALUES
+(1, 'Teste', 'teste@gmail.com', '123', '2025-10-07 18:06:27', NULL, NULL, NULL, NULL, '', '', '', '', '', NULL, '', ''),
+(2, 'Mulittle', 'muriloalves.fonseca08@gmail.com', 'EFlSs', '2025-10-07 22:50:55', NULL, NULL, NULL, NULL, '', '', '', '', '', NULL, '', '');
 
 --
 -- Índices para tabelas despejadas
 --
+
+--
+-- Índices para tabela `chat`
+--
+ALTER TABLE `chat`
+  ADD PRIMARY KEY (`id_chat`),
+  ADD KEY `id_cliente` (`id_cliente`),
+  ADD KEY `id_prestadora` (`id_prestadora`);
 
 --
 -- Índices para tabela `cliente`
@@ -90,6 +139,13 @@ INSERT INTO `prestadora` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`, `
 ALTER TABLE `cliente`
   ADD PRIMARY KEY (`id_usuario`),
   ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Índices para tabela `mensagem`
+--
+ALTER TABLE `mensagem`
+  ADD PRIMARY KEY (`id_mensagem`),
+  ADD KEY `id_chat` (`id_chat`);
 
 --
 -- Índices para tabela `prestadora`
@@ -103,16 +159,45 @@ ALTER TABLE `prestadora`
 --
 
 --
+-- AUTO_INCREMENT de tabela `chat`
+--
+ALTER TABLE `chat`
+  MODIFY `id_chat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT de tabela `cliente`
 --
 ALTER TABLE `cliente`
   MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT de tabela `mensagem`
+--
+ALTER TABLE `mensagem`
+  MODIFY `id_mensagem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT de tabela `prestadora`
 --
 ALTER TABLE `prestadora`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Restrições para despejos de tabelas
+--
+
+--
+-- Limitadores para a tabela `chat`
+--
+ALTER TABLE `chat`
+  ADD CONSTRAINT `chat_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_usuario`),
+  ADD CONSTRAINT `chat_ibfk_2` FOREIGN KEY (`id_prestadora`) REFERENCES `prestadora` (`id_usuario`);
+
+--
+-- Limitadores para a tabela `mensagem`
+--
+ALTER TABLE `mensagem`
+  ADD CONSTRAINT `mensagem_ibfk_1` FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

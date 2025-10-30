@@ -1,18 +1,13 @@
-// Pegar o botão e o menu
+// ==================== MENU RESPONSIVO ====================
 const menuBtn = document.getElementById("menu-btn");
 const menu = document.getElementById("menu");
 
-// Quando clicar no botão, alternar classe
 menuBtn.addEventListener("click", () => {
   menu.classList.toggle("show");
 });
-/* chat.js
-   Arquivo de integração: contém placeholders e funções para popular a lista de chats
-   e as mensagens. Troque as funções fetch* pelos seus endpoints quando tiver a API.
-*/
 
+// ==================== CHAT SCRIPT ====================
 document.addEventListener("DOMContentLoaded", () => {
-  // elementos
   const chatListEl = document.getElementById("chat-list");
   const messagesEl = document.getElementById("chat-messages");
   const userNameEl = document.getElementById("chat-user-name");
@@ -22,55 +17,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const messageInput = document.getElementById("message-input");
   const sendBtn = document.getElementById("send-btn");
 
-  // estado local (será substituído por dados reais)
   let chats = [];
   let activeChatId = null;
-  let chatHistories = {}; // { chatId: [messages...] }
+  let chatHistories = {};
 
-  // ---------- FUNÇÕES DE API (placeholder) ----------
-  // Substitua estas funções por chamadas reais ao seu backend (fetch / axios / websocket)
+  // ---------- FUNÇÕES DE API (PLACEHOLDER) ----------
+  const fetchChatList = async () => {
+    // futuramente virá do backend
+    return [
+      { id: 1, name: "Chat", photo: "../img/SemFoto.jpg", lastMessage: "", online: true }
+    ];
+  };
 
-  // Pegar lista de chats (history)
-  function fetchChatList() {
-    // TODO: substituir por fetch('/api/chats') etc.
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([
-          { id: "c1", name: "Chat", photo: "../img/SemFoto.jpg", lastMessage: "", online: true, horario: "2025-10-21 10:45:32"},
+  const fetchChatHistory = async (chatId) => {
+    // futuramente virá do backend
+    const sample = { 1: [{ id: "m1", from: "them", text: "Oi!" }] };
+    return sample[chatId] || [];
+  };
 
-        ]);
-      }, 200);
-    });
-  }
-
-  // Pegar histórico de mensagens de um chat
-  function fetchChatHistory(chatId) {
-    // TODO: substituir por fetch(`/api/chats/${chatId}/messages`)
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const sample = {
-          c1: [
-            { id: "m1", from: "them", text: "Oi" },
-          ],
-
-        };
-        resolve(sample[chatId] || []);
-      }, 200);
-    });
-  }
-
-  // Enviar mensagem (placeholder)
-  function sendMessageToApi(chatId, text) {
-    // TODO: substituir por POST para armazenar a mensagem no backend
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ id: "local-" + Date.now(), from: "me", text });
-      }, 150);
-    });
-  }
+  const sendMessageToApi = async (chatId, text) => {
+    // retorna mensagem local para exibição imediata
+    return { id: "local-" + Date.now(), from: "me", text };
+  };
 
   // ---------- RENDERIZAÇÃO ----------
-  function renderChatList(list) {
+  const renderChatList = (list) => {
     chatListEl.innerHTML = "";
     list.forEach(chat => {
       const item = document.createElement("div");
@@ -84,83 +55,94 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const meta = document.createElement("div");
       meta.className = "meta";
+      meta.innerHTML = `
+        <h4>${chat.name}</h4>
+        <p>${chat.lastMessage || ""}</p>
+      `;
 
-      const h4 = document.createElement("h4");
-      h4.textContent = chat.name;
-
-      const p = document.createElement("p");
-      p.textContent = chat.lastMessage || "";
-
-      meta.appendChild(h4);
-      meta.appendChild(p);
-
-      item.appendChild(avatar);
-      item.appendChild(meta);
-
-      item.addEventListener("click", () => {
-        openChat(chat.id);
-      });
-
+      item.append(avatar, meta);
+      item.addEventListener("click", () => openChat(chat.id));
       chatListEl.appendChild(item);
     });
-  }
+  };
 
-  function renderMessages(messages) {
+  const renderMessages = (messages) => {
     messagesEl.innerHTML = "";
     messages.forEach(m => {
       const div = document.createElement("div");
-      div.classList.add("msg");
-      div.classList.add(m.from === "me" ? "outgoing" : "incoming");
+      div.classList.add("msg", m.from === "me" ? "outgoing" : "incoming");
       div.textContent = m.text;
       messagesEl.appendChild(div);
     });
-    // scroll para o final
     messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
+  };
 
-  function setActiveChatUI(chat) {
+  const setActiveChatUI = (chat) => {
     activeChatId = chat.id;
     userNameEl.textContent = chat.name;
     userPhotoEl.style.backgroundImage = `url('${chat.photo}')`;
-    userStatusEl.textContent = chat.online ? "Online" : "Último visto";
-    // marca como ativo na lista
+    userStatusEl.textContent = chat.online ? "Online" : "Offline";
     document.querySelectorAll(".chat-item").forEach(el => el.classList.remove("active"));
     const activeEl = document.querySelector(`.chat-item[data-chat-id="${chat.id}"]`);
     if (activeEl) activeEl.classList.add("active");
-  }
+  };
 
   // ---------- AÇÕES ----------
-  async function openChat(chatId) {
+  const openChat = async (chatId) => {
     const chat = chats.find(c => c.id === chatId);
     if (!chat) return;
     setActiveChatUI(chat);
-    // carregar histórico (ou pegar do cache)
     if (!chatHistories[chatId]) {
       chatHistories[chatId] = await fetchChatHistory(chatId);
     }
     renderMessages(chatHistories[chatId]);
-  }
+  };
 
-  // enviar mensagem
+  // Enviar mensagem
   sendBtn.addEventListener("click", async () => {
     const text = messageInput.value.trim();
     if (!text || !activeChatId) return;
-    // criar mensagem localmente e enviar para API
+
+    // exibir mensagem localmente
     const saved = await sendMessageToApi(activeChatId, text);
-    // atualizar histórico local
     chatHistories[activeChatId] = chatHistories[activeChatId] || [];
     chatHistories[activeChatId].push(saved);
     renderMessages(chatHistories[activeChatId]);
     messageInput.value = "";
-    // Atualize a lista de chats (última mensagem) localmente
+
+    // atualizar preview da lista
     const idx = chats.findIndex(c => c.id === activeChatId);
     if (idx >= 0) {
       chats[idx].lastMessage = text;
       renderChatList(chats);
     }
+
+    // ======= ENVIO PARA BACKEND =======
+    const id_mensagem = Math.floor(Date.now() / 100); // temporario
+    const id_chat = 1;        // chat ativo
+    const id_remetente = 1;              // placeholder (usuário logado)
+    const id_destinatario = 2;           // placeholder (destino)
+    const conteudo = text;
+
+    try {
+      const response = await fetch('/Programacao_TCC_Avena/php/settings.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          id_mensagem,
+          id_chat,
+          id_remetente,
+          id_destinatario,
+          conteudo
+        })
+      });
+      const result = await response.text();
+      console.log("Retorno do PHP:", result);
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+    }
   });
 
-  // enviar com Enter
   messageInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -168,10 +150,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Busca simples na lista de chats
   searchInput.addEventListener("input", (e) => {
     const q = e.target.value.toLowerCase();
-    const filtered = chats.filter(c => c.name.toLowerCase().includes(q) || (c.lastMessage && c.lastMessage.toLowerCase().includes(q)));
+    const filtered = chats.filter(c =>
+      c.name.toLowerCase().includes(q) ||
+      (c.lastMessage && c.lastMessage.toLowerCase().includes(q))
+    );
     renderChatList(filtered);
   });
 
@@ -179,14 +163,10 @@ document.addEventListener("DOMContentLoaded", () => {
   (async function init() {
     chats = await fetchChatList();
     renderChatList(chats);
-
-    // Abrir o primeiro chat por padrão (único chat aberto)
-    if (chats.length > 0) {
-      await openChat(chats[0].id);
-    }
+    if (chats.length > 0) await openChat(chats[0].id);
   })();
 
-  // Expor funções úteis no window para facilitar debug/integracao
+  // ---------- API GLOBAL (debug) ----------
   window.chatAPI = {
     fetchChatList,
     fetchChatHistory,
@@ -195,4 +175,3 @@ document.addEventListener("DOMContentLoaded", () => {
     get state() { return { chats, activeChatId, chatHistories }; }
   };
 });
-

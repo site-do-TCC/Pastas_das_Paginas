@@ -1,21 +1,14 @@
 <?php
+$servidor = "localhost";
+$usuario = "root";
+$senha = "usbw";
+$dbname = "db_avena";
 
+$conexao = new mysqli($servidor, $usuario, $senha, $dbname);
 
-    $dbHost = 'localhost'; // pode usar minúsculo
-    $dbUsername = 'root';
-    $dbPassword = 'usbw';
-    $dbName = 'db_avena';
+if ($conexao->connect_error) {
+    die("Erro na conexão: " . $conexao->connect_error);
+}
 
-    $conexao = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName);
-
-    date_default_timezone_set('America/Sao_Paulo')
-    $globalData = date("d/m/Y")
-    $globalHora = date("H:i")
-    $showNome = false;
-    
-    //if ($conexao->connect_errno){
-    //   echo 'Erro na conexão';
-    //} else {
-    //    echo 'Deu certo';
-    //}
+date_default_timezone_set('America/Sao_Paulo');
 ?>

@@ -1,7 +1,9 @@
 <?php
-session_start();
-include(__DIR__ . '/../php/conexao.php');
-include(__DIR__ . '/../php/settings.php');
+include_once('../php/conexao.php');
+include_once('../php/settings.php');
+
+
+
 
 ?>
 <!DOCTYPE html>
