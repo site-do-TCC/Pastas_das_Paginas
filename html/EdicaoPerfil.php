@@ -1,8 +1,21 @@
 
 <?php
 session_start();
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include_once(__DIR__ . '/../php/conexao.php');
+
+echo  $_SESSION["email"];
+echo  $_SESSION["tipo"];
+$email = $_SESSION['email'];
+$sql = "SELECT * FROM prestadora WHERE email = '$email'";
+$result = $conexao->query($sql);
+$row = $result->fetch_assoc();
+
+if($row['passou_cadastro'] == 1){
+   header('Location: \Programacao_TCC_Avena\html\bemVindoPrestadora.php');
+
+}
 ?>
 
 
@@ -402,12 +415,11 @@ if (mysqli_query($conexao, $sql)) {
 } else {
     echo "Erro ao atualizar: " . mysqli_error($conexao);
 }
-$row = $result->fetch_assoc();
+
+
+
 
 }
-if($row['passou_cadastro'] == 1){
-    header('Location: ../htm/EdicaoPerfil.php');
-    exit;
-}
+
 
 ?>

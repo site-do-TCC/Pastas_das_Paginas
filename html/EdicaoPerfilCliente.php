@@ -194,22 +194,7 @@ if (isset($_POST['salvar'])) {
     }
    }
    //Fim do salvamento da imagem de perfil
-
-
 //-----------------------------------------------------------------------------------------------------------------
-
-
-
-   
-
-
-
-        
-
-
-
-
-
 
 $cliente_telefone = $_POST['telefone'];
 $cliente_localizacao = $_POST['localizacao'];

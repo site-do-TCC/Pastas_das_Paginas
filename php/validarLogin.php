@@ -20,9 +20,10 @@ if(isset($_POST['submit']) && !empty($_POST['email']) && !empty($_POST['senha'])
             exit;
         } else {
             $dados = $result->fetch_assoc();
-            $_SESSION['id_prestadora'] = $dados['id_prestadora'];
+            $_SESSION['id_usuario'] = $dados['id_usuario'];
             $_SESSION['tipo'] = 'profissional';
             $_SESSION['email'] = $email;
+            $_SESSION['senha'] = $senha;
             if ($dados['passou_cadastro'] < 1){
                 header('Location: ../html/EdicaoPerfil.php');
             }else{
@@ -42,7 +43,7 @@ if(isset($_POST['submit']) && !empty($_POST['email']) && !empty($_POST['senha'])
             exit;
         } else {
             $dados = $result->fetch_assoc();
-            $_SESSION['id_cliente'] = $dados['id_usuario']; 
+            $_SESSION['id_usuario'] = $dados['id_usuario']; 
             $_SESSION['tipo'] = 'cliente';
             $_SESSION['email'] = $email;
             header('Location: ../html/bemVindoCliente.php');
