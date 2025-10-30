@@ -108,12 +108,6 @@ include_once(__DIR__ . '/../php/conexao.php');
                         <input type="email" id="email" name="email" placeholder="Email da empresa" required>
                     </div>
 
-
-
-
-
-
-
                 </div>
 
                 <!-- Coluna da direita -->
@@ -219,10 +213,9 @@ if (isset($_POST['salvar'])) {
 
     // Recupera da sessão
     $email = $_SESSION['email'];
-    $senha = $_SESSION['senha'];
 
     // Busca o ID do usuário logado
-    $sql = "SELECT id_usuario FROM prestadora WHERE email = '$email' AND senha = '$senha'";
+    $sql = "SELECT id_usuario FROM prestadora WHERE email = '$email'";
     $result = $conexao->query($sql);
 
     if ($result && $result->num_rows > 0) {
@@ -409,7 +402,12 @@ if (mysqli_query($conexao, $sql)) {
 } else {
     echo "Erro ao atualizar: " . mysqli_error($conexao);
 }
-    
+$row = $result->fetch_assoc();
+
+}
+if($row['passou_cadastro'] == 1){
+    header('Location: ../htm/EdicaoPerfil.php');
+    exit;
 }
 
 ?>
