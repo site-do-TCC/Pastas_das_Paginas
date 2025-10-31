@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 20-Out-2025 às 20:26
+-- Tempo de geração: 31-Out-2025 às 02:14
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -32,17 +32,23 @@ CREATE TABLE `cliente` (
   `nome` varchar(100) NOT NULL,
   `email` varchar(320) NOT NULL,
   `senha` varchar(255) NOT NULL,
-  `criado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `imgperfil` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `criado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `cliente_telefone` varchar(11) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `cliente_localizacao` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `cliente_facebook` varchar(50) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `cliente_instagram` varchar(30) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `passou_cadastro` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `cliente`
 --
 
-INSERT INTO `cliente` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`) VALUES
-(1, 'Teste2', 'teste2@gmail.com', 'CtibT', '2025-09-21 23:39:28'),
-(3, 'Teste3', 'teste3@gmail.com', '123', '2025-09-09 21:04:22'),
-(4, 'Mulittle', 'muriloalves.fonseca08@gmail.com', '3RIPn', '2025-09-23 14:54:45');
+INSERT INTO `cliente` (`id_usuario`, `nome`, `email`, `senha`, `imgperfil`, `criado_em`, `cliente_telefone`, `cliente_localizacao`, `cliente_facebook`, `cliente_instagram`, `passou_cadastro`) VALUES
+(1, 'Teste2', 'teste2@gmail.com', 'CtibT', NULL, '2025-09-21 23:39:28', NULL, NULL, NULL, NULL, 0),
+(3, 'Teste3', 'teste3@gmail.com', '123', '../ImgPerfilCliente/perfil_3.PNG', '2025-10-31 01:55:59', '', '', '', '', 0),
+(4, 'Mulittle', 'muriloalves.fonseca08@gmail.com', '3RIPn', NULL, '2025-09-23 14:54:45', NULL, NULL, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -94,7 +100,8 @@ CREATE TABLE `prestadora` (
 INSERT INTO `prestadora` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`, `imgperfil`, `banner1`, `banner2`, `banner3`, `empresa_nome`, `empresa_telefone`, `empresa_email`, `empresa_localizacao`, `empresa_facebook`, `empresa_instagram`, `empresa_biografia`, `empresa_servicos`, `passou_cadastro`) VALUES
 (1, 'Teste', 'teste@gmail.com', '123', '2025-10-14 22:01:16', '../ImgPerfilPrestadoras/perfil_1.webp', '../ImgBannersPrestadoras/banner1_id_1.jpg', '../ImgBannersPrestadoras/banner2_id_1.jpg', '../ImgBannersPrestadoras/banner3_id_1.jpg', 'Teste', '12345', 'teste@gmail.com', 'Sp', 'http://localhost/Programacao_TCC_Avena/html/EdicaoPerfil.php', 'teste@gmail.com', 'testetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetesteteste', 'etestetesteaaa aaaaa\naaaaaaaaaaaaaaaaaaaa aaaaaaaaaa', 1),
 (2, 'Mulittle', 'muriloalves.fonseca08@gmail.com', 'EFlSs', '2025-10-14 20:41:03', '../ImgPerfilPrestadoras/perfil_2.png', '../ImgBannersPrestadoras/banner1_id_2.jpg', '../ImgBannersPrestadoras/banner2_id_2.webp', '../ImgBannersPrestadoras/banner3_id_2.png', 'Mulittle', '(11)9722075060', 'muriloalves.fonseca08@gmail.com', 'Sp - Ferraz de Vasconcelos', 'http://FoiBanidoessapembra.com', 'murilimodeiocolica@gmail', 'Odeio Colica Odeio Colica Odeio ColicaOdeio Colica Odeio Colica Odeio Colica', 'Odeio Colica Odeio Colica Odeio Colica Odeio Colica Odeio Colica', 1),
-(3, 'Amanda', 'amanda3capa@gmail.com', '123', '2025-10-14 22:57:37', '../ImgPerfilPrestadoras/perfil_3.webp', '../ImgBannersPrestadoras/banner1_id_3.png', '../ImgBannersPrestadoras/banner2_id_3.png', '../ImgBannersPrestadoras/banner3_id_3.png', 'Amanda', '(11)74882532', 'amanda3capa@gmail.com', 'Kalahari', 'http://FoiBanidoessapembra.com', 'amandinha@arroba', 'sou a amandinha, gostu de fri fairi', 'sou a amandinha, gostu de fri fairi, jogo fri fai9ri, dou 3 capas na tropinha do free fairei', 1);
+(3, 'Amanda', 'amanda3capa@gmail.com', '123', '2025-10-14 22:57:37', '../ImgPerfilPrestadoras/perfil_3.webp', '../ImgBannersPrestadoras/banner1_id_3.png', '../ImgBannersPrestadoras/banner2_id_3.png', '../ImgBannersPrestadoras/banner3_id_3.png', 'Amanda', '(11)74882532', 'amanda3capa@gmail.com', 'Kalahari', 'http://FoiBanidoessapembra.com', 'amandinha@arroba', 'sou a amandinha, gostu de fri fairi', 'sou a amandinha, gostu de fri fairi, jogo fri fai9ri, dou 3 capas na tropinha do free fairei', 1),
+(25, 'TestePrestadora', 'testeprestadora@gmail.com', '123', '2025-10-29 22:14:38', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0);
 
 --
 -- Índices para tabelas despejadas
@@ -140,7 +147,7 @@ ALTER TABLE `curso`
 -- AUTO_INCREMENT de tabela `prestadora`
 --
 ALTER TABLE `prestadora`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
