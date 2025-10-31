@@ -7,20 +7,21 @@ session_start();
 
 include_once('../php/conexao.php');
 
-$nome = "Usuário";
+//$nome = "Usuário";
 
 
 if (!isset($conexao)) {
     die("Erro: conexão com o banco não encontrada. Verifique ../php/conexao.php");
 }
 
-if (!empty($_SESSION['id_cliente'])) {
-    $idCliente = (int) $_SESSION['id_cliente'];
+if (!empty($_SESSION['id_usuario'])) {
+    $id_usuario = $_SESSION['id_usuario'];
 
     $stmt = $conexao->prepare("SELECT nome FROM cliente WHERE id_usuario = ?");
     if ($stmt === false) {
+
     } else {
-        $stmt->bind_param("i", $idCliente);
+        $stmt->bind_param("i", $id_usuario);
         $executou = $stmt->execute();
         if ($executou) {
             $resultado = $stmt->get_result();
@@ -28,6 +29,7 @@ if (!empty($_SESSION['id_cliente'])) {
                 $row = $resultado->fetch_assoc();
                 if (!empty($row['nome'])) {
                     $nome = $row['nome'];
+                    
                 }
             } else {
                 
@@ -36,6 +38,7 @@ if (!empty($_SESSION['id_cliente'])) {
             
         }
         $stmt->close();
+        
     }
 }
 ?>
@@ -66,7 +69,7 @@ if (!empty($_SESSION['id_cliente'])) {
       </div>
 
       <div class="perfil-area">
-        <span class="nome"><?php echo htmlspecialchars($nome); ?></span>
+        <span class="nome"><?php echo $nome ?></span>
 
        
         <img src="../img/perfil.png" alt="Foto de perfil" class="perfil-foto">
@@ -90,7 +93,7 @@ if (!empty($_SESSION['id_cliente'])) {
 
   <main class="conteudo">
     <div class="container">
-      <h2>Bem-vindo de volta, <?php echo htmlspecialchars($nome); ?>!</h2>
+      <h2>Bem-vindo de volta, <?php echo $nome; ?>!</h2>
       <p>Encontre prestadoras de serviços qualificadas para as suas necessidades.</p>
 
       <div class="botoes">

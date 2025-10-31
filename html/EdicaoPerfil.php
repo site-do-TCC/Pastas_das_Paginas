@@ -378,15 +378,6 @@ if (isset($_POST['salvar'])) {
 
 
 //-----------------------------------------------------------------------------------------------------------------
-
-         
-
-        
-
-
-
-
-
 $empresa_nome = $_POST['nome'];
 $empresa_telefone = $_POST['telefone'];
 $empresa_email = $_POST['email'];
@@ -410,7 +401,7 @@ $sql = "UPDATE prestadora SET
         WHERE id_usuario='$id_usuario'";
 
 if (mysqli_query($conexao, $sql)) {
-    $sql = "UPDATE prestadora SET passou_cadastro = 1 WHERE id_usuario = $id_usuario";
+    $sql = "UPDATE prestadora SET passou_cadastro = 1 WHERE id_usuario = '$id_usuario'";
     mysqli_query($conexao, $sql);
 } else {
     echo "Erro ao atualizar: " . mysqli_error($conexao);

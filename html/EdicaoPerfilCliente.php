@@ -62,7 +62,7 @@ include_once(__DIR__ . '/../php/conexao.php');
             <img src="\Programacao_TCC_Avena\img\meuPerfil.png" alt="Meu Perfil">
         </div>
 
-    <form method="POST" enctype="multipart/form-data" action="EdicaoPerfil.php">
+    <form method="POST" enctype="multipart/form-data" action="EdicaoPerfilCliente.php">
 
 
 
@@ -129,7 +129,7 @@ include_once(__DIR__ . '/../php/conexao.php');
 
 
 </body>
-<script rel="preload" src="\Programacao_TCC_Avena\js\EdicaoPerfil.js"></script>
+<script rel="preload" src="\Programacao_TCC_Avena\js\EdicaoPerfilCliente.js"></script>
 <script src="../js/cadastro.js"></script>
 <script src="\Programacao_TCC_Avena\js\cookies.js"></script> 
 </html>
@@ -138,8 +138,9 @@ include_once(__DIR__ . '/../php/conexao.php');
     
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+include_once(__DIR__ . '/../php/conexao.php');
 
-
+print_r($_SESSION);
 
 if (isset($_POST['salvar'])) {
     include_once(__DIR__ . '/../php/conexao.php');
@@ -202,20 +203,39 @@ $cliente_facebook = $_POST['facebook'];
 $cliente_instagram = $_POST['instagram'];
 
 
-
-
 $sql = "UPDATE cliente SET 
-            cliente_telefone='$cliente_telefone',
-            cliente_localizacao='$cliente_localizacao',
-            cliente_facebook='$cliente_facebook',
-            cliente_instagram='$cliente_instagram',
-        WHERE id_usuario='$id_usuario'";
+    cliente_telefone = ?,
+    cliente_localizacao = ?,
+    cliente_facebook = ?,
+    cliente_instagram = ?
+    WHERE id_usuario = ?";
+
+$stmt = $conexao->prepare($sql);
+$stmt->bind_param("ssssi", $cliente_telefone, $cliente_localizacao, $cliente_facebook, $cliente_instagram, $id_usuario);
+
+if ($stmt->execute()) {
+    echo "Dados atualizados com sucesso!<br>";
+    $sql2 = "UPDATE cliente SET passou_cadastro = 1 WHERE id_usuario = ?";
+    $stmt2 = $conexao->prepare($sql2);
+    $stmt2->bind_param("i", $id_usuario);
+    $stmt2->execute();
+} else {
+    echo "Erro ao atualizar: " . $stmt->error;
+}
+
+echo "<pre>$sql</pre>";
+echo mysqli_error($conexao);
 
 if (mysqli_query($conexao, $sql)) {
     $sql = "UPDATE cliente SET passou_cadastro = 1 WHERE id_usuario = $id_usuario";
-    mysqli_query($conexao, $sql);
+
+    if (mysqli_query($conexao, $sql)) {
+        echo 'Tudo carregado certinho';
+    } else {
+        echo "Erro no segundo UPDATE: " . mysqli_error($conexao);
+    }
 } else {
-    echo "Erro ao atualizar: " . mysqli_error($conexao);
+    echo "Erro no primeiro UPDATE: " . mysqli_error($conexao);
 }
     
 }
