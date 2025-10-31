@@ -2,7 +2,38 @@
 include_once('../php/conexao.php');
 include_once('../php/settings.php');
 
+$nome = "Usuário";
+$foto = "../img/SemFoto.jpg"; // Foto padrão
 
+if (!isset($conexao)) {
+  die("Erro: conexão com o banco não encontrada. Verifique ../php/conexao.php");
+}
+
+if (!empty($_SESSION['id_cliente'])) {
+  $idCliente = (int) $_SESSION['id_cliente'];
+
+  $stmt = $conexao->prepare("SELECT nome FROM cliente WHERE id_usuario = ?");
+  if ($stmt === false) {
+  } else {
+    $stmt->bind_param("i", $idCliente);
+    $executou = $stmt->execute();
+    if ($executou) {
+      $resultado = $stmt->get_result();
+      if ($resultado && $resultado->num_rows > 0) {
+        $row = $resultado->fetch_assoc();
+        if (!empty($row['nome'])) {
+          $nome = $row['nome'];
+        }
+
+      } else {
+
+      }
+    } else {
+
+    }
+    $stmt->close();
+  }
+}
 
 
 ?>
@@ -20,9 +51,19 @@ include_once('../php/settings.php');
   <header>
     <nav>
       <div class="logo">
-        <img src="../img/logoAvena.png" alt="Logo Avena" href="Pagina_Inicial.html">
+        <a href="Pagina_Inicial.html">
+          <img src="../img/logoAvena.png" alt="Logo Avena">
+        </a>
       </div>
-      <div class="menu">
+
+      <div class="perfil-area">
+        <span class="nome"><?php echo htmlspecialchars($nome); ?></span>
+
+       
+        <!-- <img src=<//
+         ?php echo htmlspecialchars($foto); ?> alt="Foto de perfil" class="perfil-foto"> -->
+
+     
         <button class="menu-icon" id="menu-btn">&#9776;</button>
       </div>
     </nav>
@@ -57,7 +98,7 @@ include_once('../php/settings.php');
           <div id="chat-user-photo" class="user-photo placeholder"></div>
           <div class="user-info">
             <h3 id="chat-user-name">Nome da Pessoa</h3>
-            <span id="chat-user-status">Online</span>
+            <span id="chat-user-status"> </span>
           </div>
         </div>
 

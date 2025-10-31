@@ -22,12 +22,12 @@ document.addEventListener("DOMContentLoaded", () => {
   let chatHistories = {};
 
   // ---------- FUNÇÕES DE API (PLACEHOLDER) ----------
-  const fetchChatList = async () => {
-    // futuramente virá do backend
-    return [
-      { id: 1, name: "Chat", photo: "../img/SemFoto.jpg", lastMessage: "", online: true }
-    ];
-  };
+const fetchChatList = async () => {
+  const response = await fetch('../php/getChatList.php');
+  const data = await response.json();
+  return data;
+};
+
 
   const fetchChatHistory = async (chatId) => {
     // futuramente virá do backend
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
     activeChatId = chat.id;
     userNameEl.textContent = chat.name;
     userPhotoEl.style.backgroundImage = `url('${chat.photo}')`;
-    userStatusEl.textContent = chat.online ? "Online" : "Offline";
+    userStatusEl.textContent = chat.online ? " " : " ";
     document.querySelectorAll(".chat-item").forEach(el => el.classList.remove("active"));
     const activeEl = document.querySelector(`.chat-item[data-chat-id="${chat.id}"]`);
     if (activeEl) activeEl.classList.add("active");

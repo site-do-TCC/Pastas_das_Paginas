@@ -1,10 +1,10 @@
 /* ================= FONTS ================= */
 /* mantenha/atualize caminhos de fontes conforme seu projeto */
 @font-face {
-  font-family: "Inter";
-  src: url("../fonts/edicaoPerfil/Inter/static/Inter_18pt-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
+    font-family: "Inter";
+    src: url("../fonts/edicaoPerfil/Inter/static/Inter_18pt-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
 }
 
 /* ================= RESET ================== */
@@ -17,28 +17,57 @@
 
 }
 
+body {
+ 
+  background: linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88)),
+              url("../img/fundo-cliente.jpg") no-repeat center center fixed;
+  background-size: cover;
+
+  color: #545454;
+  padding-top: 70px;
+}
+
 /* ================= HEADER ================= */
 header {
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 90px;
-    background: #917ba4;
-    padding: 10px 40px;
-    z-index: 5;
-    position: fixed;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #917ba4;
+  height: 65px;
+  padding: 10px 40px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 1;
 }
 
 nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo img {
-    cursor: pointer;
-    height: 50px;
-    margin-top: 10px;
+  height: 35px;
+  cursor: pointer;
+}
+
+.perfil-area {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nome {
+  font-weight: 600;
+  color: #fff;
+}
+
+.perfil-foto {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
 }
 
 .menu {

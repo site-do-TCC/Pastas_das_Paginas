@@ -1,88 +1,131 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 body {
-  background-color: #f8f9fa;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  background-color: #fafafa;
+  
 }
-
-form {
-  background: #fff;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 380px;
+body p, h1, h2, h3 {
+  font-size: 1.5em; 
 }
-
-form h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: bold;
-  color: #555;
-}
-
-input, select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 18px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
-  transition: border 0.3s;
-}
-
-input:focus, select:focus {
-  border-color: #7a57d1; 
-}
-
-.btn-login {
-  width: 100%;
-  padding: 12px;
+.header {
   background: #917ba4;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 40px;
 }
 
-.btn-login:hover {
-  background: #5a3fa6;
+.logo img {
+  height: 45px;
 }
 
-.signup {
-  margin-top: 15px;
-  text-align: center;
-  font-size: 14px;
-  color: #555;
-}
-
-.signup a {
+.btn-entrar {
+  background-color: #ff6b6b;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 6px;
   text-decoration: none;
   font-weight: bold;
-  color: #7a57d1;
+  cursor: pointer;
 }
 
-.signup a:hover {
-  text-decoration: underline;
+.breadcrumb {
+  font-size: 14px;
+  padding: 15px 40px;
+  color: #666;
 }
 
-/* Fundo escuro transparente */
+.container {
+  justify-content: center;
+  display: flex;
+  padding: 40px;
+}
+
+.info {
+  justify-content: space-between;
+  display: flex;  
+  gap: 200px;  
+}
+
+.foto-perfil {
+  width: 230px;
+  height: 230px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.dados h2 {
+  margin-bottom: 10px;
+}
+
+.dados p {
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.dados{
+  position: static; 
+  max-width: 500px; 
+  word-wrap: break-word; 
+}
+
+.solicitar-btn {
+  background-color: #ff6b6b;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.banners {
+  width: 60%;
+  height: 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.banner-principal {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.mini-banners {
+  display: flex;
+  gap: 10px;
+}
+
+.mini-banners img {
+  width: 49%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.abaixo-img{
+  flex-direction: column; 
+} 
+.perfil {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.topo {
+  display: flex;
+  align-items: top;
+  gap: 20px; /* espaço entre imagem e nome */
+}
+
+.lado-img h1 {
+  font-size: 2em;
+  margin: 0;
+}
+
 .modal {
   display: none; /* começa escondido */
   position: fixed;
@@ -120,6 +163,7 @@ input:focus, select:focus {
 
 /* Botão */
 .modal-content button {
+  display: inline-block; /* deixa o botão só no tamanho do conteúdo */
   padding: 12px 24px;
   border: none;
   border-radius: 10px;
@@ -129,6 +173,8 @@ input:focus, select:focus {
   cursor: pointer;
   font-size: 15px;
   transition: background 0.3s;
+  width: auto; /* garante que não estique */
+  min-width: 100px; /* opcional: largura mínima pra não ficar pequeno demais */
 }
 
 .modal-content button:hover {
@@ -140,7 +186,6 @@ input:focus, select:focus {
   from { opacity: 0; transform: scale(0.9); }
   to   { opacity: 1; transform: scale(1); }
 }
-
 .cookie-banner {
   position: fixed;
   bottom: 20px;

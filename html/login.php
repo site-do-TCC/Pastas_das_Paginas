@@ -11,6 +11,26 @@
 </head>
 <body>
 
+<!-- ===============================
+     Banner de Consentimento de Cookies - Singularity Solutions
+     =============================== -->
+     <div id="cookie-banner" class="cookie-banner">
+  <div class="cookie-content">
+  <h4>Privacidade e Cookies</h4>
+  <p>
+        A Singularity Solutions utiliza cookies para oferecer uma experiência mais personalizada,
+        melhorar o desempenho da plataforma e garantir o funcionamento seguro dos serviços.
+        Ao aceitar, você concorda com o uso de cookies conforme nossa
+  <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">Política de Privacidade</a>.
+  </p>
+  <div class="cookie-buttons">
+  <button id="accept-cookies" class="cookie-btn accept">Aceitar</button>
+  <button id="decline-cookies" class="cookie-btn decline">Recusar</button>
+  </div>
+  </div>
+  </div>
+
+
   <!-- Mensagem -->
     <div id="modalErro" class="modal">
         <div class="modal-content">
@@ -34,11 +54,11 @@
  
   <nav id="menulogin" class="hidden">
     <ul>
-      <li><a href="sobre.html"><span class="quemSomos">Quem somos<span></a></li>
-      <li><a href="cadastro.php">Cadastrar-se</a></li>
+      <li><a href=".\quemSomos.php">Quem somos</a></li>
+      <li><a href=".\cadastro.php">Cadastrar-se</a></li>
       <hr>
-      <li><a href="contato.html">Seja um Parceiro</a></li>
-      <li><a href="suporte.html">Suporte</a></li>
+      <li><a href=".\sejaParceiro.php">Seja um Parceiro</a></li>
+      <li><a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">Home</a></li>
     </ul>
   </nav>
 
@@ -47,17 +67,8 @@
   <div class="login-card">
         <div class="login-form">
 
-<!-- tela de erro
 
-<div id="alertaErro" class="alerta">
-  <div class="alerta-box">
-    <p>E-mail ou senha inválidos.<br>
-    <strong>Verifique seus dados e tente novamente!</strong></p>
-    <button id="fecharAlerta">OK</button>
-  </div>
-</div>
 
--->
       <form action="../php/validarLogin.php" method="POST">
         <div class="mb-3">
           <label for="email">E-mail</label>
@@ -83,7 +94,6 @@
         <p class="signup">Ainda não está no Avena? <a href="cadastro.php">Crie uma Conta.</a></p>
       </form>
     </div>
-
      <div class="login-image">
         <img src="\Programacao_TCC_Avena\img\mulher cabelo preto.jpeg" alt="Ilustração login">
       </div>
@@ -110,5 +120,9 @@
         mostrarModal("Acesso inválido, preencha os campos.");
     }
 </script>
+<script src="\Programacao_TCC_Avena\js\cookies.js"></script>
+
+
+
 </html>
 

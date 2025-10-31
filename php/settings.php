@@ -1,7 +1,7 @@
 <?php
 session_start();
 include_once(__DIR__ . '/conexao.php');
-mysqli_set_charset($conexao, "utf8");
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 // Verifica se os campos foram enviados
@@ -15,7 +15,7 @@ if (
     // Captura os valores vindos do JavaScript
     $id_mensagem = mysqli_real_escape_string($conexao, $_POST['id_mensagem']);
     $id_chat = mysqli_real_escape_string($conexao, $_POST['id_chat']);
-    $id_remetente = mysqli_real_escape_string($conexao, $_POST['id_destinatario']);
+    $id_remetente = mysqli_real_escape_string($conexao, $_POST['id_remetente']);
     $id_destinatario = mysqli_real_escape_string($conexao, $_POST['id_destinatario']);
     $conteudo = mysqli_real_escape_string($conexao, $_POST['conteudo']);
 

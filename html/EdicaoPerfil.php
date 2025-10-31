@@ -22,8 +22,7 @@ include_once(__DIR__ . '/../php/conexao.php');
 <header>
     <nav>
         <div class="logo">
-            <img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena" 
-            href="\Programacao_TCC_Avena\html\Pagina_Inicial.html">
+            <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
         </div>
         <div class="menu">
 
@@ -34,6 +33,25 @@ include_once(__DIR__ . '/../php/conexao.php');
 
 
 <body>
+    <!-- ===============================
+     Banner de Consentimento de Cookies - Singularity Solutions
+     =============================== -->
+     <div id="cookie-banner" class="cookie-banner">
+  <div class="cookie-content">
+  <h4>Privacidade e Cookies</h4>
+  <p>
+        A Singularity Solutions utiliza cookies para oferecer uma experiência mais personalizada,
+        melhorar o desempenho da plataforma e garantir o funcionamento seguro dos serviços.
+        Ao aceitar, você concorda com o uso de cookies conforme nossa
+  <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">Política de Privacidade</a>.
+  </p>
+  <div class="cookie-buttons">
+  <button id="accept-cookies" class="cookie-btn accept">Aceitar</button>
+  <button id="decline-cookies" class="cookie-btn decline">Recusar</button>
+  </div>
+  </div>
+  </div>
+
 
 
     <div class="headerPerfil">
@@ -184,9 +202,9 @@ include_once(__DIR__ . '/../php/conexao.php');
     
 
 </body>
+<script rel="preload" src="\Programacao_TCC_Avena\js\EdicaoPerfil.js"></script>
 <script src="../js/cadastro.js"></script>
-<script rel="stylesheet" src="\Programacao_TCC_Avena\js\EdicaoPerfil.js"></script>
-
+<script src="\Programacao_TCC_Avena\js\cookies.js"></script> 
 </html>
 
 <?php
@@ -338,6 +356,7 @@ if (isset($_POST['salvar'])) {
 
         $sqlUpdate = "UPDATE prestadora SET banner3 = '$caminhoBanco' WHERE id_usuario = '$id_usuario'";
         if ($conexao->query($sqlUpdate)) {
+            
             //echo "Caminho salvo no banco com sucesso!";
         } else {
             //echo "Erro ao salvar no banco: " . $conexao->error;
@@ -362,7 +381,7 @@ if (isset($_POST['salvar'])) {
 
 
 
-        $empresa_nome = $_POST['nome'];
+$empresa_nome = $_POST['nome'];
 $empresa_telefone = $_POST['telefone'];
 $empresa_email = $_POST['email'];
 $empresa_localizacao = $_POST['localizacao'];
@@ -385,8 +404,8 @@ $sql = "UPDATE prestadora SET
         WHERE id_usuario='$id_usuario'";
 
 if (mysqli_query($conexao, $sql)) {
-    echo "Dados da empresa atualizados com sucesso!";
-    
+    $sql = "UPDATE prestadora SET passou_cadastro = 1 WHERE id_usuario = $id_usuario";
+    mysqli_query($conexao, $sql);
 } else {
     echo "Erro ao atualizar: " . mysqli_error($conexao);
 }
