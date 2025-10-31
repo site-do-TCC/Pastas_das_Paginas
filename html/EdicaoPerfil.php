@@ -122,7 +122,11 @@ include_once(__DIR__ . '/../php/conexao.php');
 
 
     </div>
-    <div class="container">
+    <div class="container-prestador <?php echo ($_SESSION['nome'] === 'prestador') ? 'visivel' : ''; ?>">
+
+
+
+
 
         <!-- Coluna da esquerda -->
         <div class="coluna-esquerda">
@@ -175,7 +179,7 @@ include_once(__DIR__ . '/../php/conexao.php');
 
             </div>
         </div>
-    </div>
+
 
     </div>
 
@@ -395,5 +399,6 @@ if (isset($_POST['salvar'])) {
     }
 
 }
+
 
 ?>
