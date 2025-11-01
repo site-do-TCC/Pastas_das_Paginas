@@ -4,8 +4,6 @@ session_start();
 
 
 ?>
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -144,6 +142,12 @@ ini_set('display_errors', 1);
 
 include_once(__DIR__ . '/../php/conexao.php');
 
+if (!isset($conexao) || !($conexao instanceof mysqli)) {
+    die("❌ Erro: variável \$conexao não é uma instância válida de mysqli.<br>");
+} else {
+    //echo "✅ Conexão MySQLi válida.<br>";
+}
+
 print_r($_SESSION);
 
 if (isset($_POST['salvar'])) {
@@ -153,19 +157,19 @@ if (isset($_POST['salvar'])) {
     $senha = $_SESSION['senha'] ?? null;
 
     if (!$email || !$senha) {
-        echo "Sessão inválida. Faça login novamente.";
+        //echo "Sessão inválida. Faça login novamente.";
         exit;
     }
 
     // Busca o ID do usuário logado usando prepared statement
     $sqlSel = "SELECT id_usuario FROM cliente WHERE email = ? AND senha = ?";
     if (!($stmtSel = $conexao->prepare($sqlSel))) {
-        echo "Erro no prepare SELECT: " . $conexao->error;
+        //echo "Erro no prepare SELECT: " . $conexao->error;
         exit;
     }
     $stmtSel->bind_param("ss", $email, $senha);
     if (!$stmtSel->execute()) {
-        echo "Erro no execute SELECT: " . $stmtSel->error;
+        //echo "Erro no execute SELECT: " . $stmtSel->error;
         $stmtSel->close();
         exit;
     }
@@ -177,7 +181,7 @@ if (isset($_POST['salvar'])) {
             $row = $result->fetch_assoc();
             $id_usuario = (int)$row['id_usuario'];
         } else {
-            echo "Usuário não encontrado.";
+            //echo "Usuário não encontrado.";
             $stmtSel->close();
             exit;
         }
@@ -189,7 +193,7 @@ if (isset($_POST['salvar'])) {
             $stmtSel->fetch();
             $id_usuario = (int)$id_usuario;
         } else {
-            echo "Usuário não encontrado (fallback).";
+            //echo "Usuário não encontrado (fallback).";
             $stmtSel->close();
             exit;
         }
@@ -214,14 +218,14 @@ if (isset($_POST['salvar'])) {
             if ($stmtImg = $conexao->prepare($sqlUpdateImg)) {
                 $stmtImg->bind_param("si", $caminhoDestinoRel, $id_usuario);
                 if (!$stmtImg->execute()) {
-                    echo "Erro ao salvar imagem no banco: " . $stmtImg->error . "<br>";
+                    //echo "Erro ao salvar imagem no banco: " . $stmtImg->error . "<br>";
                 }
                 $stmtImg->close();
             } else {
-                echo "Erro no prepare UPDATE imagem: " . $conexao->error . "<br>";
+                //echo "Erro no prepare UPDATE imagem: " . $conexao->error . "<br>";
             }
         } else {
-            echo "Erro no upload da imagem.<br>";
+            //echo "Erro no upload da imagem.<br>";
         }
     }
 
@@ -232,27 +236,47 @@ if (isset($_POST['salvar'])) {
     $cliente_instagram = $_POST['instagram'] ?? '';
 
     // Atualiza os dados do cliente com prepared statement
-    $sql = "INSERT INTO cliente SET 
+    $sql = "UPDATE cliente SET 
         cliente_telefone = ?,
         cliente_localizacao = ?,
         cliente_facebook = ?,
         cliente_instagram = ?
-        WHERE id_usuario = ?";
-        echo $sql;
+    WHERE id_usuario = ?";
+
+    if (mysqli_ping($conexao)) {
+        //echo "Conexão ativa com o banco de dados.<br>";
+    } else {
+        //echo "Erro na conexão: " . mysqli_connect_error() . "<br>";
+    }
+
+        //echo "<pre>";
+//echo "SQL preparado: $sql\n";
+//echo "Valores:\n";
+//print_r([
+    //'telefone' => $cliente_telefone,
+    //'localizacao' => $cliente_localizacao,
+    //'facebook' => $cliente_facebook,
+    //'instagram' => $cliente_instagram,
+    //'id_usuario' => $id_usuario
+//]);
+//echo "</pre>";
+
 
     if (!($stmt = $conexao->prepare($sql))) {
-        echo "Erro ao executar UPDATE: " . $stmt->error . "<br>";
+        //echo "Erro ao executar UPDATE: ";
         exit;
     }
 
     if (!$stmt->bind_param("ssssi", $cliente_telefone, $cliente_localizacao, $cliente_facebook, $cliente_instagram, $id_usuario)) {
-        echo "Erro no bind_param: " . $stmt->error;
+        //echo "Erro no bind_param: " . $stmt->error;
         $stmt->close();
         exit;
     }
 
     if (!$stmt->execute()) {
-        echo "Erro ao executar UPDATE: " . $stmt->error . "<br>";
+        //echo "Erro ao executar UPDATE: " . $stmt->error . "<br>";
+        //echo "Erro MySQL: " . $conexao->error . "<br>";
+        //echo "Código do erro: " . $stmt->errno . "<br>";
         $stmt->close();
         exit;
     }
@@ -262,14 +286,16 @@ if (isset($_POST['salvar'])) {
     if ($stmt2 = $conexao->prepare($sql2)) {
         $stmt2->bind_param("i", $id_usuario);
         if (!$stmt2->execute()) {
-            echo "Erro ao atualizar passou_cadastro: " . $stmt2->error . "<br>";
+            //echo "Erro ao atualizar passou_cadastro: " . $stmt2->error . "<br>";
+        }else{
+            echo "<script>window.location.href='../html/bemVindoCliente.php';</script>";
         }
         $stmt2->close();
     } else {
-        echo "Erro no prepare UPDATE passou_cadastro: " . $conexao->error . "<br>";
+        //echo "Erro no prepare UPDATE passou_cadastro: " . $conexao->error . "<br>";
     }
 
-    echo "Dados atualizados com sucesso!<br>";
+    //echo "Dados atualizados com sucesso!<br>";
 
     $stmt->close();
 }
