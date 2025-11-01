@@ -2,7 +2,7 @@
 <?php
 session_start();
 
-include_once(__DIR__ . '/../php/conexao.php');
+
 ?>
 
 
@@ -134,110 +134,143 @@ include_once(__DIR__ . '/../php/conexao.php');
 <script src="\Programacao_TCC_Avena\js\cookies.js"></script> 
 </html>
 
+
+
 <?php
-    
+// Prevent mysqli from throwing uncaught exceptions and show errors instead
+mysqli_report(MYSQLI_REPORT_OFF);
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
 include_once(__DIR__ . '/../php/conexao.php');
 
 print_r($_SESSION);
 
 if (isset($_POST['salvar'])) {
-    include_once(__DIR__ . '/../php/conexao.php');
 
-    // Recupera da sessão
-    $email = $_SESSION['email'];
-    $senha = $_SESSION['senha'];
+    // Recupera da sessão de forma segura
+    $email = $_SESSION['email'] ?? null;
+    $senha = $_SESSION['senha'] ?? null;
 
-    // Busca o ID do usuário logado
-    $sql = "SELECT id_usuario FROM cliente WHERE email = '$email' AND senha = '$senha'";
-    $result = $conexao->query($sql);
-
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $id_usuario = $row['id_usuario'];
-
-        echo "ID do usuário logado: " . $id_usuario;
-        // Agora você pode usar esse $id_usuario pra salvar imagem, atualizar perfil etc.
-    } else {
-        echo "Usuário não encontrado.";
+    if (!$email || !$senha) {
+        echo "Sessão inválida. Faça login novamente.";
+        exit;
     }
 
-    //Salvamento da imagem de perfil
-    if (isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil']['name'])) {
+    // Busca o ID do usuário logado usando prepared statement
+    $sqlSel = "SELECT id_usuario FROM cliente WHERE email = ? AND senha = ?";
+    if (!($stmtSel = $conexao->prepare($sqlSel))) {
+        echo "Erro no prepare SELECT: " . $conexao->error;
+        exit;
+    }
+    $stmtSel->bind_param("ss", $email, $senha);
+    if (!$stmtSel->execute()) {
+        echo "Erro no execute SELECT: " . $stmtSel->error;
+        $stmtSel->close();
+        exit;
+    }
 
-    $extensao = pathinfo($_FILES['fotoPerfil']['name'], PATHINFO_EXTENSION);
-    $nomeArquivo = "perfil_" . $id_usuario . "." . $extensao;
-    $caminhoDestino = "../ImgPerfilCliente/" . $nomeArquivo;
-
-
-    // Move o arquivo
-    $resultado = move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $caminhoDestino);
-
-    if ($resultado) {
-
-        //Salva o arquivo no banco de dados
-        echo "Upload realizado com sucesso!";
-        // Caminho salvo no banco (ajuste conforme a estrutura do seu projeto)
-        $caminhoBanco = $caminhoDestino;
-
-        $sqlUpdate = "UPDATE cliente SET imgperfil = '$caminhoBanco' WHERE id_usuario = '$id_usuario'";
-        if ($conexao->query($sqlUpdate)) {
-            echo "Caminho salvo no banco com sucesso!";
+    // try get_result(), fallback to bind_result if not available
+    $result = $stmtSel->get_result();
+    if ($result !== false) {
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $id_usuario = (int)$row['id_usuario'];
         } else {
-            echo "Erro ao salvar no banco: " . $conexao->error;
+            echo "Usuário não encontrado.";
+            $stmtSel->close();
+            exit;
         }
-        // FIM -----------------------------------------
-
-
-    }else {
-            echo "Erro no upload";
-    }
-   }
-   //Fim do salvamento da imagem de perfil
-//-----------------------------------------------------------------------------------------------------------------
-
-$cliente_telefone = $_POST['telefone'];
-$cliente_localizacao = $_POST['localizacao'];
-$cliente_facebook = $_POST['facebook'];
-$cliente_instagram = $_POST['instagram'];
-
-
-$sql = "UPDATE cliente SET 
-    cliente_telefone = ?,
-    cliente_localizacao = ?,
-    cliente_facebook = ?,
-    cliente_instagram = ?
-    WHERE id_usuario = ?";
-
-$stmt = $conexao->prepare($sql);
-$stmt->bind_param("ssssi", $cliente_telefone, $cliente_localizacao, $cliente_facebook, $cliente_instagram, $id_usuario);
-
-if ($stmt->execute()) {
-    echo "Dados atualizados com sucesso!<br>";
-    $sql2 = "UPDATE cliente SET passou_cadastro = 1 WHERE id_usuario = ?";
-    $stmt2 = $conexao->prepare($sql2);
-    $stmt2->bind_param("i", $id_usuario);
-    $stmt2->execute();
-} else {
-    echo "Erro ao atualizar: " . $stmt->error;
-}
-
-echo "<pre>$sql</pre>";
-echo mysqli_error($conexao);
-
-if (mysqli_query($conexao, $sql)) {
-    $sql = "UPDATE cliente SET passou_cadastro = 1 WHERE id_usuario = $id_usuario";
-
-    if (mysqli_query($conexao, $sql)) {
-        echo 'Tudo carregado certinho';
     } else {
-        echo "Erro no segundo UPDATE: " . mysqli_error($conexao);
+        // fallback
+        $stmtSel->store_result();
+        if ($stmtSel->num_rows > 0) {
+            $stmtSel->bind_result($id_usuario);
+            $stmtSel->fetch();
+            $id_usuario = (int)$id_usuario;
+        } else {
+            echo "Usuário não encontrado (fallback).";
+            $stmtSel->close();
+            exit;
+        }
     }
-} else {
-    echo "Erro no primeiro UPDATE: " . mysqli_error($conexao);
-}
-    
-}
+    $stmtSel->close();
 
+    // Salvamento da imagem de perfil (se enviada)
+    if (isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil']['name'])) {
+        $uploadDirRel = "../ImgPerfilCliente/";
+        $uploadDirAbs = __DIR__ . "/../ImgPerfilCliente/";
+        if (!is_dir($uploadDirAbs)) {
+            mkdir($uploadDirAbs, 0755, true);
+        }
+
+        $extensao = pathinfo($_FILES['fotoPerfil']['name'], PATHINFO_EXTENSION);
+        $nomeArquivo = "perfil_" . $id_usuario . "." . $extensao;
+        $caminhoDestinoRel = $uploadDirRel . $nomeArquivo; // caminho relativo a salvar no banco
+        $caminhoDestinoAbs = $uploadDirAbs . $nomeArquivo; // caminho físico para move_uploaded_file
+
+        if (move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $caminhoDestinoAbs)) {
+            $sqlUpdateImg = "UPDATE cliente SET imgperfil = ? WHERE id_usuario = ?";
+            if ($stmtImg = $conexao->prepare($sqlUpdateImg)) {
+                $stmtImg->bind_param("si", $caminhoDestinoRel, $id_usuario);
+                if (!$stmtImg->execute()) {
+                    echo "Erro ao salvar imagem no banco: " . $stmtImg->error . "<br>";
+                }
+                $stmtImg->close();
+            } else {
+                echo "Erro no prepare UPDATE imagem: " . $conexao->error . "<br>";
+            }
+        } else {
+            echo "Erro no upload da imagem.<br>";
+        }
+    }
+
+    // Recupera campos do formulário com default seguro
+    $cliente_telefone = $_POST['telefone'] ?? '';
+    $cliente_localizacao = $_POST['localizacao'] ?? '';
+    $cliente_facebook = $_POST['facebook'] ?? '';
+    $cliente_instagram = $_POST['instagram'] ?? '';
+
+    // Atualiza os dados do cliente com prepared statement
+    $sql = "INSERT INTO cliente SET 
+        cliente_telefone = ?,
+        cliente_localizacao = ?,
+        cliente_facebook = ?,
+        cliente_instagram = ?
+        WHERE id_usuario = ?";
+        echo $sql;
+
+    if (!($stmt = $conexao->prepare($sql))) {
+        echo "Erro ao executar UPDATE: " . $stmt->error . "<br>";
+        exit;
+    }
+
+    if (!$stmt->bind_param("ssssi", $cliente_telefone, $cliente_localizacao, $cliente_facebook, $cliente_instagram, $id_usuario)) {
+        echo "Erro no bind_param: " . $stmt->error;
+        $stmt->close();
+        exit;
+    }
+
+    if (!$stmt->execute()) {
+        echo "Erro ao executar UPDATE: " . $stmt->error . "<br>";
+        $stmt->close();
+        exit;
+    }
+
+    // marca que passou cadastro
+    $sql2 = "UPDATE cliente SET passou_cadastro = 1 WHERE id_usuario = ?";
+    if ($stmt2 = $conexao->prepare($sql2)) {
+        $stmt2->bind_param("i", $id_usuario);
+        if (!$stmt2->execute()) {
+            echo "Erro ao atualizar passou_cadastro: " . $stmt2->error . "<br>";
+        }
+        $stmt2->close();
+    } else {
+        echo "Erro no prepare UPDATE passou_cadastro: " . $conexao->error . "<br>";
+    }
+
+    echo "Dados atualizados com sucesso!<br>";
+
+    $stmt->close();
+}
 ?>
