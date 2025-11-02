@@ -89,6 +89,7 @@ nav {
 }
 
 .menu-icon {
+  transform: translateY(-55%);
   margin-top: 10%;
   background: none;
   border: none;

@@ -40,6 +40,29 @@ if (!empty($_SESSION['id_usuario'])) {
         $stmt->close();
         
     }
+    $stmt = $conexao->prepare("SELECT imgperfil FROM cliente WHERE id_usuario = ?");
+    if ($stmt === false) {
+
+    } else {
+        $stmt->bind_param("i", $id_usuario);
+        $executou = $stmt->execute();
+        if ($executou) {
+            $resultado = $stmt->get_result();
+            if ($resultado && $resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                if (!empty($row['imgperfil'])) {
+                    $img = $row['imgperfil'];
+                    
+                }
+            } else {
+                
+            }
+        } else {
+            
+        }
+        $stmt->close();
+        
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -72,7 +95,7 @@ if (!empty($_SESSION['id_usuario'])) {
         <span class="nome"><?php echo $nome ?></span>
 
        
-        <img src="../img/perfil.png" alt="Foto de perfil" class="perfil-foto">
+        <img src="<?php  echo $img?>" alt="Foto de perfil" class="perfil-foto">
 
      
         <button class="menu-icon" id="menu-btn">&#9776;</button>

@@ -95,20 +95,20 @@ $logado = isset($_SESSION['email']);
           </div>
         </div>
 
-  <h3>Sobre <?= htmlspecialchars($prof['empresa_nome']) ?></h3>
+
 </div>
         <h3>Sobre <?= htmlspecialchars($prof['empresa_nome']) ?></h3>
       </div>
 
       <div class="dados">
         
-        <!--
+
         <div class="avaliacao">
           
         </div>
         
         <a href="#">57 Avaliações</a>
-        -->
+
         
             
             <p><?= nl2br(htmlspecialchars($prof['empresa_biografia'])) ?></p>
@@ -136,7 +136,7 @@ $logado = isset($_SESSION['email']);
       if (!logado) {
         window.location.href = "login.php";
       } else {
-        mostrarModal("Serviço solicitado com sucesso! (aqui entra a função que você vai definir)");
+        mostrarModal("Serviço solicitado com sucesso! (aqui entra a função que eu vou definir depois)");
       }
     }
     function btnEntrar() {
