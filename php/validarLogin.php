@@ -25,7 +25,7 @@ if(isset($_POST['submit']) && !empty($_POST['email']) && !empty($_POST['senha'])
             $_SESSION['email'] = $email;
             $_SESSION['senha'] = $senha;
             if ($dados['passou_cadastro'] < 1){
-                header('Location: ../html/EdicaoPerfil.php');
+                header('Location: ../html/AdicaoServicoPrestadora.php');
             }else{
                 header('Location: ../html/bemVindoPrestadora.php');
             }
@@ -48,7 +48,7 @@ if(isset($_POST['submit']) && !empty($_POST['email']) && !empty($_POST['senha'])
             $_SESSION['email'] = $email;
             $_SESSION['senha'] = $senha;
             if ($dados['passou_cadastro'] < 1){
-                header('Location: ../html/EdicaoPerfilCliente.php');
+                header('Location: ../html/AdicaoPerfilCliente.php');
             }else{
                 header('Location: ../html/bemVindoCliente.php');
             }

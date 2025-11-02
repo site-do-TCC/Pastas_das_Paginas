@@ -60,7 +60,7 @@ session_start();
             <img src="\Programacao_TCC_Avena\img\meuPerfil.png" alt="Meu Perfil">
         </div>
 
-    <form method="POST" enctype="multipart/form-data" action="EdicaoPerfilCliente.php">
+    <form method="POST" enctype="multipart/form-data" action="AdicaoPerfilCliente.php">
 
 
 

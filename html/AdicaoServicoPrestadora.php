@@ -75,7 +75,7 @@ if($row['passou_cadastro'] == 1){
             <img src="\Programacao_TCC_Avena\img\meuPerfil.png" alt="Meu Perfil">
         </div>
 
-    <form method="POST" enctype="multipart/form-data" action="EdicaoPerfil.php">
+    <form method="POST" enctype="multipart/form-data" action="AdicaoServicoPrestadora.php">
 
 
 

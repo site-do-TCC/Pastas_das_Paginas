@@ -159,7 +159,7 @@
     } else {
         $result = mysqli_query($conexao, "INSERT INTO prestadora(nome,email,senha) VALUES ('$nome','$email','$senha')");
         if ($result) {
-            echo "<script>window.location.href='../html/EdicaoPerfil.php';</script>";
+            echo "<script>window.location.href='../html/AdicaoServicoPrestadora.php';</script>";
             exit;
         } else {
             echo "<script>mostrarModal('Erro ao cadastrar');</script>";
