@@ -1,5 +1,7 @@
 
 <?php
+
+
 session_start();
 
 
@@ -135,7 +137,8 @@ session_start();
 
 
 <?php
-// Prevent mysqli from throwing uncaught exceptions and show errors instead
+
+session_start();
 mysqli_report(MYSQLI_REPORT_OFF);
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -144,296 +147,195 @@ include_once(__DIR__ . '/../php/conexao.php');
 
 if (!isset($conexao) || !($conexao instanceof mysqli)) {
     die("❌ Erro: variável \$conexao não é uma instância válida de mysqli.<br>");
-} else {
-    echo "✅ Conexão MySQLi válida.<br>";
 }
 
-//print_r($_SESSION);
-//print_r($_SESSION['tipo']);
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo'])) {
+    die("Sessão inválida. Faça login novamente.");
+}
+
+$id_usuario = $_SESSION['id_usuario'];
 
 if (isset($_POST['salvar'])) {
-    
-    if ($_SESSION['tipo'] == 'cliente'){
-    // Recupera da sessão de forma segura
-    $email = $_SESSION['email'] ?? null;
-    $senha = $_SESSION['senha'] ?? null;
 
-    if (!$email || !$senha) {
-        echo "Sessão inválida. Faça login novamente.";
-        exit;
-    }
+    if ($_SESSION['tipo'] == 'cliente') {
 
-    // Busca o ID do usuário logado usando prepared statement
-    $sqlSel = "SELECT id_usuario FROM cliente WHERE email = ? AND senha = ?";
-    if (!($stmtSel = $conexao->prepare($sqlSel))) {
-        echo "Erro no prepare SELECT: " . $conexao->error;
-        exit;
-    }
-    $stmtSel->bind_param("ss", $email, $senha);
-    if (!$stmtSel->execute()) {
-        echo "Erro no execute SELECT: " . $stmtSel->error;
-        $stmtSel->close();
-        exit;
-    }
-
-    // try get_result(), fallback to bind_result if not available
-    $result = $stmtSel->get_result();
-    if ($result !== false) {
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $id_usuario = (int)$row['id_usuario'];
-        } else {
-            echo "Usuário não encontrado.";
-            $stmtSel->close();
-            exit;
-        }
-    } else {
-        // fallback
-        $stmtSel->store_result();
-        if ($stmtSel->num_rows > 0) {
-            $stmtSel->bind_result($id_usuario);
-            $stmtSel->fetch();
-            $id_usuario = (int)$id_usuario;
-        } else {
-            echo "Usuário não encontrado (fallback).";
-            $stmtSel->close();
-            exit;
-        }
-    }
-    $stmtSel->close();
-
-    // Salvamento da imagem de perfil (se enviada)
-    if (isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil']['name'])) {
-        $uploadDirRel = "../ImgPerfilCliente/";
-        $uploadDirAbs = __DIR__ . "/../ImgPerfilCliente/";
-        if (!is_dir($uploadDirAbs)) {
-            mkdir($uploadDirAbs, 0755, true);
-        }
-
-        $extensao = pathinfo($_FILES['fotoPerfil']['name'], PATHINFO_EXTENSION);
-        $nomeArquivo = "perfil_" . $id_usuario . "." . $extensao;
-        $caminhoDestinoRel = $uploadDirRel . $nomeArquivo; // caminho relativo a salvar no banco
-        $caminhoDestinoAbs = $uploadDirAbs . $nomeArquivo; // caminho físico para move_uploaded_file
-
-        if (move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $caminhoDestinoAbs)) {
-            $sqlUpdateImg = "UPDATE cliente SET imgperfil = ? WHERE id_usuario = ?";
-            if ($stmtImg = $conexao->prepare($sqlUpdateImg)) {
-                $stmtImg->bind_param("si", $caminhoDestinoRel, $id_usuario);
-                if (!$stmtImg->execute()) {
-                    echo "Erro ao salvar imagem no banco: " . $stmtImg->error . "<br>";
-                }
-                $stmtImg->close();
-            } else {
-                echo "Erro no prepare UPDATE imagem: " . $conexao->error . "<br>";
+        // Atualiza a imagem
+        if (isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil']['name'])) {
+            $uploadDirRel = "../ImgPerfilCliente/";
+            $uploadDirAbs = __DIR__ . "/../ImgPerfilCliente/";
+            if (!is_dir($uploadDirAbs)) {
+                mkdir($uploadDirAbs, 0755, true);
             }
-        } else {
-            echo "Erro no upload da imagem.<br>";
+
+            $extensao = pathinfo($_FILES['fotoPerfil']['name'], PATHINFO_EXTENSION);
+            $nomeArquivo = "perfil_" . $id_usuario . "." . $extensao;
+            $caminhoDestinoRel = $uploadDirRel . $nomeArquivo;
+            $caminhoDestinoAbs = $uploadDirAbs . $nomeArquivo;
+
+            if (move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $caminhoDestinoAbs)) {
+                $sqlUpdateImg = "UPDATE cliente SET imgperfil = ? WHERE id_usuario = ?";
+                $stmtImg = $conexao->prepare($sqlUpdateImg);
+                $stmtImg->bind_param("si", $caminhoDestinoRel, $id_usuario);
+                $stmtImg->execute();
+                $stmtImg->close();
+            }
         }
-    }
 
-     // Recupera campos do formulário com default seguro
-    $senha = $_POST['senha'] ?? '';
-    $cliente_localizacao = $_POST['localizacao'] ?? '';
-    $nome = $_POST['nome'] ?? '';
-    $email = $_POST['email'] ?? '';
+        // Campos
+        $senha = $_POST['senha'] ?? '';
+        $localizacao = $_POST['localizacao'] ?? '';
+        $nome = $_POST['nome'] ?? '';
+        $email = $_POST['email'] ?? '';
 
-    // Atualiza os dados do cliente com prepared statement
-    $sql = "UPDATE cliente SET 
-        senha = ?,
-        cliente_localizacao = ?,
-        nome = ?,
-        email = ?
-    WHERE id_usuario = ?";
+        // ⚠️ Verifica se o e-mail já existe em outro usuário
+        if (!empty($email)) {
+            $sqlCheckEmail = "SELECT id_usuario FROM cliente WHERE email = ? AND id_usuario != ?";
+            $stmtCheck = $conexao->prepare($sqlCheckEmail);
+            $stmtCheck->bind_param("si", $email, $id_usuario);
+            $stmtCheck->execute();
+            $stmtCheck->store_result();
 
+            if ($stmtCheck->num_rows > 0) {
+                echo "❌ Este e-mail já está cadastrado em outra conta.<br>";
+                $stmtCheck->close();
+                exit;
+            }
+            $stmtCheck->close();
+        }
 
-    if (mysqli_ping($conexao)) {
-        echo "Conexão ativa com o banco de dados.<br>";
-    } else {
-        echo "Erro na conexão: " . mysqli_connect_error() . "<br>";
-    }
+        // UPDATE protegido com CASE WHEN
+        $sql = "UPDATE cliente SET
+            senha = CASE WHEN ? = '' THEN senha ELSE ? END,
+            cliente_localizacao = CASE WHEN ? = '' THEN cliente_localizacao ELSE ? END,
+            nome = CASE WHEN ? = '' THEN nome ELSE ? END,
+            email = CASE WHEN ? = '' THEN email ELSE ? END
+        WHERE id_usuario = ?";
 
-        //echo "<pre>";
-//echo "SQL preparado: $sql\n";
-//echo "Valores:\n";
-//print_r([
-    //'telefone' => $cliente_telefone,
-    //'localizacao' => $cliente_localizacao,
-    //'facebook' => $cliente_facebook,
-    //'instagram' => $cliente_instagram,
-    //'id_usuario' => $id_usuario
-//]);
-//echo "</pre>";
+        $stmt = $conexao->prepare($sql);
+        $stmt->bind_param("ssssssssi", 
+            $senha, $senha,
+            $localizacao, $localizacao,
+            $nome, $nome,
+            $email, $email,
+            $id_usuario
+        );
 
+        if ($stmt->execute()) {
+            echo "✅ Dados atualizados com sucesso!<br>";
 
-    if (!($stmt = $conexao->prepare($sql))) {
-        echo "Erro ao executar UPDATE: ";
-        exit;
-    }
+            // Atualiza sessão
+            if (!empty($email)) $_SESSION['email'] = $email;
+            if (!empty($senha)) $_SESSION['senha'] = $senha;
+        } else {
+            echo "Erro ao atualizar: " . $stmt->error;
+        }
 
-    if (!$stmt->bind_param("ssssi", $senha, $cliente_localizacao, $nome, $email, $id_usuario)) {
-        echo "Erro no bind_param: " . $stmt->error;
         $stmt->close();
-        exit;
-    }
-
-    if (!$stmt->execute()) {
-        echo "Erro ao executar UPDATE: " . $stmt->error . "<br>";
-        echo "Erro MySQL: " . $conexao->error . "<br>";
-        echo "Código do erro: " . $stmt->errno . "<br>";
-        $stmt->close();
-        exit;
-    }
-
-    $_SESSION['email'] = $email;
-    $_SESSION['senha'] = $senha;
-
-    echo "Dados atualizados com sucesso!<br>";
-
-    $stmt->close();
-    }
+    } 
 
     //---------------------------------------
-    //Parte da profissional agora
+    // Parte da profissional
     //---------------------------------------
 
+    if ($_SESSION['tipo'] == 'profissional') {
 
-    if ($_SESSION['tipo'] == 'profissional'){
-        // Recupera da sessão de forma segura
-    $email = $_SESSION['email'] ?? null;
-    $senha = $_SESSION['senha'] ?? null;
-
-    if (!$email || !$senha) {
-        echo "Sessão inválida. Faça login novamente.";
-        exit;
-    }
-
-    // Busca o ID do usuário logado usando prepared statement
-    $sqlSel = "SELECT id_usuario FROM profissional WHERE email = ? AND senha = ?";
-    if (!($stmtSel = $conexao->prepare($sqlSel))) {
-        echo "Erro no prepare SELECT: " . $conexao->error;
-        exit;
-    }
-    $stmtSel->bind_param("ss", $email, $senha);
-    if (!$stmtSel->execute()) {
-        echo "Erro no execute SELECT: " . $stmtSel->error;
-        $stmtSel->close();
-        exit;
-    }
-
-    // try get_result(), fallback to bind_result if not available
-    $result = $stmtSel->get_result();
-    if ($result !== false) {
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $id_usuario = (int)$row['id_usuario'];
-        } else {
-            echo "Usuário não encontrado.";
-            $stmtSel->close();
-            exit;
-        }
-    } else {
-        // fallback
-        $stmtSel->store_result();
-        if ($stmtSel->num_rows > 0) {
-            $stmtSel->bind_result($id_usuario);
-            $stmtSel->fetch();
-            $id_usuario = (int)$id_usuario;
-        } else {
-            echo "Usuário não encontrado (fallback).";
-            $stmtSel->close();
-            exit;
-        }
-    }
-    $stmtSel->close();
-
-    // Salvamento da imagem de perfil (se enviada)
-    if (isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil']['name'])) {
-        $uploadDirRel = "../ImgPerfilPrestadoras/";
-        $uploadDirAbs = __DIR__ . "/../ImgPerfilPrestadoras/";
-        if (!is_dir($uploadDirAbs)) {
-            mkdir($uploadDirAbs, 0755, true);
-        }
-
-        $extensao = pathinfo($_FILES['fotoPerfil']['name'], PATHINFO_EXTENSION);
-        $nomeArquivo = "perfil_" . $id_usuario . "." . $extensao;
-        $caminhoDestinoRel = $uploadDirRel . $nomeArquivo; // caminho relativo a salvar no banco
-        $caminhoDestinoAbs = $uploadDirAbs . $nomeArquivo; // caminho físico para move_uploaded_file
-
-        if (move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $caminhoDestinoAbs)) {
-            $sqlUpdateImg = "UPDATE profissional SET imgperfil = ? WHERE id_usuario = ?";
-            if ($stmtImg = $conexao->prepare($sqlUpdateImg)) {
-                $stmtImg->bind_param("si", $caminhoDestinoRel, $id_usuario);
-                if (!$stmtImg->execute()) {
-                    echo "Erro ao salvar imagem no banco: " . $stmtImg->error . "<br>";
-                }
-                $stmtImg->close();
-            } else {
-                echo "Erro no prepare UPDATE imagem: " . $conexao->error . "<br>";
+        // Atualiza a imagem
+        if (isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil']['name'])) {
+            $uploadDirRel = "../ImgPerfilPrestadoras/";
+            $uploadDirAbs = __DIR__ . "/../ImgPerfilPrestadoras/";
+            if (!is_dir($uploadDirAbs)) {
+                mkdir($uploadDirAbs, 0755, true);
             }
-        } else {
-            echo "Erro no upload da imagem.<br>";
+
+            $extensao = pathinfo($_FILES['fotoPerfil']['name'], PATHINFO_EXTENSION);
+            $nomeArquivo = "perfil_" . $id_usuario . "." . $extensao;
+            $caminhoDestinoRel = $uploadDirRel . $nomeArquivo;
+            $caminhoDestinoAbs = $uploadDirAbs . $nomeArquivo;
+
+            if (move_uploaded_file($_FILES['fotoPerfil']['tmp_name'], $caminhoDestinoAbs)) {
+                $sqlUpdateImg = "UPDATE prestadora SET imgperfil = ? WHERE id_usuario = ?";
+                $stmtImg = $conexao->prepare($sqlUpdateImg);
+                $stmtImg->bind_param("si", $caminhoDestinoRel, $id_usuario);
+                $stmtImg->execute();
+                $stmtImg->close();
+            }
         }
-    }
 
-    // Recupera campos do formulário com default seguro
-    $senha = $_POST['senha'] ?? '';
-    $empresa_localizacao = $_POST['localizacao'] ?? '';
-    $nome = $_POST['nome'] ?? '';
-    $email = $_POST['email'] ?? '';
+        // Campos
+        $senha = $_POST['senha'] ?? '';
+        $localizacao = $_POST['localizacao'] ?? '';
+        $nome = $_POST['nome'] ?? '';
+        $email = $_POST['email'] ?? '';
 
-    // Atualiza os dados do cliente com prepared statement
-    $sql = "UPDATE cliente SET 
-        senha = ?,
-        empresa_localizacao = ?,
-        nome = ?,
-        email = ?
-    WHERE id_usuario = ?";
+        // ⚠️ Verifica se o e-mail já existe em outra prestadora
+        if (!empty($email)) {
+            $sqlCheckEmail = "SELECT id_usuario FROM prestadora WHERE email = ? AND id_usuario != ?";
+            $stmtCheck = $conexao->prepare($sqlCheckEmail);
+            $stmtCheck->bind_param("si", $email, $id_usuario);
+            $stmtCheck->execute();
+            $stmtCheck->store_result();
 
-    if (mysqli_ping($conexao)) {
-        echo "Conexão ativa com o banco de dados.<br>";
-    } else {
-        echo "Erro na conexão: " . mysqli_connect_error() . "<br>";
-    }
+            if ($stmtCheck->num_rows > 0) {
+                echo "❌ Este e-mail já está cadastrado em outra conta.<br>";
+                $stmtCheck->close();
+                exit;
+            }
+            $stmtCheck->close();
+        }
 
-        //echo "<pre>";
-//echo "SQL preparado: $sql\n";
-//echo "Valores:\n";
-//print_r([
-    //'telefone' => $cliente_telefone,
-    //'localizacao' => $cliente_localizacao,
-    //'facebook' => $cliente_facebook,
-    //'instagram' => $cliente_instagram,
-    //'id_usuario' => $id_usuario
-//]);
-//echo "</pre>";
+        // UPDATE
+        $sql = "UPDATE prestadora SET
+            senha = CASE WHEN ? = '' THEN senha ELSE ? END,
+            empresa_localizacao = CASE WHEN ? = '' THEN empresa_localizacao ELSE ? END,
+            nome = CASE WHEN ? = '' THEN nome ELSE ? END,
+            email = CASE WHEN ? = '' THEN email ELSE ? END
+        WHERE id_usuario = ?";
 
+        $stmt = $conexao->prepare($sql);
+        $stmt->bind_param("ssssssssi", 
+            $senha, $senha,
+            $localizacao, $localizacao,
+            $nome, $nome,
+            $email, $email,
+            $id_usuario
+        );
 
-    if (!($stmt = $conexao->prepare($sql))) {
-        echo "Erro ao executar UPDATE: ";
-        exit;
-    }
+        if ($stmt->execute()) {
+            echo "✅ Dados atualizados com sucesso!<br>";
 
-    if (!$stmt->bind_param("ssssi", $senha, $empresa_localizacao, $nome, $email, $id_usuario)) {
-        echo "Erro no bind_param: " . $stmt->error;
+            if (!empty($email)) $_SESSION['email'] = $email;
+            if (!empty($senha)) $_SESSION['senha'] = $senha;
+        } else {
+            echo "Erro ao atualizar: " . $stmt->error;
+        }
+
         $stmt->close();
-        exit;
     }
+}
 
-    if (!$stmt->execute()) {
-        echo "Erro ao executar UPDATE: " . $stmt->error . "<br>";
-        echo "Erro MySQL: " . $conexao->error . "<br>";
-        echo "Código do erro: " . $stmt->errno . "<br>";
-        $stmt->close();
-        exit;
-    }
+if (isset($_POST['excluir'])) { if ($_SESSION['tipo'] == 'cliente') { 
+    $sqlDelete = "DELETE FROM cliente WHERE id_usuario = ?"; $stmtDelete = $conexao->prepare($sqlDelete); $stmtDelete->bind_param("i", $id_usuario); 
+    if ($stmtDelete->execute()){
+        echo "✅ Conta excluída com sucesso!<br>"; 
+        session_destroy(); 
+        echo "<script>window.location.href='../html/Pagina_Inicial.html';</script>"; 
+        exit; 
+    } 
+    else{
+       echo "Erro ao excluir conta: " . $stmtDelete->error; 
+    } 
+    $stmtDelete->close(); 
+} if ($_SESSION['tipo'] == 'profissional') { 
+    $sqlDelete = "DELETE FROM prestadora WHERE id_usuario = ?"; 
+    $stmtDelete = $conexao->prepare($sqlDelete); 
+    $stmtDelete->bind_param("i", $id_usuario); 
+    if ($stmtDelete->execute()) { 
+        echo "✅ Conta excluída com sucesso!<br>"; session_destroy(); 
+        echo "<script>window.location.href='../html/Pagina_Inicial.html';</script>"; 
+        exit; 
+} else{ 
+    echo "Erro ao excluir conta: " . $stmtDelete->error; } $stmtDelete->close(); 
+} 
 
-    
-    $_SESSION['email'] = $email;
-    $_SESSION['senha'] = $senha;
-
-    echo "Dados atualizados com sucesso!<br>";
-
-    $stmt->close();
-    }
 }
 ?>
