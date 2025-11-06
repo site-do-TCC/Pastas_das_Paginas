@@ -312,7 +312,7 @@ if (isset($_POST['salvar'])) {
         $stmt->close();
     }
 }
-
+//Excluir conta
 if (isset($_POST['excluir'])) { if ($_SESSION['tipo'] == 'cliente') { 
     $sqlDelete = "DELETE FROM cliente WHERE id_usuario = ?"; $stmtDelete = $conexao->prepare($sqlDelete); $stmtDelete->bind_param("i", $id_usuario); 
     if ($stmtDelete->execute()){
@@ -330,7 +330,8 @@ if (isset($_POST['excluir'])) { if ($_SESSION['tipo'] == 'cliente') {
     $stmtDelete = $conexao->prepare($sqlDelete); 
     $stmtDelete->bind_param("i", $id_usuario); 
     if ($stmtDelete->execute()) { 
-        echo "✅ Conta excluída com sucesso!<br>"; session_destroy(); 
+        echo "✅ Conta excluída com sucesso!<br>"; 
+        session_destroy(); 
         echo "<script>window.location.href='../html/Pagina_Inicial.html';</script>"; 
         exit; 
 } else{ 

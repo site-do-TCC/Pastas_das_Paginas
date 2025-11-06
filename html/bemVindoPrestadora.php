@@ -1,21 +1,66 @@
 <?php
 session_start();
-include("conexao.php");
+include("../php/conexao.php");
 
 // Simulação: depois você coloca o ID da prestadora logada via login
-$id_prestadora = $_SESSION['id_prestadora'] ?? 1;
-
-$sql = "SELECT nome, foto FROM prestadora WHERE id_prestadora = $id_prestadora";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    $prestadora = $result->fetch_assoc();
-    $nome = $prestadora['nome'];
-    $foto = $prestadora['foto'] ?: "../img/perfil.png";
-} else {
-    $nome = "Usuário";
-    $foto = "../img/perfil.png";
+if (!isset($conexao)) {
+    die("Erro: conexão com o banco não encontrada. Verifique ../php/conexao.php");
 }
+
+if (!empty($_SESSION['id_usuario'])) {
+    $id_usuario = $_SESSION['id_usuario'];
+
+    $stmt = $conexao->prepare("SELECT nome FROM prestadora WHERE id_usuario = ?");
+    if ($stmt === false) {
+
+    } else {
+        $stmt->bind_param("i", $id_usuario);
+        $executou = $stmt->execute();
+        if ($executou) {
+            $resultado = $stmt->get_result();
+            if ($resultado && $resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                if (!empty($row['nome'])) {
+                    $nome = $row['nome'];
+                    
+                }
+            } else {
+                
+            }
+        } else {
+            
+        }
+        $stmt->close();
+
+
+
+
+$stmt = $conexao->prepare("SELECT imgperfil FROM prestadora WHERE id_usuario = ?");
+    if ($stmt === false) {
+
+    } else {
+        $stmt->bind_param("i", $id_usuario);
+        $executou = $stmt->execute();
+        if ($executou) {
+            $resultado = $stmt->get_result();
+            if ($resultado && $resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                if (!empty($row['imgperfil'])) {
+                    $img = $row['imgperfil'];
+                    
+                }
+            } else {
+                
+            }
+        } else {
+            
+        }
+        $stmt->close();
+        
+    }
+}
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +83,7 @@ if ($result->num_rows > 0) {
 
       <div class="perfil-area">
         <span class="nome"><?php echo htmlspecialchars($nome); ?></span>
-        <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto de perfil" class="perfil-foto">
+        <img src="<?php echo htmlspecialchars($img); ?>" alt="Foto de perfil" class="perfil-foto">
         <button class="menu-icon" id="menu-btn">&#9776;</button>
       </div>
     </nav>
@@ -49,15 +94,16 @@ if ($result->num_rows > 0) {
     <p>Gerencie seus serviços e encontre novas oportunidades hoje.</p>
 
     <div class="botoes">
-      <a href="editarPerfil.php" class="btn editar-perfil">⚙️ Editar Perfil</a>
-      <a href="editarServicos.php" class="btn editar-servicos">🖋️ Editar Serviços</a>
-      <a href="mensagens.php" class="btn mensagens">💬 Mensagens</a>
-      <a href="avaliacoes.php" class="btn avaliacoes">⭐ Avaliações</a>
-      <a href="cursos.php" class="btn cursos">🎓 Cursos</a>
-      <a href="agenda.php" class="btn agenda">📅 Minha Agenda</a>
+      <a href="..\html\EdicaoPerfilGeral.php" class="btn editar-perfil">⚙️ Editar Perfil</a>
+      <a href="#" class="btn editar-servicos">🖋️ Editar Serviços</a>
+      <a href="#" class="btn mensagens">💬 Mensagens</a>
+      <a href="#" class="btn avaliacoes">⭐ Avaliações</a>
+      <a href="..\html\cursos.php" class="btn cursos">🎓 Cursos</a>
+      <a href="#" class="btn agenda">📅 Minha Agenda</a>
     </div>
   </main>
 
+  <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
   <script>
   const menuBtn = document.getElementById("menu-btn");
   menuBtn.addEventListener("click", () => alert("Menu lateral em construção..."));

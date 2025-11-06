@@ -14,7 +14,6 @@ $row = $result->fetch_assoc();
 
 if($row['passou_cadastro'] == 1){
    header('Location: \Programacao_TCC_Avena\html\bemVindoPrestadora.php');
-
 }
 ?>
 
@@ -403,6 +402,7 @@ $sql = "UPDATE prestadora SET
 if (mysqli_query($conexao, $sql)) {
     $sql = "UPDATE prestadora SET passou_cadastro = 1 WHERE id_usuario = '$id_usuario'";
     mysqli_query($conexao, $sql);
+    echo "<script>window.location.href='../html/AdicaoServicoPrestadora.php';</script>";
 } else {
     echo "Erro ao atualizar: " . mysqli_error($conexao);
 }
