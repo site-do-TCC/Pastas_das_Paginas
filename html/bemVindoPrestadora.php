@@ -95,7 +95,7 @@ $stmt = $conexao->prepare("SELECT imgperfil FROM prestadora WHERE id_usuario = ?
 
     <div class="botoes">
       <a href="..\html\EdicaoPerfilGeral.php" class="btn editar-perfil">⚙️ Editar Perfil</a>
-      <a href="#" class="btn editar-servicos">🖋️ Editar Serviços</a>
+      <a href="..\html\EditarServico.php" class="btn editar-servicos">🖋️ Editar Serviços</a>
       <a href="#" class="btn mensagens">💬 Mensagens</a>
       <a href="#" class="btn avaliacoes">⭐ Avaliações</a>
       <a href="..\html\cursos.php" class="btn cursos">🎓 Cursos</a>

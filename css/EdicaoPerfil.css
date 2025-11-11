@@ -13,26 +13,7 @@
   font-style: normal;
 }
 
-@font-face {
-  font-family: "Poppins";
-  src: url("../fonts/edicaoPerfil/Poppins/Poppins-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
 
-@font-face {
-  font-family: "OpenSans-Bold";
-  src: url("../fonts/edicaoPerfil/Open_Sans/OpenSans-Bold.ttf") format("truetype");
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../fonts/edicaoPerfil/Inter/static/Inter_18pt-Bold.ttf") format("truetype");
-  font-weight: bold;
-  font-style: normal;
-}
 
 /* ================= RESET ================== */
 * {
@@ -134,7 +115,7 @@ body {
   border-radius: 10px;
   max-width: 900px;
   margin: 60px auto 110px auto;
-  font-family: "OpenSans-Bold";
+  font-family: "Mulish";
   color: #545454;
 }
 
@@ -144,7 +125,7 @@ body {
   gap: 40px;
   justify-content: center;
   margin-left: 8px;
-  font-family: "OpenSans-Bold";
+  font-family: "Mulish";
 }
 
 .colunaForm {
@@ -160,7 +141,7 @@ label {
   margin-bottom: 8px;
   margin-left: 2px;
   display: block;
-  font-family: "OpenSans-Bold";
+  font-family: "Mulish";
   color: #545454;
 }
 
@@ -246,19 +227,21 @@ textarea {
 }
 
 .coluna-esquerda {
+  transform: translateY(-10%);
   flex: 1;
   margin-left: -20px;
   margin-top: -50px;
 }
 
 .coluna-direita {
+  transform: translateY(-20%);
   flex: 1;
-  font-family: "OpenSans-Bold";
+  font-family: "Mulish";
 }
 
 .coluna-direita h4 {
   margin-bottom: 15px;
-  font-family: "OpenSans-Bold";
+  font-family: "Mulish";
   text-align: left;
 }
 
