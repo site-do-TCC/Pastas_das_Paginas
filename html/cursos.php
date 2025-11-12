@@ -48,7 +48,7 @@
                     <img src="../img/gestao-tempo.jpeg" alt="Gestão de Tempo">
                     <h3>Gestão de Tempo</h3>
                     <p>Aprenda a organizar seu tempo e tarefas de forma eficiente, aumentando sua produtividade e reduzindo o estresse. Desenvolva hábitos que ajudam a manter foco e disciplina no dia a dia pessoal e profissional.</p>
-                    <button><a href='#' style="text-decoration:none; color:#fff">Ver Detalhes</a></button>
+                    <button><a href='..\html\cursosDetalhes.php?id_curso=1' style="text-decoration:none; color:#fff">Ver Detalhes</a></button>
                 </div>
 
                 <div class="card">
