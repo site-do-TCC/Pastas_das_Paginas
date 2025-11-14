@@ -86,10 +86,47 @@ if (!empty($_SESSION['id_usuario'])) {
 <body>
 
 
+<!-- ===============================
+       Menu Lateral
+       =============================== -->
+  <nav id="menu" class="hidden">
+    <ul>
+      <li><a href=".\quemSomos.php">Quem somos</a></li>
+      <li><a href=".\cadastro.php">Cadastrar-se</a></li>
+      <hr>
+      <li><a href=".\sejaParceiro.php">Seja um Parceiro</a></li>
+      <li><a href=".\Pagina_Inicial.html"><span class="Home">Home</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- ===============================
+       Banner de Consentimento de Cookies
+       =============================== -->
+  <div id="cookie-banner" class="cookie-banner">
+    <div class="cookie-content">
+      <h4>Privacidade e Cookies</h4>
+      <p>
+        A Singularity Solutions utiliza cookies para oferecer uma experiência mais personalizada,
+        melhorar o desempenho da plataforma e garantir o funcionamento seguro dos serviços.
+        Ao aceitar, você concorda com o uso de cookies conforme nossa
+        <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">
+          Política de Privacidade
+        </a>.
+      </p>
+      <div class="cookie-buttons">
+        <button id="accept-cookies" class="cookie-btn accept">Aceitar</button>
+        <button id="decline-cookies" class="cookie-btn decline">Recusar</button>
+      </div>
+    </div>
+  </div>
 
 
 
- <header>
+
+
+
+
+   <header>
     <nav>
       <div class="logo">
         <a href="Pagina_Inicial.html">
@@ -98,15 +135,12 @@ if (!empty($_SESSION['id_usuario'])) {
       </div>
 
       <div class="perfil-area">
-        <span class="nome"  style="color:#f5f5f5;"><?php echo $nome ?></span>
-
-       
+        <span class="nome"><?php echo $nome ?></span>
         <img src="<?php echo $img?>" alt="Foto de perfil" class="perfil-foto">
-
-        
+        <button class="menu-icon" id="menu-btn">&#9776;</button>
       </div>
     </nav>
-  </header>
+    </header>
 
 
 
@@ -144,4 +178,6 @@ if (!empty($_SESSION['id_usuario'])) {
         </div>
     </main>
 </body>
+<script src="../js/login.js"></script>
+  <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
 </html>

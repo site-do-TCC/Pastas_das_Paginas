@@ -82,6 +82,42 @@ if (!empty($_SESSION['id_usuario'])) {
 </head>
 <body>
 
+  <!-- ===============================
+       Menu Lateral
+       =============================== -->
+  <nav id="menu" class="hidden">
+    <ul>
+      <li><a href=".\quemSomos.php">Quem somos</a></li>
+      <li><a href=".\cadastro.php">Cadastrar-se</a></li>
+      <hr>
+      <li><a href=".\sejaParceiro.php">Seja um Parceiro</a></li>
+      <li><a href=".\Pagina_Inicial.html"><span class="Home">Home</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- ===============================
+       Banner de Consentimento de Cookies
+       =============================== -->
+  <div id="cookie-banner" class="cookie-banner">
+    <div class="cookie-content">
+      <h4>Privacidade e Cookies</h4>
+      <p>
+        A Singularity Solutions utiliza cookies para oferecer uma experiência mais personalizada,
+        melhorar o desempenho da plataforma e garantir o funcionamento seguro dos serviços.
+        Ao aceitar, você concorda com o uso de cookies conforme nossa
+        <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">
+          Política de Privacidade
+        </a>.
+      </p>
+      <div class="cookie-buttons">
+        <button id="accept-cookies" class="cookie-btn accept">Aceitar</button>
+        <button id="decline-cookies" class="cookie-btn decline">Recusar</button>
+      </div>
+    </div>
+  </div>
+
+
+
 
   <header>
     <nav>
@@ -104,15 +140,10 @@ if (!empty($_SESSION['id_usuario'])) {
   </header>
 
 
-  <nav id="menulogin" class="hidden">
-    <ul>
-      <li><a href="sobre.html"><span class="quemSomos">Quem somos</span></a></li>
-      <li><a href="cadastro.php">Cadastrar-se</a></li>
-      <hr>
-      <li><a href="contato.html">Seja um Parceiro</a></li>
-      <li><a href="suporte.html">Suporte</a></li>
-    </ul>
-  </nav>
+  
+
+
+
 
   <main class="conteudo">
     <div class="container">
@@ -128,10 +159,12 @@ if (!empty($_SESSION['id_usuario'])) {
     </div>
   </main>
 
-  <script src="../js/login.js"></script> 
+ 
   <script>
    
    (<?php echo json_encode($_SESSION); ?>);
   </script>
 </body>
+   <script src="../js/login.js"></script> 
+  <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
 </html>

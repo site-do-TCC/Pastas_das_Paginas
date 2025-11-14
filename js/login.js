@@ -1,6 +1,6 @@
 // Pegar o botão e o menu
 const menuBtn = document.getElementById("menu-btn");
-const menulogin = document.getElementById("menulogin");
+const menulogin = document.getElementById("menu");
 
 // Quando clicar no botão, alternar classe
 menuBtn.addEventListener("click", () => {

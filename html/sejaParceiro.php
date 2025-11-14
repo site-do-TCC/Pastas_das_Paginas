@@ -5,9 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seja um Parceiro - Avena</title>
   <link rel="stylesheet" href="\Programacao_TCC_Avena\css\sejaParceiro.css">
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+<!-- ===============================
+       Modal de Erro
+       =============================== -->
+  <div id="modalErro" class="modal">
+    <div class="modal-content">
+      <p id="mensagemErro">E-mail não encontrado!</p>
+      <button onclick="fecharModal()">OK</button>
+    </div>
+  </div>
+    
 
     <!-- ===============================
      Banner de Consentimento de Cookies - Singularity Solutions
@@ -40,20 +50,18 @@
   </nav>
 
 
-    <!-- Mensagem -->
-    <div id="modalErro" class="modal">
-        <div class="modal-content">
-            <button onclick="fecharModal()">OK</button>
-        </div>
-    </div>
+    
 
-  <header>
+  <!-- Cabeçalho -->
+  <header class="header">
     <nav class="navbar">
       <div class="logo">
-        <img src="../img/logoAvena.png" alt="Logo Avena">
+        <a href=".\Pagina_Inicial.html"><img src="../img/logoAvena.png" alt="Logo Avena"></a>
       </div>
+
       <div class="menu">
         <a href=".\login.php" class="btn-entrar">Entrar</a>
+
           <button class="menu-icon" id="menu-btn">&#9776;</button>
         </div>
       </div>
@@ -99,9 +107,12 @@
     </div>
   </main>
 </body>
-<script src="\Programacao_TCC_Avena\js\recuperaSenha.js"></script>
+
+<script src="\Programacao_TCC_Avena\js\login.js"></script>
 <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
+
 <script src="../js/cadastro.js"></script>
+
 </html>
 
 <?php
@@ -161,9 +172,10 @@ if (isset($_POST['submit'])){
         ";
 
         $mail->send();
-         echo "<script>mostrarModal('Email enviado. Agradecemos muito sua parceria, logo entraremos em contato!');</script>";
+        echo "<script>mostrarModal('Email enviado. Agradecemos muito sua parceria, logo entraremos em contato!');</script>";
     } catch (Exception $e) {
-         echo "<script>mostrarModal('Erro no envio do emial, tene novamente mais tarde');</script>";
+         echo "<script>mostrarModal('Erro no envio do email, tene novamente mais tarde');</script>";
     }
 }
+
 ?>

@@ -64,6 +64,17 @@ if($row['passou_cadastro'] == 1){
   </div>
   </div>
 
+  <!-- Menu -->
+  <nav id="menu" class="hidden">
+    <ul>
+      <li><a href=".\quemSomos.php">Quem somos</a></li>
+      <li><a href=".\cadastro.php">Cadastrar-se</a></li>
+      <hr>
+      <li><a href=".\sejaParceiro.php">Seja um Parceiro</a></li>
+      <li><a href=".\Pagina_Inicial.html"><span class="Home">Home</span></a></li>
+    </ul>
+  </nav>
+
 
 
     <div class="headerPerfil">

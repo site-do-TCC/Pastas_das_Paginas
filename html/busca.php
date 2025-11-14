@@ -10,23 +10,22 @@ include_once(__DIR__ . '/../php/conexao.php');
 $search_servico = isset($_GET['search_servico']) ? trim($_GET['search_servico']) : '';
 $search_localizacao = isset($_GET['search_localizacao']) ? trim($_GET['search_localizacao']) : '';
 
-// Monta a query base
-$sql = "SELECT * FROM prestadora WHERE 1=1";
+// Query base: só traz quem passou no cadastro
+$sql = "SELECT * FROM prestadora WHERE passou_cadastro = 1";
 
-// Adiciona os filtros se foram preenchidos
+// Adiciona filtros
 if (!empty($search_servico)) {
-  $sql .= " AND (empresa_servicos LIKE '%$search_servico%' OR empresa_servicos LIKE '%$search_servico%')";
+  $sql .= " AND empresa_servicos LIKE '%$search_servico%'";
 }
 
 if (!empty($search_localizacao)) {
-  $sql .= " AND (empresa_localizacao LIKE '%$search_localizacao%' OR empresa_localizacao LIKE '%$search_localizacao%')";
+  $sql .= " AND empresa_localizacao LIKE '%$search_localizacao%'";
 }
 
 // Executa e conta resultados
 $resultado = mysqli_query($conexao, $sql);
 $total = mysqli_num_rows($resultado);
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>

@@ -73,6 +73,40 @@ $stmt = $conexao->prepare("SELECT imgperfil FROM prestadora WHERE id_usuario = ?
 </head>
 
 <body>
+<!-- ===============================
+       Menu Lateral
+       =============================== -->
+  <nav id="menu" class="hidden">
+    <ul>
+      <li><a href=".\quemSomos.php">Quem somos</a></li>
+      <li><a href=".\cadastro.php">Cadastrar-se</a></li>
+      <hr>
+      <li><a href=".\sejaParceiro.php">Seja um Parceiro</a></li>
+      <li><a href=".\Pagina_Inicial.html"><span class="Home">Home</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- ===============================
+       Banner de Consentimento de Cookies
+       =============================== -->
+  <div id="cookie-banner" class="cookie-banner">
+    <div class="cookie-content">
+      <h4>Privacidade e Cookies</h4>
+      <p>
+        A Singularity Solutions utiliza cookies para oferecer uma experiência mais personalizada,
+        melhorar o desempenho da plataforma e garantir o funcionamento seguro dos serviços.
+        Ao aceitar, você concorda com o uso de cookies conforme nossa
+        <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">
+          Política de Privacidade
+        </a>.
+      </p>
+      <div class="cookie-buttons">
+        <button id="accept-cookies" class="cookie-btn accept">Aceitar</button>
+        <button id="decline-cookies" class="cookie-btn decline">Recusar</button>
+      </div>
+    </div>
+  </div>
+
   <header>
     <nav>
       <div class="logo">
@@ -103,10 +137,9 @@ $stmt = $conexao->prepare("SELECT imgperfil FROM prestadora WHERE id_usuario = ?
     </div>
   </main>
 
-  <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
-  <script>
-  const menuBtn = document.getElementById("menu-btn");
-  menuBtn.addEventListener("click", () => alert("Menu lateral em construção..."));
-  </script>
+  
 </body>
+
+   <script src="../js/login.js"></script>
+  <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
 </html>

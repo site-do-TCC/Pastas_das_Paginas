@@ -46,14 +46,15 @@ nav {
 
 .login-card {
   max-width: 1100px;
-  margin: 8% auto;
+  margin: 6.7% 6.7%;
   background-color: #fff;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   overflow: hidden;
   display: flex;
-  padding: 40px 60px; 
-  transform: translateY(52px);
+  padding: 10px 30px; 
+  transform: translateY(52px); 
+  transform: scale(1.05);
 }
 
 
@@ -118,7 +119,7 @@ label {
 
 .btnEntrar:hover {
   background: #e45c5c;
-  transform: scale(1.05); 
+  transform: scale(1); 
 }
 a{
   text-decoration: none;

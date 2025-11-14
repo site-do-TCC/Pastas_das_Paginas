@@ -20,22 +20,24 @@ body {
 }
 
 /* ======= HEADER ======= */
-header {
+.header {
+  height: 44px;
   background-color: #917ba4;
   padding: 10px 40px;
+  z-index: 1;
 }
-
-
 
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap:80%;
+  height: 40px;
 }
 
 .logo img {
-  height: 40px;
+  cursor: pointer;
+      height: 35px;
+      margin-top: 10px;
 }
 
 .btn-entrar {
@@ -91,6 +93,7 @@ a{
   font-size: 0.9em;
   color: #666;
   margin-bottom: 20px;
+  margin-top: 30px;
 }
 
 .breadcrumb svg {
@@ -110,7 +113,6 @@ a{
   height: 350px;
   overflow: hidden;
   border-radius: 15px;
-  
 }
 
 .banner img {
@@ -140,10 +142,11 @@ a{
   line-height: 1.7;
   text-align: justify;
 }
+
 .img-lado {
-    width: 70%;   /* tamanho menor */
+    width: 70%;
     height: auto;
-    border-radius: 10px; /* opcional */
+    border-radius: 10px;
     margin-left:30%;
 }
 
@@ -166,6 +169,7 @@ a{
 }
 
 /* ---- Título "Quem Somos" ---- */
+/* ⚠️ MANTIDO EXATAMENTE COMO VOCÊ PEDIU! NÃO ALTEREI NADA */
 .quem-somos h1 {
   transform: translate(5%, 30%);
   position: relative;
@@ -222,6 +226,7 @@ a{
 .quemSomos{
   font-weight: bolder;
 }
+
 /* ======= MODAL ======= */
 .modal {
   display: none;
@@ -344,34 +349,91 @@ a{
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ======= RESPONSIVIDADE ======= */
+/* ===========================================================
+   ======= RESPONSIVIDADE 
+   =========================================================== */
+
 @media (max-width: 900px) {
-  .texto-imagem {
-    flex-direction: column;
-    align-items: center;
+
+  .navbar {
+    gap: 20px;
+    padding: 0 10px;
   }
 
-  .texto-imagem .imagem-lateral {
-    justify-content: center;
-    margin-top: 20px;
+  .conteudo {
+    padding: 30px 20px;
   }
 
-  .texto-imagem .imagem-lateral img {
-    width: 80%;
-    max-width: none;
-  }
-
-  .quem-somos h1 {
-    font-size: 4em;
-    text-align: center;
+  .breadcrumb {
+    transform: translateX(0);
   }
 
   .banner {
-    height: 250px;
+    height: 220px;
+  }
+
+  .texto {
+    width: 100%;
+  }
+
+  .texto-imagem {
+    flex-direction: column;
+    align-items: center;
+    text-align: justify;
+  }
+
+  .img-lado {
+    width: 90%;
+    margin-left: 0;
+  }
+
+  .texto-imagem .imagem-lateral img {
+    width: 85%;
+    max-width: 300px;
+  }
+
+  
+  .quem-somos h1 {
+    font-size: clamp(3rem, 10vw, 6rem);
+    text-align: center;
+  }
+
+  .show {
+    margin-left: 55%;
+    padding: 15px;
   }
 }
+
+/* MOBILE MUITO PEQUENO */
+@media (max-width: 500px) {
+
+  .navbar {
+    padding: 0 5px;
+  }
+
+  .banner {
+    height: 180px;
+  }
+
+  .texto p {
+    font-size: 1.1em;
+  }
+
+  .texto-imagem {
+    gap: 20px;
+  }
+
+  .quem-somos h1 {
+    font-size: clamp(2.5rem, 12vw, 5rem);
+  }
+
+  .imagem-lateral img {
+    width: 95%;
+  }
+}
+
 .sobre-container {
     display: flex;
-    align-items: center; /* centraliza verticalmente */
+    align-items: center;
     justify-content: space-between;
 }
