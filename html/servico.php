@@ -1,11 +1,8 @@
 <?php
-
+session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
-session_start();
 include_once(__DIR__ . '/../php/conexao.php');
-
  //Verifica se foi passado um ID na URL
 if (!isset($_GET['id_usuario'])) {
     header("Location: busca.php");
@@ -24,6 +21,17 @@ if (mysqli_num_rows($resultado) == 0) {
 
 $prof = mysqli_fetch_assoc($resultado);
 $logado = isset($_SESSION['email']);
+
+if ($_SESSION['tipo']=='profissional') {
+    $sqlPrestadora = "SELECT nome, imgperfil FROM prestadora WHERE id_usuario = ".$_SESSION['id_usuario'];
+    $resultadoPrestadora = mysqli_query($conexao, $sql);
+    $profLog = mysqli_fetch_assoc($resultado);
+}else if ($_SESSION['tipo']=='cliente') {
+    $sqlCliente = "SELECT nome, imgperfil FROM cliente WHERE id_usuario = ".$_SESSION['id_usuario'];
+    $resultadoCliente = mysqli_query($conexao, $sql);
+    $profLog = mysqli_fetch_assoc($resultado);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -68,7 +76,11 @@ $logado = isset($_SESSION['email']);
     <div class="logo">
       <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
     </div>
-    <a onclick="btnEntrar()" class="btn-entrar">ENTRAR</a>
+    <a href="..\html\login.php" class="btn-entrar" id="btn-entrar">ENTRAR</a>
+    <div class="perfil-area">
+      <span class="nome"><?php echo htmlspecialchars($profLog['nome']); ?></span>
+      <img src="<?php echo htmlspecialchars($profLog['imgperfil']); ?>" alt="Foto de perfil" class="perfil-foto">
+    </div>
   </header>
 
   <nav class="breadcrumb">
@@ -116,7 +128,7 @@ $logado = isset($_SESSION['email']);
 
             <p><strong>Contato:</strong> <?= htmlspecialchars($prof['empresa_telefone']) ?></p>
 
-            <button class="solicitar-btn" onclick="solicitarServico()">SOLICITAR</button>
+            <button class="solicitar-btn" onclick="solicitarServico()" id="solicitar-btn">SOLICITAR</button>
         </div>
     </div>
 
@@ -131,6 +143,15 @@ $logado = isset($_SESSION['email']);
   </main>
   <script src="../js/login.js"></script>
   <script>
+      const logado = <?= json_encode($logado) ?>;
+      if (!logado) {
+        document.getElementById("btn-entrar").style.display = "block";
+      } else {
+        document.getElementById("btn-entrar").style.display = "none";
+      }
+
+
+
     function solicitarServico() {
       const logado = <?= json_encode($logado) ?>;
       if (!logado) {
@@ -139,14 +160,8 @@ $logado = isset($_SESSION['email']);
         mostrarModal("Serviço solicitado com sucesso! (aqui entra a função que eu vou definir depois)");
       }
     }
-    function btnEntrar() {
-      const logado = <?= json_encode($logado) ?>;
-      if (!logado) {
-        window.location.href = "login.php";
-      } else {
-        mostrarModal("Você já esta logado.");
-      }
-    }
+    
+   
   </script>
 </body>
 <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
