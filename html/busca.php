@@ -2,9 +2,21 @@
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
 session_start();
 include_once(__DIR__ . '/../php/conexao.php');
+
+print_r($_SESSION);
+
+$_SESSION['id_prestadora'] = null;
+
+if (isset($_SESSION['id_usuario'])) {
+
+$sqlUsuario = "SELECT nome, imgperfil FROM cliente WHERE id_usuario = ".$_SESSION['id_usuario'];
+$resultadoCliente = mysqli_query($conexao, $sqlUsuario);
+$profLog = mysqli_fetch_assoc($resultadoCliente);
+$id_usuario = isset($_SESSION['id_usuario']) ? intval($_SESSION['id_usuario']) : null;
+}
+
 
 // Pega os valores enviados pela URL
 $search_servico = isset($_GET['search_servico']) ? trim($_GET['search_servico']) : '';
@@ -109,7 +121,7 @@ $total = mysqli_num_rows($resultado);
     <section class="cards-container">
       <?php if ($total > 0) { ?>
         <?php while ($prof = mysqli_fetch_assoc($resultado)) { ?>
-          <a href="\Programacao_TCC_Avena\html\servico.php?id_usuario=<?= $prof['id_usuario']?>" class="cards-link">
+          <a href="\Programacao_TCC_Avena\html\servico.php?id_prestadora=<?= $prof['id_usuario']?>" class="cards-link">
           <div class="card">
             <div class="card-img">
               <img src="<?= $prof['banner1'] ?>" alt="<?= $prof['nome'] ?>">

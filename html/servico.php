@@ -2,36 +2,79 @@
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include_once(__DIR__ . '/../php/conexao.php');
- //Verifica se foi passado um ID na URL
-if (!isset($_GET['id_usuario'])) {
+include_once(__DIR__ . '/../php/conexao.php'); // ajuste caminho se precisar
+
+
+// -------------------- TRATAMENTO DO POST --------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['solicitar'])) {
+
+
+    // ID DO CLIENTE LOGADO
+    if (!isset($_SESSION['id_usuario'])) {
+        header("Location: ../html/login.php");
+        exit;
+    }
+
+    $id_contratante = intval($_SESSION['id_usuario']);
+
+    // ID DA PRESTADORA
+    $id_prestadora = intval($_POST['id_prestadora']);
+
+    // INSERIR NA TABELA
+    $insert = mysqli_prepare(
+        $conexao,
+        "INSERT INTO solicitacoes (id_contratante, id_prestadora) VALUES (?, ?)"
+    );
+
+    mysqli_stmt_bind_param($insert, "ii", $id_contratante, $id_prestadora);
+    $ok = mysqli_stmt_execute($insert);
+    mysqli_stmt_close($insert);
+
+    if ($ok) {
+        header("Location: servico.php?id_prestadora={$id_prestadora}&success=1");
+        exit;
+    } else {
+        echo "<script>mostrarModal('Erro ao solicitar serviço. Veja se id_contratante e id_prestadora existem.');</script>";
+    }
+}
+// -------------------- FIM TRATAMENTO POST --------------------
+
+// GET id_prestadora (a que veio do card)
+if (!isset($_GET['id_prestadora'])) {
     header("Location: busca.php");
     exit;
 }
+$id_prestadora = intval($_GET['id_prestadora']);
+$_SESSION['id_prestadora'] = $id_prestadora;
 
-$id_usuario = intval($_GET['id_usuario']);
-$sql = "SELECT * FROM prestadora WHERE id_usuario = $id_usuario";
+// busca dados da prestadora
+$sql = "SELECT * FROM prestadora WHERE id_usuario = $id_prestadora";
 $resultado = mysqli_query($conexao, $sql);
-
- //Se não encontrar, redireciona  
 if (mysqli_num_rows($resultado) == 0) {
-  header("Location: busca.php");
-  exit;
+    header("Location: busca.php");
+    exit;
 }
-
 $prof = mysqli_fetch_assoc($resultado);
-$logado = isset($_SESSION['email']);
 
-if ($_SESSION['tipo']=='profissional') {
-    $sqlPrestadora = "SELECT nome, imgperfil FROM prestadora WHERE id_usuario = ".$_SESSION['id_usuario'];
-    $resultadoPrestadora = mysqli_query($conexao, $sql);
-    $profLog = mysqli_fetch_assoc($resultado);
-}else if ($_SESSION['tipo']=='cliente') {
-    $sqlCliente = "SELECT nome, imgperfil FROM cliente WHERE id_usuario = ".$_SESSION['id_usuario'];
-    $resultadoCliente = mysqli_query($conexao, $sql);
-    $profLog = mysqli_fetch_assoc($resultado);
+// info do usuário logado (se houver)
+$logado = isset($_SESSION['id_usuario']);
+$id_usuario = $logado ? intval($_SESSION['id_usuario']) : null;
+
+// buscar dados do perfil do usuário logado para header (se existir)
+$profLog = null;
+if ($logado) {
+    if ($_SESSION['tipo'] === 'profissional') {
+        $sqlPrestadora = "SELECT nome, imgperfil FROM prestadora WHERE id_usuario = ".$id_usuario;
+        $resultadoPrestadora = mysqli_query($conexao, $sqlPrestadora);
+        $profLog = mysqli_fetch_assoc($resultadoPrestadora);
+    } else {
+        $sqlCliente = "SELECT nome, imgperfil FROM cliente WHERE id_usuario = ".$id_usuario;
+        $resultadoCliente = mysqli_query($conexao, $sqlCliente);
+        $profLog = mysqli_fetch_assoc($resultadoCliente);
+    }
 }
 
+print_r($_SESSION); 
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +89,7 @@ if ($_SESSION['tipo']=='profissional') {
 
    <!-- ===============================
      Banner de Consentimento de Cookies - Singularity Solutions
-     =============================== -->
+     =================================== -->
      <div id="cookie-banner" class="cookie-banner">
   <div class="cookie-content">
   <h4>Privacidade e Cookies</h4>
@@ -67,7 +110,7 @@ if ($_SESSION['tipo']=='profissional') {
   <!-- Mensagem -->
     <div id="modalErro" class="modal">
         <div class="modal-content">
-            <p id="mensagemErro">E-mail ou senha incorretos</p>
+            <p id="mensagemErro">...</p>
             <button onclick="fecharModal()">OK</button>
         </div>
     </div>
@@ -76,11 +119,26 @@ if ($_SESSION['tipo']=='profissional') {
     <div class="logo">
       <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
     </div>
+    <!-- Botão do perfil se não estiver logado -->
     <a href="..\html\login.php" class="btn-entrar" id="btn-entrar">ENTRAR</a>
-    <div class="perfil-area">
+    <!-- Fim do botão do perfil se não estiver logado -->
+
+
+    <!-- ===============================================
+         Área do perfil se tiver logado (VAI DENTRO DA HEADER)
+    ====================================================-->
+    <?php if(isset($_SESSION['id_usuario'])){?>
+    <div class="perfil-area" id="perfil-area">
       <span class="nome"><?php echo htmlspecialchars($profLog['nome']); ?></span>
       <img src="<?php echo htmlspecialchars($profLog['imgperfil']); ?>" alt="Foto de perfil" class="perfil-foto">
     </div>
+
+    <?php } ?>
+    <!-- ======================================================
+          Fim da área do perfil se estiver logado (VAI DENTRO DA HEADER)
+    =============================================================-->
+
+
   </header>
 
   <nav class="breadcrumb">
@@ -128,7 +186,28 @@ if ($_SESSION['tipo']=='profissional') {
 
             <p><strong>Contato:</strong> <?= htmlspecialchars($prof['empresa_telefone']) ?></p>
 
-            <button class="solicitar-btn" onclick="solicitarServico()" id="solicitar-btn">SOLICITAR</button>
+            <?php if ($logado): ?>
+              <form method="POST" action="">
+                <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($id_usuario) ?>">
+                <input type="hidden" name="id_prestadora" value="<?= htmlspecialchars($id_prestadora) ?>">
+                <?php if($_SESSION['tipo'] === 'profissional'): ?>
+                  <button type="button" onclick="mostrarModal('Prestadoras não podem solicitar serviços.');" class="solicitar-btn">
+                    Solicitar Serviço
+                  </button>
+                <?php else: ?>
+                  <button type="submit" name="solicitar" class="solicitar-btn">Solicitar Serviço</button>
+                <?php endif; ?>
+              </form>
+            <?php else: ?>
+              <a href="../html/login.php" class="solicitar-btn">Entrar para Solicitar</a>
+            <?php endif; ?>
+
+  <?php if (isset($_GET['success'])): ?>
+    <script>mostrarModal('Solicitação enviada com sucesso!');</script>
+  <?php elseif (isset($errorMsg)): ?>
+    <script>mostrarModal('<?= addslashes($errorMsg) ?>');</script>
+  <?php endif; ?>
+
         </div>
     </div>
 
@@ -143,26 +222,38 @@ if ($_SESSION['tipo']=='profissional') {
   </main>
   <script src="../js/login.js"></script>
   <script>
+    // ===========================================================
+    // Exibir ou ocultar o botão "ENTRAR" com base no status de login. Se estiver logado as informações do perfil aparecem
+    // ===========================================================
       const logado = <?= json_encode($logado) ?>;
       if (!logado) {
+        document.getElementById("perfil-area").style.display = "none";
         document.getElementById("btn-entrar").style.display = "block";
       } else {
+        document.getElementById("perfil-area").style.display = "block";
         document.getElementById("btn-entrar").style.display = "none";
       }
-
-
-
-    function solicitarServico() {
-      const logado = <?= json_encode($logado) ?>;
-      if (!logado) {
-        window.location.href = "login.php";
-      } else {
-        mostrarModal("Serviço solicitado com sucesso! (aqui entra a função que eu vou definir depois)");
-      }
-    }
-    
-   
+    // ===========================================================
+    // Fim do exibir ou ocultar o botão "ENTRAR" com base no status de login. Se estiver logado as informações do perfil aparecem
+    // ===========================================================    
   </script>
 </body>
+<script src="../js/login.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const url = new URL(window.location.href);
+    const success = url.searchParams.get("success");
+    const erro = url.searchParams.get("erro");
+
+    if (success) {
+        mostrarModal("Solicitação enviada com sucesso!");
+    }
+
+    if (erro) {
+        mostrarModal(erro);
+    }
+});
+</script>
 <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
 </html>

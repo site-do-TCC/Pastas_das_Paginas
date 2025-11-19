@@ -221,41 +221,6 @@
 }
 
 
- /*  css da tela de erro nao sei se ta certo 
-.alerta {
-  display: none; 
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.alerta-box {
-  background: #f5f2e8;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  width: 300px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-
-.alerta-box p {
-  margin-bottom: 15px;
-}
-
-.alerta-box button {
-  background: #ff6b6b;
-  border: none;
-  padding: 8px 20px;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-}
-*/
 
 /* Fundo escuro transparente */
 .modal {
