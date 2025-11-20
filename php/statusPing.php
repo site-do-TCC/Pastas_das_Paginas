@@ -1,0 +1,71 @@
+<?php
+session_start();
+require_once __DIR__ . '/conexao.php';
+header('Content-Type: application/json; charset=utf-8');
+
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+$conexao->set_charset('utf8mb4');
+date_default_timezone_set('America/Sao_Paulo');
+
+function resolveCurrentUser()
+{
+    $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null; // 'cliente' ou 'profissional'
+    $idPrest = (int) (isset($_SESSION['id_prestadora']) ? $_SESSION['id_prestadora'] : (isset($_SESSION['prestadora']['id_usuario']) ? $_SESSION['prestadora']['id_usuario'] : 0));
+    $idCli   = (int) (isset($_SESSION['id_cliente']) ? $_SESSION['id_cliente'] : (isset($_SESSION['cliente']['id_usuario']) ? $_SESSION['cliente']['id_usuario'] : 0));
+
+    if ($tipo === 'cliente') {
+        return ['role' => 'cliente', 'id' => $idCli];
+    }
+    if ($tipo === 'profissional') {
+        return ['role' => 'prestadora', 'id' => $idPrest];
+    }
+    if ($idCli && !$idPrest) return ['role' => 'cliente', 'id' => $idCli];
+    if ($idPrest && !$idCli) return ['role' => 'prestadora', 'id' => $idPrest];
+    return ['role' => null, 'id' => 0];
+}
+
+try {
+    $current = resolveCurrentUser();
+    if (!$current['id'] || !$current['role']) {
+        http_response_code(401);
+        echo json_encode(['ok' => false, 'erro' => 'Usuário não autenticado']);
+        exit;
+    }
+
+    $role = $current['role'];
+    $userId = $current['id'];
+
+    $conexao->query("CREATE TABLE IF NOT EXISTS presence (
+        user_id INT NOT NULL,
+        role ENUM('cliente','prestadora') NOT NULL,
+        last_active DATETIME DEFAULT CURRENT_TIMESTAMP,
+        typing_until DATETIME DEFAULT NULL,
+        PRIMARY KEY(user_id, role)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    $typing = isset($_POST['typing']) ? (int) $_POST['typing'] : null; // 1 liga, 0 desliga
+
+    if ($typing === 1) {
+        $stmt = $conexao->prepare("INSERT INTO presence (user_id, role, last_active, typing_until)
+            VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 6 SECOND))
+            ON DUPLICATE KEY UPDATE last_active = VALUES(last_active), typing_until = VALUES(typing_until)");
+    } elseif ($typing === 0) {
+        $stmt = $conexao->prepare("INSERT INTO presence (user_id, role, last_active, typing_until)
+            VALUES (?, ?, NOW(), NULL)
+            ON DUPLICATE KEY UPDATE last_active = VALUES(last_active), typing_until = NULL");
+    } else {
+        $stmt = $conexao->prepare("INSERT INTO presence (user_id, role, last_active)
+            VALUES (?, ?, NOW())
+            ON DUPLICATE KEY UPDATE last_active = VALUES(last_active)");
+    }
+    $stmt->bind_param('is', $userId, $role);
+    $stmt->execute();
+    $stmt->close();
+
+    echo json_encode(['ok' => true]);
+    exit;
+} catch (mysqli_sql_exception $e) {
+    http_response_code(500);
+    echo json_encode(['ok' => false, 'erro' => $e->getMessage()]);
+    exit;
+}

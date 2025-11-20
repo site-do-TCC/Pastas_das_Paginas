@@ -1,0 +1,9 @@
+.badge-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #7C3AED; /* roxo */
+  border-radius: 50%;
+  margin-left: 6px;
+  vertical-align: middle;
+}
