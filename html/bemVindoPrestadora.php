@@ -133,7 +133,7 @@ $stmt = $conexao->prepare("SELECT imgperfil FROM prestadora WHERE id_usuario = ?
       <a href="#" class="btn mensagens">💬 Mensagens</a>
       <a href="#" class="btn avaliacoes">⭐ Avaliações</a>
       <a href="..\html\cursos.php" class="btn cursos">🎓 Cursos</a>
-      <a href="..\html\agenda.php" class="btn agenda">📅 Minha Agenda</a>
+      <a href="..\html\agendaPrestadora.php" class="btn agenda">📅 Minha Agenda</a>
     </div>
   </main>
 

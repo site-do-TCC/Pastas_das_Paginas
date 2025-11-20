@@ -31,25 +31,25 @@ $prest = mysqli_fetch_assoc($sql);
 // =============================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $id_solic = intval($_POST['id_solic']);
+    $id = intval($_POST['id']);
     $acao = $_POST['acao']; // aceitar ou recusar
 
     // Atualiza status da solicitação
-    $status = ($acao === "aceitar") ? "aceita" : "recusada";
-    mysqli_query($conexao, "UPDATE solicitacoes SET status = '$status' WHERE id_solic = $id_solic");
+    $status = ($acao === "aceitar") ? "aceito" : "recusado"; 
+    mysqli_query($conexao, "UPDATE solicitacoes SET status = '$status' WHERE id = $id");
 
     // Criar notificação para o cliente
     $sqlInfo = mysqli_query($conexao, "
         SELECT id_contratante 
         FROM solicitacoes 
-        WHERE id_solic = $id_solic
+        WHERE id = $id
     ");
     $inf = mysqli_fetch_assoc($sqlInfo);
     $id_cliente = $inf['id_contratante'];
 
     mysqli_query($conexao, "
-        INSERT INTO notificacoes (id_usuario, mensagem) 
-        VALUES ($id_cliente, 'Sua solicitação foi $status pela usuario.')
+        INSERT INTO notificacoes (id_usuario, id_solicitacao, mensagem)
+        VALUES ($id_cliente, $id, 'Seu pedido foi $status pela prestadora.')
     ");
 
     header("Location: agenda.php?success=$status");
@@ -72,7 +72,6 @@ $solicitacoes = mysqli_query($conexao, "
     WHERE s.id_prestadora = $id_usuario
     ORDER BY s.id DESC
 ");
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -148,8 +147,7 @@ $solicitacoes = mysqli_query($conexao, "
 
             <?php if ($s['status'] === "pendente"): ?>
             <form method="POST" class="acoes">
-                <input type="hidden" name="id_solic" value="<?= $s['id'] ?>">
-
+                <input type="hidden" name="id" value="<?= $s['id'] ?>">
                 <button name="acao" value="aceitar" class="btn aceitar">Aceitar</button>
                 <button name="acao" value="recusar" class="btn recusar">Recusar</button>
             </form>

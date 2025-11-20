@@ -64,6 +64,32 @@ if (!empty($_SESSION['id_usuario'])) {
         
     }
 }
+
+
+// =============================================
+// BUSCAR NOTIFICAÇÕES DO CLIENTE
+// =============================================
+$notificacoes = [];
+$stmt = $conexao->prepare("
+    SELECT id, mensagem, visualizado, data
+    FROM notificacoes
+    WHERE id_usuario = ?
+    ORDER BY id DESC
+");
+$stmt->bind_param("i", $id_usuario);
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    $notificacoes[] = $row;
+}
+$stmt->close();
+
+// Contar notificações não lidas
+$notif_nao_lidas = 0;
+foreach ($notificacoes as $n) {
+    if ($n['visualizado'] == 0) $notif_nao_lidas++;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -133,7 +159,32 @@ if (!empty($_SESSION['id_usuario'])) {
        
         <img src="<?php  echo $img?>" alt="Foto de perfil" class="perfil-foto">
 
-     
+        <!-- Ícone de Notificações -->
+<div class="notificacoes-container">
+    <button id="btn-notificacoes" class="notif-btn">
+        🔔
+        <?php if ($notif_nao_lidas > 0): ?>
+            <span class="notif-count"><?php echo $notif_nao_lidas; ?></span>
+        <?php endif; ?>
+    </button>
+
+    <!-- DROPDOWN DAS NOTIFICAÇÕES -->
+    <div id="notif-dropdown" class="notif-dropdown hidden">
+        <?php if (count($notificacoes) === 0): ?>
+            <p class="vazio">Nenhuma notificação.</p>
+        <?php else: ?>
+            <?php foreach ($notificacoes as $n): ?>
+                <div class="notif-item <?php echo $n['visualizado'] ? '' : 'nao-lida'; ?>">
+                    <p><?php echo $n['mensagem']; ?></p>
+                    <small><?php echo $n['data']; ?></small>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+
         <button class="menu-icon" id="menu-btn">&#9776;</button>
       </div>
     </nav>
@@ -152,7 +203,7 @@ if (!empty($_SESSION['id_usuario'])) {
 
       <div class="botoes">
         <a href="busca.php" class="btn buscar">🔍 Buscar Serviços</a>
-        <a href="agenda.php" class="btn agenda">📅 Minha Agenda</a>
+        <a href="agendaCliente.php" class="btn agenda">📅 Minha Agenda</a>
         <a href="contato.html" class="btn mensagens">💬 Mensagens</a>
         <a href="avaliacoes.php" class="btn avaliacoes">⭐ Minhas Avaliações</a>
       </div>
@@ -164,6 +215,14 @@ if (!empty($_SESSION['id_usuario'])) {
    
    (<?php echo json_encode($_SESSION); ?>);
   </script>
+  <script>
+document.getElementById("btn-notificacoes").addEventListener("click", () => {
+    document.getElementById("notif-dropdown").classList.toggle("hidden");
+
+    // Marcar como lidas via AJAX
+    fetch("../php/marcar_notificacoes.php");
+});
+</script>
 </body>
    <script src="../js/login.js"></script> 
   <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
