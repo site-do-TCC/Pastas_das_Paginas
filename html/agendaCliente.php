@@ -70,6 +70,58 @@ if(isset($_POST['deletar'])) {
     header("Location: agendaCliente.php");
     exit();
 }
+
+
+// ======================= GERAR CALENDÁRIO =======================
+
+// Pega mês e ano atual OU do GET (?mes=11&ano=2025)
+$mes = isset($_GET['mes']) ? intval($_GET['mes']) : date("m");
+$ano = isset($_GET['ano']) ? intval($_GET['ano']) : date("Y");
+
+// Primeiro e último dia do mês
+$primeiroDia = new DateTime("$ano-$mes-01");
+$ultimoDia = new DateTime("$ano-$mes-" . $primeiroDia->format("t"));
+
+// Dia da semana do primeiro dia (0=domingo)
+$diaSemana = intval($primeiroDia->format("w"));
+
+// Carregar todas as anotações desse mês
+$sqlCalendario = "SELECT id, data_evento, anotacao 
+                  FROM agenda 
+                  WHERE id_usuario = ? AND tipo_usuario = ? 
+                  AND MONTH(data_evento) = ? AND YEAR(data_evento) = ?";
+$stmtCal = $conexao->prepare($sqlCalendario);
+$stmtCal->bind_param("isii", $id_usuario, $tipo_usuario, $mes, $ano);
+$stmtCal->execute();
+$anotacoesMes = $stmtCal->get_result()->fetch_all(MYSQLI_ASSOC);
+
+// Converter para array indexado por dia
+$marcados = [];
+foreach ($anotacoesMes as $evento) {
+    $dia = intval(date("d", strtotime($evento["data_evento"])));
+    $marcados[$dia][] = $evento;
+}
+
+setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf8', 'portuguese');
+
+function mesPorExtenso($mes) {
+    $nomes = [
+        1 => "Janeiro",
+        2 => "Fevereiro",
+        3 => "Março",
+        4 => "Abril",
+        5 => "Maio",
+        6 => "Junho",
+        7 => "Julho",
+        8 => "Agosto",
+        9 => "Setembro",
+        10 => "Outubro",
+        11 => "Novembro",
+        12 => "Dezembro"
+    ];
+
+    return $nomes[(int)$mes] ?? "";
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -141,10 +193,72 @@ if(isset($_POST['deletar'])) {
 
     <h2 class="titulo-lista">Minhas Anotações</h2>
 
+
+
+    <!-- CALENDÁRIO -->
+<div class="calendario-container">
+
+    <div class="calendario-header">
+        <a href="?mes=<?= ($mes == 1 ? 12 : $mes - 1) ?>&ano=<?= ($mes == 1 ? $ano - 1 : $ano) ?>" class="cal-btn">◀</a>
+
+        <h2><?= mesPorExtenso($mes) ?> de <?= $ano ?></h2>
+
+        <a href="?mes=<?= ($mes == 12 ? 1 : $mes + 1) ?>&ano=<?= ($mes == 12 ? $ano + 1 : $ano) ?>" class="cal-btn">▶</a>
+    </div>
+
+    <table class="calendario">
+        <tr>
+            <th>Dom</th><th>Seg</th><th>Ter</th><th>Qua</th>
+            <th>Qui</th><th>Sex</th><th>Sáb</th>
+        </tr>
+        <tr>
+        <?php
+            // células vazias antes do 1° dia
+            for ($i=0; $i < $diaSemana; $i++) echo "<td></td>";
+
+            $dia = 1;
+            while ($dia <= intval($primeiroDia->format("t"))) {
+
+                // Quebra linha a cada sábado
+                if (($diaSemana % 7) == 0 && $dia != 1) echo "</tr><tr>";
+
+                $temEvento = isset($marcados[$dia]);
+
+                echo "<td class='".($temEvento ? "dia-evento" : "")."'>";
+
+                echo "<div class='dia-numero'>$dia</div>";
+
+                if ($temEvento) {
+                    foreach ($marcados[$dia] as $ev) {
+                        echo "<div class='evento-mini'>".htmlspecialchars($ev['anotacao'])."</div>";
+                    }
+                }
+
+                echo "</td>";
+
+                $dia++;
+                $diaSemana++;
+            }
+
+            // completa linha final
+            while ($diaSemana % 7 != 0) {
+                echo "<td></td>";
+                $diaSemana++;
+            }
+        ?>
+        </tr>
+    </table>
+</div>
+
+
+
+
+
+
     <div class="lista-anotacoes">
         <?php while($a = mysqli_fetch_assoc($result)): ?>
 
-            
+
         <?php
             $dataEvento = new DateTime($a['data_evento'] . " 00:00:00");
             $hoje = new DateTime("today 00:00:00");

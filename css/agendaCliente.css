@@ -136,6 +136,68 @@ textarea {
     font-weight: bold;
 }
 
+/* CALENDÁRIO */
+.calendario-container {
+    background: #fff;
+    padding: 20px;
+    margin: 30px 0;
+    border-radius: 14px;
+    border: 2px solid #ddd;
+}
+
+.calendario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.cal-btn {
+    padding: 6px 12px;
+    background: #917ba4;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.calendario {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.calendario th {
+    background: #917ba4;
+    color: white;
+    padding: 10px;
+}
+
+.calendario td {
+    height: 90px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+    padding: 6px;
+    position: relative;
+}
+
+.dia-numero {
+    font-weight: bold;
+    color: #917ba4;
+}
+
+.dia-evento {
+    background: #f7f0ff;
+}
+
+.evento-mini {
+    background: #917ba4;
+    color: white;
+    font-size: 0.75em;
+    padding: 3px 6px;
+    border-radius: 6px;
+    margin-top: 4px;
+}
+
 /* RESPONSIVO */
 @media (max-width: 650px) {
   .anotacao-card {
@@ -220,7 +282,7 @@ textarea {
   z-index: 9999;
   max-width: 480px;
   margin: auto;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Mulish', sans-serif;
   display: none;
   animation: fadeIn 0.5s ease-in-out;
 }

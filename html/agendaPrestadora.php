@@ -4,74 +4,145 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require_once "../php/conexao.php";
 
-// =============================================
-// 1) VERIFICA LOGIN
-// =============================================
+// ==========================
+// 0) LOGIN + TIPO
+// ==========================
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: ../html/login.php");
     exit;
 }
-
-// Somente prestadoras podem acessar
-if ($_SESSION['tipo'] !== 'profissional') {
+if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'profissional') {
     header("Location: ..\html\Pagina_Inicial.html");
     exit;
 }
 
 $id_usuario = intval($_SESSION['id_usuario']);
 
-// =============================================
-// 2) PEGAR DADOS DA usuario LOGADA
-// =============================================
-$sql = mysqli_query($conexao, "SELECT nome, imgperfil FROM prestadora WHERE id_usuario = $id_usuario");
-$prest = mysqli_fetch_assoc($sql);
+// ==========================
+// 1) DADOS DA PRESTADORA (header)
+// ==========================
+$stmt = $conexao->prepare("SELECT nome, imgperfil FROM prestadora WHERE id_usuario = ?");
+$stmt->bind_param("i", $id_usuario);
+$stmt->execute();
+$resP = $stmt->get_result();
+$prest = $resP->fetch_assoc();
+$stmt->close();
 
-// =============================================
-// 3) TRATAMENTO DE ACEITAR OU RECUSAR SOLICITAÇÃO
-// =============================================
+// ==========================
+// 2) TRATAMENTO DE POSTS
+// Usamos um campo hidden 'form_type' para distinguir ações
+// ==========================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $id = intval($_POST['id']);
-    $acao = $_POST['acao']; // aceitar ou recusar
+    $form_type = isset($_POST['form_type']) ? $_POST['form_type'] : '';
 
-    // Atualiza status da solicitação
-    $status = ($acao === "aceitar") ? "aceito" : "recusado"; 
-    mysqli_query($conexao, "UPDATE solicitacoes SET status = '$status' WHERE id = $id");
+    // ---- aceitar / recusar solicitação ----
+    if ($form_type === 'sol_action' && isset($_POST['id']) && isset($_POST['acao'])) {
+        $id = intval($_POST['id']);
+        $acao = $_POST['acao'];
+        $status = ($acao === 'aceitar') ? 'aceito' : 'recusado';
 
-    // Criar notificação para o cliente
-    $sqlInfo = mysqli_query($conexao, "
-        SELECT id_contratante 
-        FROM solicitacoes 
-        WHERE id = $id
-    ");
-    $inf = mysqli_fetch_assoc($sqlInfo);
-    $id_cliente = $inf['id_contratante'];
+        $upd = $conexao->prepare("UPDATE solicitacoes SET status = ? WHERE id = ?");
+        $upd->bind_param("si", $status, $id);
+        $upd->execute();
+        $upd->close();
 
-    mysqli_query($conexao, "
-        INSERT INTO notificacoes (id_usuario, id_solicitacao, mensagem)
-        VALUES ($id_cliente, $id, 'Seu pedido foi $status pela prestadora.')
-    ");
+        // pegar id_contratante para notificação
+        $q = $conexao->prepare("SELECT id_contratante FROM solicitacoes WHERE id = ?");
+        $q->bind_param("i", $id);
+        $q->execute();
+        $r = $q->get_result()->fetch_assoc();
+        $q->close();
 
-    header("Location: agenda.php?success=$status");
-    exit;
+        if ($r && !empty($r['id_contratante'])) {
+            $id_cliente = intval($r['id_contratante']);
+            // Inserir notificação (usando prepared stmt)
+            $ins = $conexao->prepare("INSERT INTO notificacoes (id_usuario, id_solicitacao, mensagem) VALUES (?, ?, ?)");
+            $msg = "Seu pedido foi $status pela prestadora.";
+            $ins->bind_param("iis", $id_cliente, $id, $msg);
+            $ins->execute();
+            $ins->close();
+        }
+
+        header("Location: agendaPrestadora.php?success=$status");
+        exit;
+    }
+
+    // ---- inserir anotação na agenda da prestadora ----
+    if ($form_type === 'agenda_insert' && isset($_POST['data']) && isset($_POST['texto'])) {
+        $data_ev = $_POST['data'];
+        $texto = trim($_POST['texto']);
+        $tipo_usuario = 'prestadora';
+
+        $ins = $conexao->prepare("INSERT INTO agenda (id_usuario, tipo_usuario, data_evento, anotacao) VALUES (?, ?, ?, ?)");
+        $ins->bind_param("isss", $id_usuario, $tipo_usuario, $data_ev, $texto);
+        $ins->execute();
+        $ins->close();
+
+        header("Location: agendaPrestadora.php?ok=1");
+        exit;
+    }
+
+    // ---- excluir anotação ----
+    if ($form_type === 'agenda_delete' && isset($_POST['deletar'])) {
+        $idDel = intval($_POST['deletar']);
+        $del = $conexao->prepare("DELETE FROM agenda WHERE id = ? AND id_usuario = ? AND tipo_usuario = 'prestadora'");
+        $del->bind_param("ii", $idDel, $id_usuario);
+        $del->execute();
+        $del->close();
+        header("Location: agendaPrestadora.php");
+        exit;
+    }
 }
 
-// =============================================
-// 4) SOLICITAÇÕES RECEBIDAS
-// =============================================
-//var_dump($_SESSION);
-//exit;
-$solicitacoes = mysqli_query($conexao, "
-    SELECT 
-        s.id,
-        s.status,
-        u.nome AS cliente_nome,
-        u.imgperfil AS cliente_img
+// ==========================
+// 3) LISTAR SOLICITAÇÕES (para a aba solicitações)
+// ==========================
+$stmt = $conexao->prepare("
+    SELECT s.id, s.status, c.nome AS cliente_nome, c.imgperfil AS cliente_img
     FROM solicitacoes s
-    INNER JOIN cliente u ON u.id_usuario = s.id_contratante
-    WHERE s.id_prestadora = $id_usuario
+    INNER JOIN cliente c ON c.id_usuario = s.id_contratante
+    WHERE s.id_prestadora = ?
     ORDER BY s.id DESC
 ");
+$stmt->bind_param("i", $id_usuario);
+$stmt->execute();
+$solicitacoes = $stmt->get_result();
+$stmt->close();
+
+// ==========================
+// 4) LISTAR ANOTAÇÕES (para aba agenda + calendário)
+// ==========================
+$tipo_usuario = 'prestadora';
+$stmt = $conexao->prepare("SELECT id, data_evento, anotacao FROM agenda WHERE id_usuario = ? AND tipo_usuario = ? ORDER BY data_evento ASC");
+$stmt->bind_param("is", $id_usuario, $tipo_usuario);
+$stmt->execute();
+$result = $stmt->get_result();
+$anotacoes_all = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+// para o calendário (mês/ano selecionados)
+$mes = isset($_GET['mes']) ? intval($_GET['mes']) : intval(date("m"));
+$ano = isset($_GET['ano']) ? intval($_GET['ano']) : intval(date("Y"));
+$stmt = $conexao->prepare("SELECT id, data_evento, anotacao FROM agenda WHERE id_usuario = ? AND tipo_usuario = ? AND MONTH(data_evento) = ? AND YEAR(data_evento) = ?");
+$stmt->bind_param("isii", $id_usuario, $tipo_usuario, $mes, $ano);
+$stmt->execute();
+$anotacoesMes = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+// montar array indexado por dia
+$marcados = [];
+foreach ($anotacoesMes as $ev) {
+    $dia = intval(date("d", strtotime($ev['data_evento'])));
+    $marcados[$dia][] = $ev;
+}
+
+// função mês por extenso (pt-BR)
+function mesPorExtenso($m) {
+    $nomes = [1=>"Janeiro",2=>"Fevereiro",3=>"Março",4=>"Abril",5=>"Maio",6=>"Junho",7=>"Julho",8=>"Agosto",9=>"Setembro",10=>"Outubro",11=>"Novembro",12=>"Dezembro"];
+    return $nomes[(int)$m] ?? "";
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -122,45 +193,169 @@ $solicitacoes = mysqli_query($conexao, "
     </div>
 </header>
 
-<main class="agenda-container">
+<div class="tabs-container">
 
-    <h1 class="titulo-agenda">Minhas Solicitações</h1>
-
-    <?php if (isset($_GET['success'])): ?>
-        <script>mostrarModal("Solicitação <?= htmlspecialchars($_GET['success']) ?> com sucesso!");</script>
-    <?php endif; ?>
-
-    <div class="lista-solicitacoes">
-        <?php while($s = mysqli_fetch_assoc($solicitacoes)): ?>
-        <div class="sol-card">
-
-            <div class="sol-info">
-                <img src="<?= htmlspecialchars($s['cliente_img']) ?>" class="cliente-img">
-
-                <div>
-                    <h2><?= htmlspecialchars($s['cliente_nome']) ?></h2>
-                    <p>Status: <strong class="status <?= $s['status'] ?>">
-                        <?= htmlspecialchars($s['status']) ?>
-                    </strong></p>
-                </div>
-            </div>
-
-            <?php if ($s['status'] === "pendente"): ?>
-            <form method="POST" class="acoes">
-                <input type="hidden" name="id" value="<?= $s['id'] ?>">
-                <button name="acao" value="aceitar" class="btn aceitar">Aceitar</button>
-                <button name="acao" value="recusar" class="btn recusar">Recusar</button>
-            </form>
-            <?php endif; ?>
-
-        </div>
-        <?php endwhile; ?>
+    <div class="tabs-header">
+        <button class="tab-btn active" data-tab="0">Agenda</button>
+        <button class="tab-btn" data-tab="1">Solicitações</button>
     </div>
 
-</main>
+    <div class="tabs-wrapper">
+        <div class="tabs-content">
+
+            <!-- ===== TAB AGENDA (index 0) ===== -->
+            <section class="tab-page" id="tab-agenda">
+                <h1 class="titulo-agenda">Minha Agenda</h1>
+
+                <!-- FORMULARIO AGENDA -->
+                <form method="POST" class="form-anotacao">
+                    <input type="hidden" name="form_type" value="agenda_insert">
+                    <div class="form-group">
+                        <label>Data:</label>
+                        <input type="date" name="data" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Anotação:</label>
+                        <textarea name="texto" maxlength="255" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-salvar">Salvar Anotação</button>
+                </form>
+
+                <!-- CALENDÁRIO -->
+                <div class="calendario-container">
+                    <div class="calendario-header">
+                        <a href="?mes=<?= ($mes == 1 ? 12 : $mes - 1) ?>&ano=<?= ($mes == 1 ? $ano - 1 : $ano) ?>" class="cal-btn">◀</a>
+                        <h2><?= mesPorExtenso($mes) ?> de <?= $ano ?></h2>
+                        <a href="?mes=<?= ($mes == 12 ? 1 : $mes + 1) ?>&ano=<?= ($mes == 12 ? $ano + 1 : $ano) ?>" class="cal-btn">▶</a>
+                    </div>
+
+                    <table class="calendario">
+                        <tr>
+                            <th>Dom</th><th>Seg</th><th>Ter</th><th>Qua</th>
+                            <th>Qui</th><th>Sex</th><th>Sáb</th>
+                        </tr>
+                        <tr>
+                        <?php
+                            // calculos do mês
+                            $primeiroDia = new DateTime("$ano-$mes-01");
+                            $ultimoDia = intval($primeiroDia->format("t"));
+                            $diaSemana = intval($primeiroDia->format("w")); // 0 dom
+
+                            // células vazias antes do 1° dia
+                            for ($i=0; $i < $diaSemana; $i++) echo "<td></td>";
+
+                            $dia = 1;
+                            $col = $diaSemana;
+                            while ($dia <= $ultimoDia) {
+
+                                if ($col % 7 == 0 && $dia != 1) echo "</tr><tr>";
+
+                                $temEvento = isset($marcados[$dia]);
+                                echo "<td class='".($temEvento ? "dia-evento" : "")."'>";
+                                echo "<div class='dia-numero'>$dia</div>";
+                                if ($temEvento) {
+                                    foreach ($marcados[$dia] as $ev) {
+                                        echo "<div class='evento-mini'>".htmlspecialchars($ev['anotacao'])."</div>";
+                                    }
+                                }
+                                echo "</td>";
+
+                                $dia++; $col++;
+                            }
+
+                            // completa linha final
+                            while ($col % 7 != 0) { echo "<td></td>"; $col++; }
+                        ?>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- LISTA DE ANOTAÇÕES -->
+                <h2 class="titulo-lista">Minhas Anotações</h2>
+                <div class="lista-anotacoes">
+                    <?php foreach ($anotacoes_all as $a): ?>
+                        <?php
+                            $dataEvento = new DateTime($a['data_evento'] . " 00:00:00");
+                            $hoje = new DateTime("today 00:00:00");
+                            $diff = $hoje->diff($dataEvento);
+                            $diasRestantes = (int)$diff->format("%r%a");
+                        ?>
+                        <div class="anotacao-card">
+                            <div class="anotacao-data"><?= date("d/m/Y", strtotime($a['data_evento'])) ?></div>
+                            <div class="anotacao-texto"><?= nl2br(htmlspecialchars($a['anotacao'])) ?></div>
+                            <div class="dias-restantes">
+                                <?php
+                                    if ($diasRestantes > 1) echo "Faltam $diasRestantes dias";
+                                    elseif ($diasRestantes === 1) echo "Falta 1 dia";
+                                    elseif ($diasRestantes === 0) echo "É hoje!";
+                                    else echo "Evento passou há " . abs($diasRestantes) . " dias";
+                                ?>
+                            </div>
+
+                            <form method="POST" style="margin-left:10px;">
+                                <input type="hidden" name="form_type" value="agenda_delete">
+                                <input type="hidden" name="deletar" value="<?= $a['id'] ?>">
+                                <button class="btn-delete" type="submit">Excluir</button>
+                            </form>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+            </section>
+
+            <!-- ===== TAB SOLICITAÇÕES (index 1) ===== -->
+            <section class="tab-page" id="tab-solicitacoes">
+                <h1 class="titulo-agenda">Minhas Solicitações</h1>
+
+                <?php if (isset($_GET['success'])): ?>
+                    <script>mostrarModal("Solicitação <?= htmlspecialchars($_GET['success']) ?> com sucesso!");</script>
+                <?php endif; ?>
+
+                <div class="lista-solicitacoes">
+                    <?php while($s = mysqli_fetch_assoc($solicitacoes)): ?>
+                        <div class="sol-card">
+                            <div class="sol-info">
+                                <img src="<?= htmlspecialchars($s['cliente_img']) ?>" class="cliente-img">
+                                <div>
+                                    <h2><?= htmlspecialchars($s['cliente_nome']) ?></h2>
+                                    <p>Status: <strong class="status <?= $s['status'] ?>"><?= htmlspecialchars($s['status']) ?></strong></p>
+                                </div>
+                            </div>
+
+                            <?php if ($s['status'] === "pendente"): ?>
+                                <form method="POST" class="acoes">
+                                    <input type="hidden" name="form_type" value="sol_action">
+                                    <input type="hidden" name="id" value="<?= $s['id'] ?>">
+                                    <button name="acao" value="aceitar" class="btn aceitar">Aceitar</button>
+                                    <button name="acao" value="recusar" class="btn recusar">Recusar</button>
+                                </form>
+                            <?php endif; ?>
+
+                        </div>
+                    <?php endwhile; ?>
+                </div>
+            </section>
+
+        </div> <!-- .tabs-content -->
+    </div> <!-- .tabs-wrapper -->
+
+</div> <!-- .tabs-container -->
 
 <script src="../js/login.js"></script>
 <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
+<script>
+// TABS: translate by 100% per tab (each tab-page = 100%)
+document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
 
+        const tabIndex = this.getAttribute("data-tab");
+        document.querySelector(".tabs-content").style.transform = `translateX(-${tabIndex * 100}%)`;
+    });
+});
+</script>
 </body>
 </html>
