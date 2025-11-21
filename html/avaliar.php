@@ -5,20 +5,16 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 include_once(__DIR__ . '/../php/conexao.php');
-if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['email']) || $_SESSION['tipo'] == 'cliente'){
-    echo '<script> window.location.href = "\login.php"</script>';
-    session_destroy();
+
+
+// VERIFICA LOGIN
+if (!isset($_SESSION["id_usuario"])) {
+    echo "Erro: usuário não logado";
     exit;
 }
 
-
-
 $avaliador_id = $_SESSION["id_usuario"];
-$avaliador_tipo = $_SESSION["tipo"]; // cliente ou profissional
-if ($avaliador_tipo == 'profissional') {
-    $avaliador_tipo = 'prestadora';
-}
-    
+$avaliador_tipo = $_SESSION["tipo"]; // cliente ou prestadora
 
 $avaliado_id = $_GET["id"] ?? null;
 if (!$avaliado_id) {
@@ -53,6 +49,7 @@ if (isset($_POST['submit'])) {
     $avaliado_id = mysqli_real_escape_string($conexao, $_POST["avaliado_id"]);
     $nota        = mysqli_real_escape_string($conexao, $_POST["nota"]);
     $comentario  = mysqli_real_escape_string($conexao, $_POST["comentario"]);
+<<<<<<< HEAD
 
 
     
@@ -71,6 +68,25 @@ if (isset($_POST['submit'])) {
 }
 
 
+=======
+    $data        = date("Y-m-d H:i:s");
+
+    $sqlInsert = "
+        INSERT INTO avaliacoes 
+        (avaliador_id, avaliador_tipo, avaliado_id, avaliado_tipo, nota, comentario, data_avaliacao)
+        VALUES 
+        ('$avaliador_id', '$avaliador_tipo', '$avaliado_id', '$avaliado_tipo', '$nota', '$comentario', '$data')
+    ";
+
+    if (mysqli_query($conexao, $sqlInsert)) {
+        header("Location: avaliar.php?ok=1");
+        exit;
+    } else {
+        echo "Erro ao salvar avaliação: " . mysqli_error($conexao);
+    }
+}
+
+>>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
 ?>
 
 
@@ -115,6 +131,7 @@ if (isset($_POST['submit'])) {
     </div>
   </div>
 
+<<<<<<< HEAD
   <!-- Mensagem -->
     <div id="modalErro" class="modal">
         <div class="modal-content">
@@ -122,6 +139,8 @@ if (isset($_POST['submit'])) {
             <button onclick="fecharModal()">OK</button>
         </div>
     </div>
+=======
+>>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
 
 
 
@@ -147,6 +166,7 @@ if (isset($_POST['submit'])) {
 
 
   
+<<<<<<< HEAD
 <!-- 
 ========================
 // BOTÃO VOLTAR
@@ -185,30 +205,49 @@ if (isset($_POST['submit'])) {
 // BOTÃO VOLTAR
 ========================
 -->
+=======
+
+>>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
 
 
 
   <main class="container">
+<<<<<<< HEAD
 
 
 
    
+=======
+>>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
    <h2>Avaliando: <?= htmlspecialchars($avaliado["nome"]) ?></h2>
 
 <form action="avaliar.php?id=<?= $avaliado_id ?>" method="POST">
     <input type="hidden" name="avaliado_id" value="<?= $avaliado_id ?>">
 
+<<<<<<< HEAD
     <div class="stars" required>
         <i class="star" data-value="1" onclick="estrelaUm()" id="1" required>★</i>
         <i class="star" data-value="2" onclick="estrelaDois()" id="2" required>★</i>
         <i class="star" data-value="3"  onclick="estrelaTres()" id="3" required>★</i>
         <i class="star" data-value="4"  onclick="estrelaQuatro()" id="4" required>★</i>
         <i class="star" data-value="5"  onclick="estrelaCinco()" id="5" required>★</i>
+=======
+    <div class="stars">
+        <i class="star" data-value="1" onclick="estrelaUm()" id="1">★</i>
+        <i class="star" data-value="2" onclick="estrelaDois()" id="2">★</i>
+        <i class="star" data-value="3"  onclick="estrelaTres()" id="3" >★</i>
+        <i class="star" data-value="4"  onclick="estrelaQuatro()" id="4">★</i>
+        <i class="star" data-value="5"  onclick="estrelaCinco()" id="5">★</i>
+>>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
     </div>
 
     <input type="hidden" id="nota" name="nota">
 
+<<<<<<< HEAD
     <textarea name="comentario" placeholder="Escreva um comentário..." required></textarea>
+=======
+    <textarea name="comentario" placeholder="Escreva um comentário..."></textarea>
+>>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
 
     <button type="submit" class="btn-enviar" name="submit">Enviar Avaliação</button>
 </form>
@@ -218,7 +257,11 @@ if (isset($_POST['submit'])) {
  
 
 </body>
+<<<<<<< HEAD
    <script src="../js/login"></script> 
+=======
+   <script src="../js/login.js"></script> 
+>>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
   <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
   <script>
 const stars = document.querySelectorAll(".star");
@@ -261,6 +304,7 @@ stars.forEach(star => {
 });
 </script>
 </html>
+<<<<<<< HEAD
 
 <?php
 function resultado($conexao, $sqlInsert){
@@ -271,3 +315,5 @@ if (mysqli_query($conexao, $sqlInsert)) {
     }
 }
 ?>
+=======
+>>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
