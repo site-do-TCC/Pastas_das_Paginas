@@ -79,60 +79,94 @@ nav {
   cursor: pointer;
 }
 
-.lista {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 20px;
-    margin: 30px;
+/* Container principal */
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    align-items: center;
+/* Título */
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
 }
-.card img{
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
+
+/* Área das estrelas */
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0 25px 0;
 }
-.card p{
-    font-size: 1.1em;
-    font-weight: 600;
-    margin-bottom: 12px;
+
+.star {
+  font-size: 35px;
+  cursor: pointer;
+  color: #ccc;
+  transition: 0.2s;
+  user-select: none;
 }
-.card p:hover {
-    color: #741f89;
+.star:hover,
+.star.active {
+  color: #ffcc00;
+  transform: scale(1.15);
+}
+.starClicked {
+  font-size: 35px;
+  cursor: pointer;
+  color: #ffcc00;
+  transition: 0.2s;
+  user-select: none;
+}
+.starClicked:hover,
+.star.active {
+  color: #ffcc00;
+  transform: scale(1.15);
+}
+
+/* Textarea */
+textarea {
+  width: 100%;
+  padding: 12px;
+  height: 120px;
+  resize: none;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  transition: border 0.2s;
+  font-size: 15px;
+}
+
+textarea:focus {
+  border-color: #666;
+}
+
+/* Botão enviar */
+.btn-enviar {
+  margin-top: 18px;
+  width: 100%;
+  padding: 12px;
+  background: #741f89;
+  border: none;
+  color: white;
+  font-size: 17px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-enviar:hover {
+    transform: scale(1.05);
     transition: ease-in-out 0.3s;
-    transform: scale(1.2);
 }
-.card:hover {
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-    transform: translateY(-5px);
-    transition: ease-in-out 0.3s;
-}
-.card a:hover {
-    text-decoration: none;
-    transform: scale(1.2);
-    transition: ease-in-out 0.3s;
-}
-.card a:active {
-    transform: scale(1);
-}
-.btn-avaliar {
-    margin-top: 12px;
-    background: #741f89;
-    color: #fff;
-    padding: 10px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
+
+
 .cookie-banner {
   position: fixed;
   bottom: 20px;
