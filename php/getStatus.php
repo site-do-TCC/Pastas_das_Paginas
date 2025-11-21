@@ -46,10 +46,16 @@ try {
         role ENUM('cliente','prestadora') NOT NULL,
         last_active DATETIME DEFAULT CURRENT_TIMESTAMP,
         typing_until DATETIME DEFAULT NULL,
-        PRIMARY KEY(user_id, role)
+        typing_target INT NULL,
+        PRIMARY KEY(user_id, role),
+        KEY(typing_target)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $col = $conexao->query("SHOW COLUMNS FROM presence LIKE 'typing_target'");
+    if ($col->num_rows === 0) {
+        $conexao->query("ALTER TABLE presence ADD COLUMN typing_target INT NULL AFTER typing_until, ADD KEY typing_target (typing_target)");
+    }
 
-    $stmt = $conexao->prepare("SELECT last_active, typing_until FROM presence WHERE user_id = ? AND role = ? LIMIT 1");
+    $stmt = $conexao->prepare("SELECT last_active, typing_until, typing_target FROM presence WHERE user_id = ? AND role = ? LIMIT 1");
     $stmt->bind_param('is', $otherId, $otherRole);
     $stmt->execute();
     $res = $stmt->get_result();
@@ -61,9 +67,9 @@ try {
     $online = false;
 
     if ($row) {
-        if (!empty($row['typing_until'])) {
+        if (!empty($row['typing_until']) && !empty($row['typing_target'])) {
             $typingUntil = new DateTime($row['typing_until']);
-            if ($typingUntil > $now) {
+            if ($typingUntil > $now && (int)$row['typing_target'] === (int)$current['id']) {
                 $typing = true;
             }
         }

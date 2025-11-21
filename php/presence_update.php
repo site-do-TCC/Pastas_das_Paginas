@@ -35,32 +35,44 @@ try {
     $role = $current['role'];
     $userId = $current['id'];
 
-    // Cria tabela de presença se ainda não existir
+    // Cria tabela de presença se ainda não existir (agora com typing_target)
     $conexao->query("CREATE TABLE IF NOT EXISTS presence (
         user_id INT NOT NULL,
         role ENUM('cliente','prestadora') NOT NULL,
         last_active DATETIME DEFAULT CURRENT_TIMESTAMP,
         typing_until DATETIME DEFAULT NULL,
-        PRIMARY KEY(user_id, role)
+        typing_target INT NULL,
+        PRIMARY KEY(user_id, role),
+        KEY(typing_target)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    // Garante coluna typing_target caso tabela antiga exista
+    $col = $conexao->query("SHOW COLUMNS FROM presence LIKE 'typing_target'");
+    if ($col->num_rows === 0) {
+        $conexao->query("ALTER TABLE presence ADD COLUMN typing_target INT NULL AFTER typing_until, ADD KEY typing_target (typing_target)");
+    }
 
     $typing = isset($_POST['typing']) ? (int) $_POST['typing'] : null; // 1 liga, 0 desliga, null mantém
 
+    $target = isset($_POST['other_id']) ? (int)$_POST['other_id'] : null;
     if ($typing === 1) {
-        // estende TTL de digitando
-        $stmt = $conexao->prepare("INSERT INTO presence (user_id, role, last_active, typing_until)
-            VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 6 SECOND))
-            ON DUPLICATE KEY UPDATE last_active = VALUES(last_active), typing_until = VALUES(typing_until)");
+        // estende TTL e salva alvo do chat
+        $stmt = $conexao->prepare("INSERT INTO presence (user_id, role, last_active, typing_until, typing_target)
+            VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 6 SECOND), ?)
+            ON DUPLICATE KEY UPDATE last_active = VALUES(last_active), typing_until = VALUES(typing_until), typing_target = VALUES(typing_target)");
+        $stmt->bind_param('isi', $userId, $role, $target);
     } elseif ($typing === 0) {
-        $stmt = $conexao->prepare("INSERT INTO presence (user_id, role, last_active, typing_until)
-            VALUES (?, ?, NOW(), NULL)
-            ON DUPLICATE KEY UPDATE last_active = VALUES(last_active), typing_until = NULL");
+        // desliga typing mantendo online
+        $stmt = $conexao->prepare("INSERT INTO presence (user_id, role, last_active, typing_until, typing_target)
+            VALUES (?, ?, NOW(), NULL, NULL)
+            ON DUPLICATE KEY UPDATE last_active = VALUES(last_active), typing_until = NULL, typing_target = NULL");
+        $stmt->bind_param('is', $userId, $role);
     } else {
+        // apenas online ping
         $stmt = $conexao->prepare("INSERT INTO presence (user_id, role, last_active)
             VALUES (?, ?, NOW())
             ON DUPLICATE KEY UPDATE last_active = VALUES(last_active)");
+        $stmt->bind_param('is', $userId, $role);
     }
-    $stmt->bind_param('is', $userId, $role);
     $stmt->execute();
     $stmt->close();
 

@@ -128,6 +128,7 @@ if (!empty($_SESSION['id_cliente'])) {
 
       <div class="chat-messages" id="chat-messages"></div>
 
+      <div id="attached-bar" class="attachments-bar" aria-live="polite" aria-label="Arquivos anexados" hidden></div>
       <div class="chat-input" id="chat-input-area">
         <button id="attach-btn" type="button" aria-label="Anexar arquivo">
           <img src="../img/botaoUpload.png" alt="Anexar">

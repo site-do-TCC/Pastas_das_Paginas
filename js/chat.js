@@ -153,8 +153,15 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     });
 
-    window.chats = updated.length ? updated : prev;
-    window.renderChatList?.(window.chats);
+    // Ordena sempre por atividade (tempo > id) para ordem base
+    updated.sort((a,b) => {
+      const ta = a.lastMessageTime ? new Date(a.lastMessageTime).getTime() : 0;
+      const tb = b.lastMessageTime ? new Date(b.lastMessageTime).getTime() : 0;
+      if (tb !== ta) return tb - ta; // mais recente primeiro
+      return (b.lastMessageId||0) - (a.lastMessageId||0);
+    });
+    window.chats = updated.length ? updated : prev; // mantém baseline
+    window.renderChatList?.(window.chats); // filtro aplicado dentro de renderChatList
 
     // Se o ativo avançou no servidor, traga só novas e marque lido
     const a = window.activeChatId && (window.chats || []).find(c => c.id === window.activeChatId);
@@ -201,16 +208,21 @@ document.addEventListener('DOMContentLoaded', () => {
       return { ok: false, erro: err.message };
     }
   }
-
-  // renderChatList (otimizado): faz diff incremental para não reiniciar animações
+  // ====== renderChatList (ordem base + filtro visual) ======
   function renderChatList(list) {
     const chatListEl = document.getElementById('chat-list');
     if (!chatListEl) return;
-
-    const desiredIds = new Set(list.map(c => String(c.id)));
-
-    // Atualiza ou cria cada item
-    list.forEach(chat => {
+    const q = (searchInput && searchInput.value.trim().toLowerCase()) || '';
+    let working = list;
+    if (q) {
+      working = list.filter(c => {
+        const nameL = (c.name||'').toLowerCase();
+        const msgL  = (c.lastMessage||'').toLowerCase();
+        return nameL.includes(q) || msgL.includes(q);
+      }).sort((a,b) => (a.name||'').localeCompare(b.name||'', 'pt-BR', { sensitivity:'base' }));
+    }
+    const desiredIds = new Set(working.map(c => String(c.id)));
+    working.forEach(chat => {
       const idStr = String(chat.id);
       let item = chatListEl.querySelector(`.chat-item[data-chat-id='${CSS.escape(idStr)}']`);
       if (!item) {
@@ -218,178 +230,142 @@ document.addEventListener('DOMContentLoaded', () => {
         item.className = 'chat-item';
         item.dataset.chatId = idStr;
         chatListEl.appendChild(item);
-        // bind click uma vez
         item.addEventListener('click', () => {
           const lastId = chat.lastMessageId || 0;
           if (lastId) setLastReadId(chat.id, lastId);
-          const c = (chats || []).find(x => x.id === chat.id);
-          if (c) { c.unread = 0; c.hasNewMessage = false; }
-          // Não força rerender total; openChat fará ajustes necessários
+          const cRow = (chats || []).find(x => x.id === chat.id);
+          if (cRow) { cRow.unread = 0; cRow.hasNewMessage = false; }
           window.openChat?.(chat.id, { force: true });
         });
       }
-
-      // estado ativo
       if (chat.id === activeChatId) item.classList.add('active'); else item.classList.remove('active');
-
-      // avatar
       let avatar = item.querySelector('.avatar');
-      if (!avatar) {
-        avatar = document.createElement('div');
-        avatar.className = 'avatar';
-        item.appendChild(avatar);
-      }
+      if (!avatar) { avatar = document.createElement('div'); avatar.className='avatar'; item.appendChild(avatar); }
       const bgUrl = chat.photo || '../img/SemFoto.jpg';
-      if (!avatar.__bg || avatar.__bg !== bgUrl) {
-        avatar.style.backgroundImage = `url('${bgUrl}')`;
-        avatar.__bg = bgUrl;
-      }
-
-      // meta (nome + preview)
+      if (!avatar.__bg || avatar.__bg !== bgUrl) { avatar.style.backgroundImage = `url('${bgUrl}')`; avatar.__bg = bgUrl; }
       let meta = item.querySelector('.meta');
       const nameHtml = escapeHtml(chat.name);
-      const msgHtml = escapeHtml(chat.lastMessage || '');
-      const metaHtml = `<h4>${nameHtml}</h4><p>${msgHtml}</p>`;
-      if (!meta) {
-        meta = document.createElement('div');
-        meta.className = 'meta';
-        meta.innerHTML = metaHtml;
-        item.appendChild(meta);
-      } else if (meta.__html !== metaHtml) {
-        meta.innerHTML = metaHtml;
-        meta.__html = metaHtml;
+      let previewHtml = '';
+      const hist = (window.chatHistories || {})[chat.id];
+      const lastMsg = Array.isArray(hist) && hist.length ? hist[hist.length - 1] : null;
+      if (lastMsg && lastMsg.tipo && lastMsg.tipo !== 'text') {
+        const ext = (lastMsg.arquivo || '').split('/').pop()?.toLowerCase().split('.').pop() || '';
+        const tipo = lastMsg.tipo;
+        let emoji='📦', label='Arquivo';
+        if (tipo==='image'){ emoji='🖼️'; label='Imagem'; }
+        else if (tipo==='video'){ emoji='🎬'; label='Vídeo'; }
+        else if (tipo==='audio'){ emoji='🎵'; label='Áudio'; }
+        else if (tipo==='file') {
+          if (['pdf'].includes(ext)) { emoji='📄'; label='PDF'; }
+          else if (['doc','docx'].includes(ext)) { emoji='📝'; label='Documento'; }
+          else if (['xls','xlsx'].includes(ext)) { emoji='📊'; label='Planilha'; }
+          else if (['ppt','pptx'].includes(ext)) { emoji='📈'; label='Apresentação'; }
+          else if (['txt'].includes(ext)) { emoji='📃'; label='Texto'; }
+          else if (['zip','rar','7z'].includes(ext)) { emoji='🗜️'; label='Arquivo'; }
+        }
+        const caption = (lastMsg.text||'').trim();
+        const safeCaption = caption ? ' – '+escapeHtml(caption.slice(0,40)) : '';
+        previewHtml = `<i>${emoji} ${label}${safeCaption}</i>`;
+      } else {
+        previewHtml = escapeHtml(chat.lastMessage || '');
       }
-
-      // bolinha não lida
+      const metaHtml = `<h4>${nameHtml}</h4><p>${previewHtml}</p>`;
+      if (!meta) { meta=document.createElement('div'); meta.className='meta'; meta.innerHTML=metaHtml; item.appendChild(meta); }
+      else if (meta.__html !== metaHtml) { meta.innerHTML=metaHtml; meta.__html=metaHtml; }
+      item.dataset.name = chat.name || '';
+      item.dataset.lastMessage = (chat.lastMessage || '').toString();
+      if (q) item.style.display=''; else item.style.display='';
+      // unread dot
       const shouldShowDot = chat.id !== activeChatId && ((chat.unread ?? 0) > 0 || chat.hasNewMessage);
       let dot = item.querySelector('.chat-dot');
-      if (shouldShowDot && !dot) {
-        dot = document.createElement('span');
-        dot.className = 'chat-dot';
-        item.appendChild(dot);
-      } else if (!shouldShowDot && dot && !dot.classList.contains('fade-out')) {
-        // anima desaparecer e remove após transição
+      if (shouldShowDot && !dot) { dot = document.createElement('span'); dot.className='chat-dot'; item.appendChild(dot); }
+      else if (!shouldShowDot && dot && !dot.classList.contains('fade-out')) {
         dot.classList.add('fade-out');
         const removeFn = () => { dot?.remove(); };
-        dot.addEventListener('transitionend', removeFn, { once: true });
-        // fallback caso transitionend não dispare
+        dot.addEventListener('transitionend', removeFn, { once:true });
         setTimeout(removeFn, 600);
       }
     });
-
-    // Remove itens que não estão mais na lista
+    // itens fora do working: se há filtro apenas oculta, senão remove
     [...chatListEl.querySelectorAll('.chat-item')].forEach(item => {
       const id = item.dataset.chatId;
-      if (!desiredIds.has(id)) item.remove();
+      if (!desiredIds.has(id)) { if (q) item.style.display='none'; else item.remove(); }
     });
   }
 
+  // ====== renderMessages ======
   function renderMessages(messages) {
     if (!messagesEl) return;
-    messagesEl.innerHTML = "";
-    messages.forEach((m) => {
+    messagesEl.innerHTML='';
+    messages.forEach(m => {
       const div = document.createElement('div');
       div.classList.add('msg', m.from === 'me' ? 'outgoing' : 'incoming');
-      div.style.whiteSpace = 'pre-wrap';
-      div.style.wordBreak = 'break-word';
-      div.style.overflowWrap = 'break-word';
-
-      // Renderização por tipo
+      div.style.whiteSpace='pre-wrap'; div.style.wordBreak='break-word'; div.style.overflowWrap='break-word';
       const tipo = m.tipo || 'text';
       let filePath = m.arquivo || null;
-      // Corrige caminhos relativos antigos (sem /Programacao_TCC_Avena/ prefix)
       if (filePath && !/^https?:\/\//i.test(filePath)) {
         if (!filePath.startsWith('/Programacao_TCC_Avena/')) {
-          // casos antigos armazenados como 'uploads/messages/...' ou '../uploads/messages/...'
           filePath = filePath.replace(/^\.\.\/?/, '');
-          if (filePath.startsWith('uploads/')) {
-            filePath = '/Programacao_TCC_Avena/' + filePath;
-          }
+          if (filePath.startsWith('uploads/')) filePath = '/Programacao_TCC_Avena/' + filePath;
         }
       }
-      // Fallback: tentar extrair marcador se arquivo ausente mas conteudo tem anexo
       if (!filePath && tipo === 'text' && typeof m.text === 'string') {
         const markerMatch = m.text.match(/\[\[ATTACH:type=([^;]+);file=([^\]]+)\]\]/);
         if (markerMatch) {
-          const mkTipo = markerMatch[1];
-          let mkFile = markerMatch[2];
+          const mkTipo = markerMatch[1]; let mkFile = markerMatch[2];
           if (mkFile && !mkFile.startsWith('/Programacao_TCC_Avena/')) {
             if (mkFile.startsWith('uploads/')) mkFile = '/Programacao_TCC_Avena/' + mkFile;
           }
-          filePath = mkFile; m.tipo = mkTipo; // atualiza em runtime
-          m.text = m.text.replace(/\[\[ATTACH:type=[^;]+;file=[^\]]+\]\]/,'').trim();
+          filePath = mkFile; m.tipo = mkTipo; m.text = m.text.replace(/\[\[ATTACH:type=[^;]+;file=[^\]]+\]\]/,'').trim();
         }
       }
-      if (tipo === 'image' && filePath) {
+      if (m.tipo === 'image' && filePath) {
         div.classList.add('attachment');
-        const wrap = document.createElement('div');
-        wrap.className = 'image-attachment';
-        const img = document.createElement('img');
-        img.src = filePath;
-        img.alt = 'imagem';
-        img.className = 'image-el';
+        const wrap = document.createElement('div'); wrap.className='image-attachment';
+        const img = document.createElement('img'); img.src=filePath; img.alt='imagem'; img.className='image-el';
         wrap.appendChild(img);
-        if (m.text && m.text.trim() !== '') {
-          const cap = document.createElement('div'); cap.className='att-caption'; cap.textContent = m.text.trim(); wrap.appendChild(cap);
-        }
+        if (m.text && m.text.trim() !== '') { const cap=document.createElement('div'); cap.className='att-caption'; cap.textContent=m.text.trim(); wrap.appendChild(cap); }
         div.appendChild(wrap);
-      } else if (tipo === 'video' && filePath) {
+      } else if (m.tipo === 'video' && filePath) {
         div.classList.add('attachment');
-        const wrap = document.createElement('div');
-        wrap.className = 'video-attachment';
-        const vid = document.createElement('video');
-        vid.src = filePath;
-        vid.controls = true;
-        vid.className = 'video-el';
-        wrap.appendChild(vid);
-        // legenda somente se usuário forneceu texto
-        if (m.text && m.text.trim() !== '') {
-          const cap = document.createElement('div'); cap.className='att-caption'; cap.textContent = m.text.trim(); wrap.appendChild(cap);
-        }
+        const wrap=document.createElement('div'); wrap.className='video-attachment';
+        const vid=document.createElement('video'); vid.src=filePath; vid.controls=true; vid.className='video-el'; wrap.appendChild(vid);
+        if (m.text && m.text.trim() !== '') { const cap=document.createElement('div'); cap.className='att-caption'; cap.textContent=m.text.trim(); wrap.appendChild(cap); }
         div.appendChild(wrap);
-      } else if (tipo === 'audio' && filePath) {
+      } else if (m.tipo === 'audio' && filePath) {
+        div.classList.add('attachment','audio-msg');
+        const wrap=document.createElement('div'); wrap.className='audio-attachment';
+        const aud=document.createElement('audio'); aud.src=filePath; aud.controls=true; aud.className='audio-el'; wrap.appendChild(aud);
+        if (m.text && m.text.trim()!==''){ const cap=document.createElement('div'); cap.className='att-caption'; cap.textContent=m.text.trim(); wrap.appendChild(cap);} div.appendChild(wrap);
+      } else if (m.tipo === 'file' && filePath) {
         div.classList.add('attachment');
-        const wrap = document.createElement('div');
-        wrap.className = 'audio-attachment';
-        const aud = document.createElement('audio'); aud.src = filePath; aud.controls = true; aud.className='audio-el';
-        wrap.appendChild(aud);
-        if (m.text && m.text.trim() !== '') { const cap = document.createElement('div'); cap.className='att-caption'; cap.textContent = m.text.trim(); wrap.appendChild(cap); }
-        div.appendChild(wrap);
-      } else if (tipo === 'file' && filePath) {
-        const wrap = document.createElement('div');
-        wrap.className = 'file-attachment';
-        const icon = document.createElement('span');
-        icon.className = 'fa-icon';
-        const fname = (filePath.split('/').pop() || '').toLowerCase();
-        const ext = fname.split('.').pop() || '';
-        icon.textContent = ext === 'pdf' ? '📄' : (['jpg','jpeg','png','gif','webp'].includes(ext) ? '🖼️' : '📦');
-        const link = document.createElement('a');
-        link.href = filePath; link.target = '_blank'; link.rel='noopener';
-        link.className = 'file-name';
-        link.textContent = m.text && m.text.trim() !== '' ? m.text.trim() : fname;
-        const meta = document.createElement('span');
-        meta.className = 'file-meta';
-        if (m.tamanho) {
-          const kb = Math.max(1, Math.round(m.tamanho/1024));
-          meta.textContent = kb + ' KB';
-        } else {
-          meta.textContent = ext.toUpperCase();
-        }
-        wrap.appendChild(icon);
-        wrap.appendChild(link);
-        wrap.appendChild(meta);
-        div.appendChild(wrap);
-      } else { // texto normal
+        const wrap=document.createElement('div'); wrap.className='file-attachment';
+        const icon=document.createElement('span'); icon.className='fa-icon';
+        const fname=(filePath.split('/').pop()||''); const lower=fname.toLowerCase(); const ext=lower.split('.').pop()||'';
+        icon.textContent = ext==='pdf' ? '📄' : (['jpg','jpeg','png','gif','webp'].includes(ext) ? '🖼️' : '📦');
+        const link=document.createElement('a'); link.href=filePath; link.target='_blank'; link.rel='noopener'; link.className='file-name'; link.textContent = fname; // sempre nome real
+        const meta=document.createElement('span'); meta.className='file-meta';
+        if (m.tamanho){ const kb=Math.max(1,Math.round(m.tamanho/1024)); meta.textContent=kb+' KB'; } else { meta.textContent=ext.toUpperCase(); }
+        wrap.appendChild(icon); wrap.appendChild(link); wrap.appendChild(meta); div.appendChild(wrap);
+        if (m.text && m.text.trim()!=='') { const cap=document.createElement('div'); cap.className='att-caption'; cap.textContent=m.text.trim(); div.appendChild(cap); }
+      } else {
         const html = linkify(m.text || m.conteudo || '');
         div.innerHTML = html;
       }
+      let timeStr='';
+      if (m.enviado_em){ try { const d=new Date(m.enviado_em.replace(' ','T')); if(!isNaN(d.getTime())){ const hh=String(d.getHours()).padStart(2,'0'); const mm=String(d.getMinutes()).padStart(2,'0'); timeStr=hh+':'+mm; } } catch {}
+        if (!timeStr){ const m2=m.enviado_em.match(/\b(\d{2}:\d{2})\b/); if(m2) timeStr=m2[1]; }
+      }
+      if (timeStr){ const t=document.createElement('span'); t.className='msg-time'; t.textContent=timeStr; div.appendChild(t); }
       messagesEl.appendChild(div);
+      const spacer=document.createElement('div'); spacer.className='msg-spacer'; messagesEl.appendChild(spacer);
     });
     messagesEl.scrollTop = messagesEl.scrollHeight;
+    setTimeout(()=>{ if(messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight; },50);
+    requestAnimationFrame(()=>{ if(messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight; });
     upgradeLinkCards();
   }
 
-  // Expor funções para uso externo (refreshActiveChatOnce etc.)
   window.renderMessages = renderMessages;
   window.renderChatList = renderChatList;
 
@@ -419,6 +395,13 @@ document.addEventListener('DOMContentLoaded', () => {
     chatHistories[otherId] = messages;
     window.chatHistories = chatHistories; // <- mantém global
     renderMessages?.(messages);
+
+    // limpa status de digitação imediatamente ao trocar de chat
+    try {
+      stopDots();
+      setStatusText('');
+      if (userStatusEl) userStatusEl.classList.remove('online','typing');
+    } catch {}
 
     // Atualiza cabeçalho imediatamente para evitar 'layout do outro'
     const headerName = data.other?.nome || chat.name || "";
@@ -468,41 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return openChat(otherId);
   };
 
-  if (sendBtn) {
-    sendBtn.addEventListener("click", async () => {
-      // tenta desbloquear som no gesto do usuário
-      try { window.__SND__?.unlock?.(); } catch {}
-      const text = messageInput.value.trim();
-      if (!text || !activeChatId) return;
-
-      const result = await sendMessage(activeChatId, text);
-      if (result.ok) {
-        const msg = {
-          id: result.id_mensagem,
-          from: "me",
-          text,
-          enviado_em: result.enviado_em,
-        };
-        chatHistories[activeChatId] = chatHistories[activeChatId] || [];
-        chatHistories[activeChatId].push(msg);
-        renderMessages(chatHistories[activeChatId]);
-
-        const chat = chats.find((c) => c.id === activeChatId);
-        if (chat) chat.lastMessage = text;
-        // Atualiza último id para evitar tocar som ao próximo poll
-        if (result.id_mensagem) {
-          lastMsgIdMap[activeChatId] = result.id_mensagem;
-          // Marca como lido localmente para não aparecer bolinha ao sair e voltar
-          setLastReadId(activeChatId, result.id_mensagem);
-        }
-        renderChatList(chats);
-        messageInput.value = "";
-        // após salvar no servidor...
-        window.onMessageSent?.(activeChatId, (result?.id_mensagem || result?.id));
-        saveState();
-      }
-    });
-  }
+  // (removido listener antigo de envio simples para evitar duplicação)
 
   // ===== Link Preview (OpenGraph) =====
   function upgradeLinkCards(){
@@ -558,29 +507,9 @@ document.addEventListener('DOMContentLoaded', () => {
       try { window.__SND__?.unlock?.(); } catch {}
       fileInput.click();
     });
-    fileInput.addEventListener('change', async () => {
-      if (!fileInput.files || !fileInput.files.length || !activeChatId) return;
-      const file = fileInput.files[0];
-      console.log('[chat] upload iniciando:', file.name, file.type, file.size);
-      const placeholder = { id: 'temp_'+Date.now(), from:'me', tipo:'file', arquivo:null, text:'Enviando '+file.name+'...' };
-      chatHistories[activeChatId] = chatHistories[activeChatId] || [];
-      chatHistories[activeChatId].push(placeholder);
-      renderMessages(chatHistories[activeChatId]);
-      const r = await sendAttachment(activeChatId, file, '');
-      // Remove placeholder
-      const hist = chatHistories[activeChatId];
-      const idx = hist.findIndex(x => x.id === placeholder.id);
-      if (idx >= 0) hist.splice(idx,1);
-      if (r.ok) {
-        const msg = { id:r.id_mensagem, from:'me', text:r.texto||'', tipo:r.tipo, arquivo:r.arquivo, enviado_em:r.enviado_em, tamanho:r.tamanho };
-        hist.push(msg);
-        const chat = chats.find(c=>c.id===activeChatId); if (chat) chat.lastMessage = msg.text || ('['+msg.tipo+']');
-        renderMessages(hist);
-        window.onMessageSent?.(activeChatId, r.id_mensagem);
-      } else {
-        hist.push({ id:'fail_'+Date.now(), from:'me', text:'Falha: '+(r.erro||'erro upload') });
-        renderMessages(hist);
-      }
+    fileInput.addEventListener('change', () => {
+      if (!fileInput.files || !fileInput.files.length) return;
+      stageFiles(Array.from(fileInput.files));
       fileInput.value='';
     });
   }
@@ -592,6 +521,58 @@ document.addEventListener('DOMContentLoaded', () => {
         try { window.__SND__?.unlock?.(); } catch {}
         sendBtn.click();
       }
+    });
+  }
+
+  // ===== Pending attachments staging =====
+  let pendingAttachments = [];
+  const attachedBar = document.getElementById('attached-bar');
+  function formatSize(bytes){ if (!bytes) return ''; const kb = bytes/1024; if (kb<1024) return Math.max(1,Math.round(kb))+' KB'; const mb=kb/1024; return mb.toFixed(2)+' MB'; }
+  function stageFiles(files){
+    const accepted = files.filter(f => f.size>0);
+    if (!accepted.length) return;
+    pendingAttachments.push(...accepted);
+    renderPendingAttachments();
+  }
+  function removePending(idx){ pendingAttachments.splice(idx,1); renderPendingAttachments(); }
+  function renderPendingAttachments(){
+    if (!attachedBar) return;
+    if (!pendingAttachments.length){ attachedBar.hidden = true; attachedBar.innerHTML=''; return; }
+    attachedBar.hidden = false;
+    attachedBar.innerHTML = pendingAttachments.map((f,i)=>{
+      const size = formatSize(f.size);
+      const name = f.name;
+      return `<div class="attachment-chip" data-idx="${i}" title="${name}"><span class="att-name">${escapeHtml(name)}</span><span class="att-size">${escapeHtml(size)}</span><button type="button" class="remove-att" aria-label="Remover">×</button></div>`;
+    }).join('');
+  }
+  if (attachedBar && !attachedBar.__bindRemove){
+    attachedBar.__bindRemove = true;
+    attachedBar.addEventListener('click', e => {
+      const btn = e.target.closest('button.remove-att'); if (!btn) return;
+      const chip = btn.closest('.attachment-chip'); if (!chip) return;
+      const idx = Number(chip.dataset.idx); if (!isNaN(idx)) removePending(idx);
+    });
+  }
+
+  // ===== Drag & Drop to stage =====
+  const dropZone = document.getElementById('chat-input-area');
+  if (dropZone && !dropZone.__ddBound) {
+    dropZone.__ddBound = true;
+    ['dragenter','dragover'].forEach(ev => dropZone.addEventListener(ev, e => {
+      e.preventDefault(); e.stopPropagation();
+      dropZone.classList.add('drag-hover');
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+    }));
+    ['dragleave','dragend'].forEach(ev => dropZone.addEventListener(ev, e => {
+      if (e.relatedTarget === dropZone) return; // still inside
+      dropZone.classList.remove('drag-hover');
+    }));
+    dropZone.addEventListener('drop', async e => {
+      e.preventDefault(); e.stopPropagation();
+      dropZone.classList.remove('drag-hover');
+      const dt = e.dataTransfer;
+      if (!dt || !dt.files || dt.files.length === 0) return;
+      stageFiles(Array.from(dt.files));
     });
   }
 
@@ -628,44 +609,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
       renderChatList(chats);
+      // Reaplica filtro de busca se estiver ativo, para persistir durante polling
+      if (searchInput && searchInput.value.trim() !== '') {
+        const q = searchInput.value.trim().toLowerCase();
+        const filtered = chats.filter(c => (c.name||'').toLowerCase().includes(q) || (c.lastMessage||'').toLowerCase().includes(q));
+        renderChatList(filtered);
+      }
 
       if (activeChatId) {
         const open = await fetchOpenChat(activeChatId);
-        if (open && open.ok) {
-          if (typeof open.current_user_id !== "undefined" && open.current_user_id !== null) {
-            currentUserId = open.current_user_id;
-          }
-          const incoming = (open.messages || []).map(m => ({
-            id: m.id,
-            from: m.de === currentUserId ? 'me' : 'them',
-            text: m.conteudo,
-            enviado_em: m.enviado_em,
-            tipo: m.tipo || 'text',
-            arquivo: m.arquivo || null
-          }));
-          const existing = chatHistories[activeChatId] || [];
-          const seen = new Set(existing.map(x => x.id));
-          const appended = [];
-          for (const msg of incoming) {
-            if (!seen.has(msg.id)) {
-              existing.push(msg);
-              appended.push(msg);
-            }
-          }
-          // Replace history with merged version
-          chatHistories[activeChatId] = existing;
-          if (appended.length > 0) {
-            renderMessages(existing);
-            const last = existing[existing.length - 1];
-            if (last && last.id) {
-              // Som somente se a nova última veio do outro
-              if (appended.some(a => a.from === 'them')) {
-                if (document.hidden) window.__SND__?.playNew(); else window.__SND__?.playSame();
+        if (sendBtn && !sendBtn.__stagedBound) {
+          sendBtn.__stagedBound = true;
+          sendBtn.addEventListener('click', async () => {
+            try { window.__SND__?.unlock?.(); } catch {}
+            if (!activeChatId) return;
+            const text = messageInput.value.trim();
+            // If there are staged attachments, send them sequentially first with caption
+            if (pendingAttachments.length) {
+              const files = [...pendingAttachments];
+              pendingAttachments = []; renderPendingAttachments();
+              let first = true;
+              for (const f of files) {
+                const placeholder = { id: 'temp_'+Date.now()+'_'+Math.random().toString(36).slice(2), from:'me', tipo:'file', arquivo:null, text:'Enviando '+f.name+'...' };
+                chatHistories[activeChatId] = chatHistories[activeChatId] || [];
+                chatHistories[activeChatId].push(placeholder); renderMessages(chatHistories[activeChatId]); pinScrollBottom();
+                let r; try { r = await sendAttachment(activeChatId, f, first ? text : ''); } catch(e){ r={ok:false, erro:e.message}; }
+                const hist = chatHistories[activeChatId]; const idx = hist.findIndex(x => x.id === placeholder.id); if (idx>=0) hist.splice(idx,1);
+                if (r.ok) {
+                  const msg = { id:r.id_mensagem, from:'me', text:r.texto||'', tipo:r.tipo, arquivo:r.arquivo, enviado_em:r.enviado_em, tamanho:r.tamanho };
+                  hist.push(msg); const chat = chats.find(c=>c.id===activeChatId); if (chat) chat.lastMessage = msg.text || ('['+msg.tipo+']');
+                  renderMessages(hist); pinScrollBottom(); window.onMessageSent?.(activeChatId, r.id_mensagem);
+                } else {
+                  hist.push({ id:'fail_'+Date.now(), from:'me', text:'Falha: '+(r.erro||'erro upload') }); renderMessages(hist); pinScrollBottom();
+                }
+                first=false;
               }
-              lastMsgIdMap[activeChatId] = last.id;
-              setLastReadId(activeChatId, last.id);
+              messageInput.value='';
+              saveState();
+              return;
             }
-          }
+            // No attachments, normal text send
+            if (!text) return;
+            const result = await sendMessage(activeChatId, text);
+            if (result.ok) {
+              const msg = { id: result.id_mensagem, from:'me', text, enviado_em: result.enviado_em };
+              chatHistories[activeChatId] = chatHistories[activeChatId] || [];
+              chatHistories[activeChatId].push(msg);
+              renderMessages(chatHistories[activeChatId]); pinScrollBottom();
+              const chat = chats.find(c=>c.id===activeChatId); if (chat) chat.lastMessage = text;
+              if (result.id_mensagem) { lastMsgIdMap[activeChatId] = result.id_mensagem; setLastReadId(activeChatId, result.id_mensagem); }
+              renderChatList(chats); messageInput.value=''; window.onMessageSent?.(activeChatId, (result.id_mensagem||result.id)); saveState();
+            }
+          });
           // Atualiza header
           const chat = chats.find(c => c.id === activeChatId);
           const name = (open.other && open.other.nome) || (chat && chat.name) || '';
@@ -680,6 +675,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // mantém scroll no final (chamado após envios e renders)
+  function pinScrollBottom(){
+    if (!messagesEl) return;
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    // várias tentativas para mídia/preview async
+    setTimeout(()=>{ if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight; }, 120);
+    setTimeout(()=>{ if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight; }, 400);
+    requestAnimationFrame(()=>{ if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight; });
+  }
+
   function startPolling() {
     if (pollingTimer) clearInterval(pollingTimer);
     pollingTimer = setInterval(pollChats, 1000);
@@ -690,6 +695,10 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const body = new URLSearchParams();
       if (typeof typing === "number") body.append("typing", String(typing));
+      // inclui alvo do chat para escopo de digitando
+      if (typeof typing === 'number' && window.activeChatId) {
+        body.append('other_id', String(window.activeChatId));
+      }
       await fetch("/Programacao_TCC_Avena/php/presence_update.php", {
         method: "POST",
         credentials: "same-origin",
@@ -747,12 +756,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function pollPresenceOnce() {
-    if (!activeChatId) {
+    const requestedId = activeChatId; // captura id no início para comparar após fetch
+    if (!requestedId) {
       stopDots();
       setStatusText("");
       return;
     }
-    const res = await presenceGet(activeChatId);
+    const res = await presenceGet(requestedId);
+    // se mudou de chat enquanto buscava, ignora resultado
+    if (activeChatId !== requestedId) return;
     if (!res || !res.ok) return;
     if (userStatusEl) userStatusEl.classList.remove('online','typing');
     if (res.typing) {
@@ -812,6 +824,7 @@ document.addEventListener('DOMContentLoaded', () => {
       input.addEventListener('input', () => {
         const now = Date.now(); if (now - lastSent < 1200) return; lastSent = now;
         const fd = new FormData(); fd.append('typing','1');
+        if (window.activeChatId) fd.append('other_id', String(window.activeChatId));
         fetch('/Programacao_TCC_Avena/php/statusPing.php', { method:'POST', body: fd, credentials:'same-origin' }).catch(()=>{});
       });
     }
@@ -839,12 +852,25 @@ document.addEventListener('DOMContentLoaded', () => {
               headerStatus.textContent = '';
             }
           }
+          // se chat mudou durante a requisição, limpa status para evitar mostrar "digitando" incorreto
+          if (id !== window.activeChatId && headerStatus) {
+            stopDots();
+            headerStatus.textContent = '';
+            headerStatus.classList.remove('online','typing');
+          }
           const row = (window.chats || []).find(c => c.id === id);
           if (row) { row.online = !!st.online; window.renderChatList?.(window.chats || []); }
         } catch {}
       }, 1000);
     }
   })();
+
+  // ====== CHAT SEARCH BAR ======
+  // ====== CHAT SEARCH BAR (sem piscar, preserva ordem) ======
+  if (searchInput && !searchInput.__bound) {
+    searchInput.__bound = true;
+    searchInput.addEventListener('input', () => renderChatList(chats));
+  }
 
   // Ao clicar no item da lista, marque navegação do usuário
   if (chatListEl && !chatListEl.__guardClick) {
@@ -939,6 +965,55 @@ document.addEventListener('DOMContentLoaded', () => {
     // marca como lido para você (não gerar bolinha do seu próprio envio)
     if (typeof setLastReadId === 'function') setLastReadId(chatId, newMsgId);
   };
+
+  // ====== IMAGE LIGHTBOX ======
+  function openImageLightbox(src, caption='') {
+    if (!src) return;
+    const old = document.querySelector('.img-lightbox-overlay');
+    if (old) old.remove();
+    const overlay = document.createElement('div');
+    overlay.className = 'img-lightbox-overlay';
+    const content = document.createElement('div');
+    content.className = 'img-lightbox-content';
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = caption || 'imagem';
+    const btn = document.createElement('button');
+    btn.className = 'img-lightbox-close';
+    btn.type = 'button';
+    btn.setAttribute('aria-label','Fechar');
+    btn.textContent = '×';
+    btn.addEventListener('click', () => closeLightbox());
+    const capEl = document.createElement('div');
+    capEl.className = 'img-lightbox-caption';
+    capEl.textContent = caption || '';
+    content.appendChild(img);
+    content.appendChild(btn);
+    if (caption) content.appendChild(capEl);
+    overlay.appendChild(content);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeLightbox(); });
+    document.body.appendChild(overlay);
+    document.body.classList.add('lightbox-open');
+    document.addEventListener('keydown', escHandler);
+  }
+  function closeLightbox(){
+    document.body.classList.remove('lightbox-open');
+    const ov = document.querySelector('.img-lightbox-overlay');
+    if (ov) ov.remove();
+    document.removeEventListener('keydown', escHandler);
+  }
+  function escHandler(e){ if (e.key === 'Escape') closeLightbox(); }
+  if (messagesEl && !messagesEl.__lbBound) {
+    messagesEl.__lbBound = true;
+    messagesEl.addEventListener('click', (ev) => {
+      const img = ev.target.closest('.image-el');
+      if (!img) return;
+      let caption = '';
+      const cap = img.parentElement?.querySelector('.att-caption');
+      if (cap) caption = cap.textContent.trim();
+      openImageLightbox(img.src, caption);
+    });
+  }
 
 });
 async function refreshActiveChatOnce() {
