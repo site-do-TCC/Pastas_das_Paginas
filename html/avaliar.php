@@ -49,26 +49,6 @@ if (isset($_POST['submit'])) {
     $avaliado_id = mysqli_real_escape_string($conexao, $_POST["avaliado_id"]);
     $nota        = mysqli_real_escape_string($conexao, $_POST["nota"]);
     $comentario  = mysqli_real_escape_string($conexao, $_POST["comentario"]);
-<<<<<<< HEAD
-
-
-    
-
-    $sqlInsert = "
-        INSERT INTO avaliacoes 
-        (avaliador_id, avaliador_tipo, avaliado_id, avaliado_tipo, nota, comentario)
-        VALUES 
-        ('$avaliador_id', '$avaliador_tipo', '$avaliado_id', '$avaliado_tipo', '$nota', '$comentario')
-    ";
-    
-    print_r($sqlInsert);
-
-    echo resultado($conexao, $sqlInsert);
-    
-}
-
-
-=======
     $data        = date("Y-m-d H:i:s");
 
     $sqlInsert = "
@@ -86,7 +66,6 @@ if (isset($_POST['submit'])) {
     }
 }
 
->>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
 ?>
 
 
@@ -131,16 +110,6 @@ if (isset($_POST['submit'])) {
     </div>
   </div>
 
-<<<<<<< HEAD
-  <!-- Mensagem -->
-    <div id="modalErro" class="modal">
-        <div class="modal-content">
-            <p id="mensagemErro">E-mail ou senha incorretos</p>
-            <button onclick="fecharModal()">OK</button>
-        </div>
-    </div>
-=======
->>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
 
 
 
@@ -166,88 +135,26 @@ if (isset($_POST['submit'])) {
 
 
   
-<<<<<<< HEAD
-<!-- 
-========================
-// BOTÃO VOLTAR
-========================
--->
-<style>
-  .arrow-animated {
-    margin-left: 20px;
-    margin-bottom: 10px;
-    color: #917ba4;
-    width: 30px;
-    height: 30px;
-    animation: floatLeft 1.6s ease-in-out infinite;
-  }
-
-  @keyframes floatLeft {
-    0%   { transform: translateX(0); }
-    50%  { transform: translateX(-2px); }
-    100% { transform: translateX(0); }
-  }
-  h2{
-    margin-left: 20px;  
-  }
-</style>
-<a href= "..\html\avaliarLista.php">
-<svg xmlns="http://www.w3.org/2000/svg" 
-     width="20" height="20" fill="currentColor" 
-     class="bi bi-arrow-left arrow-animated"
-     viewBox="0 0 16 16">
-  <path fill-rule="evenodd" 
-        d="M5.854 4.146a.5.5 0 0 1 0 .708L3.707 7H14.5a.5.5 0 0 1 0 1H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/>
-</svg>
-</a>
-<!-- 
-========================
-// BOTÃO VOLTAR
-========================
--->
-=======
-
->>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
 
 
 
   <main class="container">
-<<<<<<< HEAD
-
-
-
-   
-=======
->>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
    <h2>Avaliando: <?= htmlspecialchars($avaliado["nome"]) ?></h2>
 
 <form action="avaliar.php?id=<?= $avaliado_id ?>" method="POST">
     <input type="hidden" name="avaliado_id" value="<?= $avaliado_id ?>">
 
-<<<<<<< HEAD
-    <div class="stars" required>
-        <i class="star" data-value="1" onclick="estrelaUm()" id="1" required>★</i>
-        <i class="star" data-value="2" onclick="estrelaDois()" id="2" required>★</i>
-        <i class="star" data-value="3"  onclick="estrelaTres()" id="3" required>★</i>
-        <i class="star" data-value="4"  onclick="estrelaQuatro()" id="4" required>★</i>
-        <i class="star" data-value="5"  onclick="estrelaCinco()" id="5" required>★</i>
-=======
     <div class="stars">
         <i class="star" data-value="1" onclick="estrelaUm()" id="1">★</i>
         <i class="star" data-value="2" onclick="estrelaDois()" id="2">★</i>
         <i class="star" data-value="3"  onclick="estrelaTres()" id="3" >★</i>
         <i class="star" data-value="4"  onclick="estrelaQuatro()" id="4">★</i>
         <i class="star" data-value="5"  onclick="estrelaCinco()" id="5">★</i>
->>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
     </div>
 
     <input type="hidden" id="nota" name="nota">
 
-<<<<<<< HEAD
-    <textarea name="comentario" placeholder="Escreva um comentário..." required></textarea>
-=======
     <textarea name="comentario" placeholder="Escreva um comentário..."></textarea>
->>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
 
     <button type="submit" class="btn-enviar" name="submit">Enviar Avaliação</button>
 </form>
@@ -257,11 +164,7 @@ if (isset($_POST['submit'])) {
  
 
 </body>
-<<<<<<< HEAD
-   <script src="../js/login"></script> 
-=======
    <script src="../js/login.js"></script> 
->>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
   <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
   <script>
 const stars = document.querySelectorAll(".star");
@@ -304,16 +207,3 @@ stars.forEach(star => {
 });
 </script>
 </html>
-<<<<<<< HEAD
-
-<?php
-function resultado($conexao, $sqlInsert){
-if (mysqli_query($conexao, $sqlInsert)) {
-        header("Location: avaliarLista.php?ok=1");
-    } else {
-        echo "Erro ao salvar avaliação: " . mysqli_error($conexao);
-    }
-}
-?>
-=======
->>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)

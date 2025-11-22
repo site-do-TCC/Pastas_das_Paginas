@@ -166,7 +166,7 @@ textarea:focus {
     transition: ease-in-out 0.3s;
 }
 
-<<<<<<< HEAD
+
 /* Fundo escuro transparente */
 .modal {
   display: none; /* começa escondido */
@@ -228,8 +228,7 @@ textarea:focus {
   from { opacity: 0; transform: scale(0.9); }
   to   { opacity: 1; transform: scale(1); }
 }
-=======
->>>>>>> 40117b1 (sistema de avalações implementadas. O usuário pode agora criar uma avaliação. Agora preciso trazer as informações delas pras outras páginas como as de serviço.)
+
 
 .cookie-banner {
   position: fixed;

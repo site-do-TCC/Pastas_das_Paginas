@@ -84,29 +84,53 @@ if (mysqli_num_rows($resultado) == 0) {
 }
 $prof = mysqli_fetch_assoc($resultado);
 
-// ===== Detecta usuário logado independente da chave usada na sessão =====
-$profLog = null; $logado = false; $id_usuario = null; $tipoSess = null;
-if (!empty($_SESSION['cliente']['id_usuario'])) {
-  $id_usuario = (int)$_SESSION['cliente']['id_usuario'];
-  $tipoSess = 'cliente';
-} elseif (!empty($_SESSION['prestadora']['id_usuario'])) {
-  $id_usuario = (int)$_SESSION['prestadora']['id_usuario'];
-  $tipoSess = 'profissional';
-}
-if ($id_usuario !== null) {
-  $logado = true;
-  if ($tipoSess === 'profissional') {
-    $stmt = $conexao->prepare("SELECT * FROM prestadora WHERE id_usuario = ? LIMIT 1");
-    if ($stmt) { $stmt->bind_param('i',$id_usuario); if ($stmt->execute()) { $res = $stmt->get_result(); $profLog = $res->fetch_assoc(); } $stmt->close(); }
-  } else {
-    $stmt = $conexao->prepare("SELECT * FROM cliente WHERE id_usuario = ? LIMIT 1");
-    if ($stmt) { $stmt->bind_param('i',$id_usuario); if ($stmt->execute()) { $res = $stmt->get_result(); $profLog = $res->fetch_assoc(); } $stmt->close(); }
-  }
-  if (!$profLog) { $profLog = ['nome'=>'Usuário','imgperfil'=>'../img/SemFoto.jpg']; }
-  if (empty($profLog['imgperfil'])) $profLog['imgperfil'] = '../img/SemFoto.jpg';
+// ======================
+// BUSCAR AVALIAÇÕES DA PRESTADORA
+// ======================
+
+// QUANTIDADE DE AVALIAÇÕES
+$sqlQtd = "
+    SELECT COUNT(*) AS total 
+    FROM avaliacoes 
+    WHERE avaliado_id = $id_prestadora 
+      AND avaliado_tipo = 'prestadora'
+";
+$resultQtd = mysqli_query($conexao, $sqlQtd);
+$qtdAvaliacoes = mysqli_fetch_assoc($resultQtd)['total'] ?? 0;
+
+// MÉDIA DAS NOTAS
+$sqlMedia = "
+    SELECT AVG(nota) AS media 
+    FROM avaliacoes 
+    WHERE avaliado_id = $id_prestadora 
+      AND avaliado_tipo = 'prestadora'
+";
+
+
+// =================================
+// info do usuário logado (se houver)
+// =================================
+$logado = isset($_SESSION['id_usuario']);
+$id_usuario = $logado ? intval($_SESSION['id_usuario']) : null;
+
+// buscar dados do perfil do usuário logado para header (se existir)
+$profLog = null;
+if ($logado) {
+    if ($_SESSION['tipo'] === 'profissional') {
+        $sqlPrestadora = "SELECT nome, imgperfil FROM prestadora WHERE id_usuario = ".$id_usuario;
+        $resultadoPrestadora = mysqli_query($conexao, $sqlPrestadora);
+        $profLog = mysqli_fetch_assoc($resultadoPrestadora);
+    } else {
+        $sqlCliente = "SELECT nome, imgperfil FROM cliente WHERE id_usuario = ".$id_usuario;
+        $resultadoCliente = mysqli_query($conexao, $sqlCliente);
+        $profLog = mysqli_fetch_assoc($resultadoCliente);
+    }
 }
 
-// remove debug print de sessão
+
+$resultMedia = mysqli_query($conexao, $sqlMedia);
+$mediaAvaliacoes = mysqli_fetch_assoc($resultMedia)['media'];
+$mediaAvaliacoes = $mediaAvaliacoes ? number_format($mediaAvaliacoes, 1) : "0.0";
 ?>
 
 <!DOCTYPE html>

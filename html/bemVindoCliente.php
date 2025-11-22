@@ -192,9 +192,9 @@ foreach ($notificacoes as $n) {
 
       <div class="botoes">
         <a href="busca.php" class="btn buscar">🔍 Buscar Serviços</a>
-        <a href="agenda.php" class="btn agenda">📅 Minha Agenda</a>
-        <a href="chat.php" class="btn mensagens" id="bv-cliente-mensagens">💬 Mensagens<span class="badge-dot" id="bv-cliente-chat-badge" style="display:none; width:12px; height:12px; background:#dc2626; border-radius:50%; margin-left:6px;"></span></a>
-        <a href="avaliacoes.php" class="btn avaliacoes">⭐ Minhas Avaliações</a>
+        <a href="agendaCliente.php" class="btn agenda">📅 Minha Agenda</a>
+        <a href="contato.html" class="btn mensagens">💬 Mensagens</a>
+        <a href="avaliarLista.php" class="btn avaliacoes">⭐ Minhas Avaliações</a>
       </div>
     </div>
   </main>

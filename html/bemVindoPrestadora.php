@@ -109,8 +109,8 @@ if ($id && $tabela) {
     <div class="botoes">
       <a href="..\html\EdicaoPerfilGeral.php" class="btn editar-perfil">⚙️ Editar Perfil</a>
       <a href="..\html\EditarServico.php" class="btn editar-servicos">🖋️ Editar Serviços</a>
-      <a href="chat.php" class="btn mensagens" id="bv-prestadora-mensagens">💬 Mensagens<span class="badge-dot" id="bv-prestadora-chat-badge" style="display:none; width:12px; height:12px; background:#dc2626; border-radius:50%; margin-left:6px;"></span></a>
-      <a href="#" class="btn avaliacoes">⭐ Avaliações</a>
+      <a href="#" class="btn mensagens">💬 Mensagens</a>
+      <a href="../html/avaliarLista.php" class="btn avaliacoes">⭐ Avaliações</a>
       <a href="..\html\cursos.php" class="btn cursos">🎓 Cursos</a>
       <a href="..\html\agendaPrestadora.php" class="btn agenda">📅 Minha Agenda</a>
     </div>
