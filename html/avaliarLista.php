@@ -70,7 +70,13 @@ $info = mysqli_fetch_assoc($resultUser);
     </div>
   </div>
 
-
+ <!-- Mensagem -->
+    <div id="modalErro" class="modal">
+        <div class="modal-content">
+            <p id="mensagemErro">E-mail ou senha incorretos</p>
+            <button onclick="fecharModal()">OK</button>
+        </div>
+    </div>
 
 
   <header>
@@ -121,3 +127,14 @@ $info = mysqli_fetch_assoc($resultUser);
    <script src="../js/login.js"></script> 
   <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
 </html>
+
+<script>
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const ok = urlParams.get('ok');
+
+    if (ok === '1') {
+        mostrarModal("Avaliação salva com sucesso!");
+    }
+
+</script>

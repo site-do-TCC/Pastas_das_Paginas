@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 19-Nov-2025 às 17:12
+-- Tempo de geração: 22-Nov-2025 às 03:26
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -20,6 +20,54 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `db_avena`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `agenda`
+--
+
+CREATE TABLE `agenda` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `tipo_usuario` enum('cliente','prestadora') NOT NULL,
+  `data_evento` date NOT NULL,
+  `anotacao` text NOT NULL,
+  `criado_em` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `agenda`
+--
+
+INSERT INTO `agenda` (`id`, `id_usuario`, `tipo_usuario`, `data_evento`, `anotacao`, `criado_em`) VALUES
+(2, 3, 'cliente', '2025-11-20', 'AnotaÃ§Ã£o pra amanhÃ£', '2025-11-19 20:12:52'),
+(3, 3, 'cliente', '2025-12-12', 'awd', '2025-11-19 20:13:06');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `avaliacoes`
+--
+
+CREATE TABLE `avaliacoes` (
+  `id` int(11) NOT NULL,
+  `avaliador_id` int(11) NOT NULL,
+  `avaliador_tipo` enum('cliente','prestadora') NOT NULL,
+  `avaliado_id` int(11) NOT NULL,
+  `avaliado_tipo` enum('cliente','prestadora') NOT NULL,
+  `nota` int(11) NOT NULL,
+  `comentario` text,
+  `data_avaliacao` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `avaliacoes`
+--
+
+INSERT INTO `avaliacoes` (`id`, `avaliador_id`, `avaliador_tipo`, `avaliado_id`, `avaliado_tipo`, `nota`, `comentario`, `data_avaliacao`) VALUES
+(1, 3, 'cliente', 22, 'prestadora', 5, 'a', '2025-11-21 20:20:44'),
+(2, 1, 'prestadora', 3, 'cliente', 5, 'a', '2025-11-21 20:31:47');
 
 -- --------------------------------------------------------
 
@@ -100,6 +148,17 @@ CREATE TABLE `notificacoes` (
   `data` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Extraindo dados da tabela `notificacoes`
+--
+
+INSERT INTO `notificacoes` (`id`, `id_usuario`, `id_solicitacao`, `mensagem`, `visualizado`, `data`) VALUES
+(10, 3, 20, 'Seu pedido foi recusado pela prestadora.', 1, '2025-11-19 18:06:41'),
+(11, 3, 19, 'Seu pedido foi aceito pela prestadora.', 1, '2025-11-19 18:06:49'),
+(12, 3, 15, 'Seu pedido foi aceito pela prestadora.', 1, '2025-11-19 18:35:34'),
+(13, 3, 18, 'Sua solicitaÃ§Ã£o foi recusado pela prestadora.', 1, '2025-11-20 15:27:05'),
+(14, 3, 21, 'Seu pedido foi recusado pela prestadora.', 1, '2025-11-20 15:31:03');
+
 -- --------------------------------------------------------
 
 --
@@ -155,14 +214,27 @@ CREATE TABLE `solicitacoes` (
 --
 
 INSERT INTO `solicitacoes` (`id`, `id_contratante`, `id_prestadora`, `data_solicitacao`, `status`) VALUES
-(15, 3, 2, '2025-11-19 13:11:05', 'pendente'),
-(18, 3, 1, '2025-11-19 13:27:24', 'pendente'),
-(19, 3, 2, '2025-11-19 13:29:10', 'pendente'),
-(20, 3, 2, '2025-11-19 13:30:46', 'pendente');
+(15, 3, 2, '2025-11-19 13:11:05', 'aceito'),
+(18, 3, 1, '2025-11-19 13:27:24', 'recusado'),
+(19, 3, 2, '2025-11-19 13:29:10', 'aceito'),
+(20, 3, 2, '2025-11-19 13:30:46', 'recusado'),
+(21, 3, 2, '2025-11-20 15:29:17', 'recusado');
 
 --
 -- Índices para tabelas despejadas
 --
+
+--
+-- Índices para tabela `agenda`
+--
+ALTER TABLE `agenda`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `avaliacoes`
+--
+ALTER TABLE `avaliacoes`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Índices para tabela `cliente`
@@ -182,8 +254,8 @@ ALTER TABLE `curso`
 --
 ALTER TABLE `notificacoes`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_usuario` (`id_usuario`),
-  ADD KEY `id_solicitacao` (`id_solicitacao`);
+  ADD KEY `id_solicitacao` (`id_solicitacao`),
+  ADD KEY `notificacoes_ibfk_1` (`id_usuario`);
 
 --
 -- Índices para tabela `prestadora`
@@ -205,6 +277,18 @@ ALTER TABLE `solicitacoes`
 --
 
 --
+-- AUTO_INCREMENT de tabela `agenda`
+--
+ALTER TABLE `agenda`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de tabela `avaliacoes`
+--
+ALTER TABLE `avaliacoes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de tabela `cliente`
 --
 ALTER TABLE `cliente`
@@ -220,7 +304,7 @@ ALTER TABLE `curso`
 -- AUTO_INCREMENT de tabela `notificacoes`
 --
 ALTER TABLE `notificacoes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de tabela `prestadora`
@@ -232,7 +316,7 @@ ALTER TABLE `prestadora`
 -- AUTO_INCREMENT de tabela `solicitacoes`
 --
 ALTER TABLE `solicitacoes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Restrições para despejos de tabelas
@@ -242,7 +326,7 @@ ALTER TABLE `solicitacoes`
 -- Limitadores para a tabela `notificacoes`
 --
 ALTER TABLE `notificacoes`
-  ADD CONSTRAINT `notificacoes_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `prestadora` (`id_usuario`),
+  ADD CONSTRAINT `notificacoes_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `cliente` (`id_usuario`),
   ADD CONSTRAINT `notificacoes_ibfk_2` FOREIGN KEY (`id_solicitacao`) REFERENCES `solicitacoes` (`id`);
 
 --

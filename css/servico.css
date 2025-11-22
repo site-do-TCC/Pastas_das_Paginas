@@ -122,6 +122,12 @@ body p, h1, h2, h3 {
 .abaixo-img{
   flex-direction: column; 
 } 
+.avaliacoes {
+  margin-top: 10px;
+  font-size: 1.2em;
+  color: #741f89;
+  text-decoration: none;
+}
 
 /*===========================================
  ESTILIZAÇÃO DA ÁREA DE PERFIL NA HEARDER 
@@ -138,7 +144,9 @@ body p, h1, h2, h3 {
   gap: 15px;
 }
 .nome {
-  font-weight: 600;
+   position: relative;
+    top: -14px; /* Move 10px para baixo */
+  font-weight: bolder;
   color: #fff;
 }
 
@@ -287,7 +295,7 @@ body p, h1, h2, h3 {
   z-index: 9999;
   max-width: 480px;
   margin: auto;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Mulish', sans-serif;
   display: none;
   animation: fadeIn 0.5s ease-in-out;
 }

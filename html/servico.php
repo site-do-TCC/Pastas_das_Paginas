@@ -56,7 +56,32 @@ if (mysqli_num_rows($resultado) == 0) {
 }
 $prof = mysqli_fetch_assoc($resultado);
 
+// ======================
+// BUSCAR AVALIAÇÕES DA PRESTADORA
+// ======================
+
+// QUANTIDADE DE AVALIAÇÕES
+$sqlQtd = "
+    SELECT COUNT(*) AS total 
+    FROM avaliacoes 
+    WHERE avaliado_id = $id_prestadora 
+      AND avaliado_tipo = 'prestadora'
+";
+$resultQtd = mysqli_query($conexao, $sqlQtd);
+$qtdAvaliacoes = mysqli_fetch_assoc($resultQtd)['total'] ?? 0;
+
+// MÉDIA DAS NOTAS
+$sqlMedia = "
+    SELECT AVG(nota) AS media 
+    FROM avaliacoes 
+    WHERE avaliado_id = $id_prestadora 
+      AND avaliado_tipo = 'prestadora'
+";
+
+
+// =================================
 // info do usuário logado (se houver)
+// =================================
 $logado = isset($_SESSION['id_usuario']);
 $id_usuario = $logado ? intval($_SESSION['id_usuario']) : null;
 
@@ -74,7 +99,10 @@ if ($logado) {
     }
 }
 
-print_r($_SESSION); 
+
+$resultMedia = mysqli_query($conexao, $sqlMedia);
+$mediaAvaliacoes = mysqli_fetch_assoc($resultMedia)['media'];
+$mediaAvaliacoes = $mediaAvaliacoes ? number_format($mediaAvaliacoes, 1) : "0.0";
 ?>
 
 <!DOCTYPE html>
@@ -170,14 +198,13 @@ print_r($_SESSION);
         <h3>Sobre <?= htmlspecialchars($prof['empresa_nome']) ?></h3>
       </div>
 
-      <div class="dados">
-        
+    <div class="avaliacao">
+    ⭐ <?= $mediaAvaliacoes ?>
+</div>
 
-        <div class="avaliacao">
-          
-        </div>
-        
-        <a href="#">57 Avaliações</a>
+<a href="avaliacoes.php?id=<?= $id_prestadora ?>" class="avaliacoes">
+    <?= $qtdAvaliacoes ?> Avaliações
+</a>
 
         
             

@@ -18,12 +18,7 @@
 
 
 body {
- 
-  background: linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88)),
-              url("../img/fundo-cliente.jpg") no-repeat center center fixed;
-  background-size: cover;
-
-  color: #545454;
+   color: #545454;
   padding-top: 70px;
 }
 

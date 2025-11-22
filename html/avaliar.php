@@ -14,7 +14,11 @@ if (!isset($_SESSION["id_usuario"])) {
 }
 
 $avaliador_id = $_SESSION["id_usuario"];
-$avaliador_tipo = $_SESSION["tipo"]; // cliente ou prestadora
+$avaliador_tipo = $_SESSION["tipo"]; // cliente ou profissional
+if ($avaliador_tipo == 'profissional') {
+    $avaliador_tipo = 'prestadora';
+}
+    
 
 $avaliado_id = $_GET["id"] ?? null;
 if (!$avaliado_id) {
@@ -49,22 +53,23 @@ if (isset($_POST['submit'])) {
     $avaliado_id = mysqli_real_escape_string($conexao, $_POST["avaliado_id"]);
     $nota        = mysqli_real_escape_string($conexao, $_POST["nota"]);
     $comentario  = mysqli_real_escape_string($conexao, $_POST["comentario"]);
-    $data        = date("Y-m-d H:i:s");
+
+
+    
 
     $sqlInsert = "
         INSERT INTO avaliacoes 
-        (avaliador_id, avaliador_tipo, avaliado_id, avaliado_tipo, nota, comentario, data_avaliacao)
+        (avaliador_id, avaliador_tipo, avaliado_id, avaliado_tipo, nota, comentario)
         VALUES 
-        ('$avaliador_id', '$avaliador_tipo', '$avaliado_id', '$avaliado_tipo', '$nota', '$comentario', '$data')
+        ('$avaliador_id', '$avaliador_tipo', '$avaliado_id', '$avaliado_tipo', '$nota', '$comentario')
     ";
+    
+    print_r($sqlInsert);
 
-    if (mysqli_query($conexao, $sqlInsert)) {
-        header("Location: avaliar.php?ok=1");
-        exit;
-    } else {
-        echo "Erro ao salvar avaliação: " . mysqli_error($conexao);
-    }
+    echo resultado($conexao, $sqlInsert);
+    
 }
+
 
 ?>
 
@@ -110,6 +115,13 @@ if (isset($_POST['submit'])) {
     </div>
   </div>
 
+  <!-- Mensagem -->
+    <div id="modalErro" class="modal">
+        <div class="modal-content">
+            <p id="mensagemErro">E-mail ou senha incorretos</p>
+            <button onclick="fecharModal()">OK</button>
+        </div>
+    </div>
 
 
 
@@ -140,22 +152,26 @@ if (isset($_POST['submit'])) {
 
 
   <main class="container">
+
+
+
+   
    <h2>Avaliando: <?= htmlspecialchars($avaliado["nome"]) ?></h2>
 
 <form action="avaliar.php?id=<?= $avaliado_id ?>" method="POST">
     <input type="hidden" name="avaliado_id" value="<?= $avaliado_id ?>">
 
-    <div class="stars">
-        <i class="star" data-value="1" onclick="estrelaUm()" id="1">★</i>
-        <i class="star" data-value="2" onclick="estrelaDois()" id="2">★</i>
-        <i class="star" data-value="3"  onclick="estrelaTres()" id="3" >★</i>
-        <i class="star" data-value="4"  onclick="estrelaQuatro()" id="4">★</i>
-        <i class="star" data-value="5"  onclick="estrelaCinco()" id="5">★</i>
+    <div class="stars" required>
+        <i class="star" data-value="1" onclick="estrelaUm()" id="1" required>★</i>
+        <i class="star" data-value="2" onclick="estrelaDois()" id="2" required>★</i>
+        <i class="star" data-value="3"  onclick="estrelaTres()" id="3" required>★</i>
+        <i class="star" data-value="4"  onclick="estrelaQuatro()" id="4" required>★</i>
+        <i class="star" data-value="5"  onclick="estrelaCinco()" id="5" required>★</i>
     </div>
 
     <input type="hidden" id="nota" name="nota">
 
-    <textarea name="comentario" placeholder="Escreva um comentário..."></textarea>
+    <textarea name="comentario" placeholder="Escreva um comentário..." required></textarea>
 
     <button type="submit" class="btn-enviar" name="submit">Enviar Avaliação</button>
 </form>
@@ -165,7 +181,7 @@ if (isset($_POST['submit'])) {
  
 
 </body>
-   <script src="../js/login.js"></script> 
+   <script src="../js/login"></script> 
   <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
   <script>
 const stars = document.querySelectorAll(".star");
@@ -208,3 +224,13 @@ stars.forEach(star => {
 });
 </script>
 </html>
+
+<?php
+function resultado($conexao, $sqlInsert){
+if (mysqli_query($conexao, $sqlInsert)) {
+        header("Location: avaliarLista.php?ok=1");
+    } else {
+        echo "Erro ao salvar avaliação: " . mysqli_error($conexao);
+    }
+}
+?>
