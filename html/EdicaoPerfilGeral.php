@@ -1,10 +1,134 @@
-
 <?php
-
+// coloque isto NO INÍCIO do EdicaoPerfilGeral.php
+mysqli_report(MYSQLI_REPORT_OFF);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 session_start();
+include_once(__DIR__ . '/../php/conexao.php');
 
+if (!isset($conexao) || !($conexao instanceof mysqli)) {
+    die("Erro interno: conexão inválida.");
+}
 
+if (isset($_POST['excluir'])) {
+    if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo'])) {
+        header("Location: ../html/Pagina_Inicial.html");
+        exit;
+    }
+
+    $id = (int) $_SESSION['id_usuario'];
+    $tipoSessao = $_SESSION['tipo']; 
+
+    error_log("EXCLUSÃO COMPLETA - Tipo: " . $tipoSessao . ", ID: " . $id);
+
+    // Começa transação
+    mysqli_begin_transaction($conexao);
+
+    try {
+        // DESABILITA FKs temporariamente
+        mysqli_query($conexao, "SET FOREIGN_KEY_CHECKS = 0");
+
+        if ($tipoSessao === 'cliente' || $tipoSessao === 'profissional') {
+            
+            $tipoBanco = ($tipoSessao === 'profissional') ? 'prestadora' : 'cliente';
+            error_log("Excluindo conta do tipo: " . $tipoBanco . " (sessão: " . $tipoSessao . ")");
+
+            // ORDEM CORRETA DE EXCLUSÃO:
+
+            // 1. NOTIFICAÇÕES - Primeiro porque pode referenciar outras tabelas
+            $stmt = $conexao->prepare("DELETE FROM notificacoes WHERE id_usuario = ?");
+            if (!$stmt) throw new Exception("Prepare notificacoes falhou: " . $conexao->error);
+            $stmt->bind_param("i", $id);
+            if (!$stmt->execute()) throw new Exception("Erro ao deletar notificacoes: " . $stmt->error);
+            $stmt->close();
+            error_log("Notificações excluídas");
+
+            // 2. AVALIAÇÕES - Onde o usuário é avaliador ou avaliado
+            $stmt = $conexao->prepare("
+                DELETE FROM avaliacoes 
+                WHERE (avaliador_tipo = ? AND avaliador_id = ?)
+                   OR (avaliado_tipo = ? AND avaliado_id = ?)
+            ");
+            if (!$stmt) throw new Exception("Prepare avaliacoes falhou: " . $conexao->error);
+            $stmt->bind_param("sisi", $tipoBanco, $id, $tipoBanco, $id);
+            if (!$stmt->execute()) throw new Exception("Erro ao deletar avaliacoes: " . $stmt->error);
+            $stmt->close();
+            error_log("Avaliações excluídas");
+
+            // 3. AGENDA - Eventos do usuário
+            $stmt = $conexao->prepare("DELETE FROM agenda WHERE id_usuario = ?");
+            if (!$stmt) throw new Exception("Prepare agenda falhou: " . $conexao->error);
+            $stmt->bind_param("i", $id);
+            if (!$stmt->execute()) throw new Exception("Erro ao deletar agenda: " . $stmt->error);
+            $stmt->close();
+            error_log("Agenda excluída");
+
+            // 4. SOLICITAÇÕES - Dependendo do tipo de usuário
+            if ($tipoSessao === 'cliente') {
+                // Cliente é contratante
+                $stmt = $conexao->prepare("DELETE FROM solicitacoes WHERE id_contratante = ?");
+            } else {
+                // Profissional é prestadora
+                $stmt = $conexao->prepare("DELETE FROM solicitacoes WHERE id_prestadora = ?");
+            }
+            
+            if (!$stmt) throw new Exception("Prepare solicitacoes falhou: " . $conexao->error);
+            $stmt->bind_param("i", $id);
+            if (!$stmt->execute()) throw new Exception("Erro ao deletar solicitacoes: " . $stmt->error);
+            $stmt->close();
+            error_log("Solicitações excluídas");
+
+            // 5. USUÁRIO PRINCIPAL - Por último, depois de excluir todos os relacionados
+            if ($tipoSessao === 'cliente') {
+                $stmt = $conexao->prepare("DELETE FROM cliente WHERE id_usuario = ?");
+            } else {
+                $stmt = $conexao->prepare("DELETE FROM prestadora WHERE id_usuario = ?");
+            }
+            
+            if (!$stmt) throw new Exception("Prepare tabela principal falhou: " . $conexao->error);
+            $stmt->bind_param("i", $id);
+            if (!$stmt->execute()) throw new Exception("Erro ao deletar usuário principal: " . $stmt->error);
+            
+            $affected = $stmt->affected_rows;
+            $stmt->close();
+            
+            if ($affected === 0) {
+                throw new Exception("Usuário não encontrado na tabela principal.");
+            }
+            
+            error_log("Usuário principal excluído - " . $affected . " linha(s) afetada(s)");
+        }
+
+        // RE-HABILITA FKs
+        mysqli_query($conexao, "SET FOREIGN_KEY_CHECKS = 1");
+
+        // Commit e logout
+        mysqli_commit($conexao);
+        
+        // Limpa todas as variáveis de sessão
+        $_SESSION = array();
+        session_destroy();
+
+        error_log("✅ CONTA EXCLUÍDA COM SUCESSO - ID: " . $id . ", Tipo: " . $tipoSessao);
+        header("Location: ../html/Pagina_Inicial.html");
+        exit;
+
+    } catch (Exception $e) {
+        mysqli_rollback($conexao);
+        
+        // Re-habilita FKs em caso de erro também
+        mysqli_query($conexao, "SET FOREIGN_KEY_CHECKS = 1");
+        
+        error_log("❌ ERRO EXCLUIR CONTA - " . $e->getMessage());
+        
+        echo "<script>
+        alert('Erro ao excluir conta: " . addslashes($e->getMessage()) . "');
+        window.location.href = '../html/Pagina_Inicial.html?erro_exclusao=1';
+        </script>";
+        exit;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -162,13 +286,6 @@ session_start();
 
 
 <?php
-
-session_start();
-mysqli_report(MYSQLI_REPORT_OFF);
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-include_once(__DIR__ . '/../php/conexao.php');
 
 if (!isset($conexao) || !($conexao instanceof mysqli)) {
     echo "<script>
@@ -357,114 +474,6 @@ if (isset($_POST['salvar'])) {
     }
 }
 
-// EXCLUSÃO DE CONTA
-// chamada: colocar dentro da sua página onde você já tem session e $conexao
-if (isset($_POST['excluir'])) {
-    if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo'])) {
-        echo "<script>document.addEventListener('DOMContentLoaded',function(){mostrarModal('Sessão inválida.');});</script>";
-        exit;
-    }
 
-    $id = (int) $_SESSION['id_usuario'];
-    $tipo = $_SESSION['tipo']; // 'cliente' ou 'profissional' (ou 'prestadora' conforme seu sistema)
-
-    // iniciar transação
-    mysqli_begin_transaction($conexao);
-
-    try {
-        if ($tipo === 'cliente') {
-            // avaliações (avaliador ou avaliado)
-            $stmt = $conexao->prepare("
-                DELETE FROM avaliacoes
-                WHERE (avaliador_tipo = 'cliente' AND avaliador_id = ?)
-                   OR (avaliado_tipo   = 'cliente' AND avaliado_id = ?)
-            ");
-            $stmt->bind_param("ii", $id, $id);
-            $stmt->execute();
-            $stmt->close();
-
-            // agenda
-            $stmt = $conexao->prepare("DELETE FROM agenda WHERE id_usuario = ?");
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-            $stmt->close();
-
-            // notificacoes
-            $stmt = $conexao->prepare("DELETE FROM notificacoes WHERE id_usuario = ?");
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-            $stmt->close();
-
-            // solicitacoes (quando é contratante)
-            $stmt = $conexao->prepare("DELETE FROM solicitacoes WHERE id_contratante = ?");
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-            $stmt->close();
-
-            // por fim apagar cliente
-            $stmt = $conexao->prepare("DELETE FROM cliente WHERE id_usuario = ?");
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-
-            if ($stmt->affected_rows === 0) {
-                throw new Exception("Não foi possível apagar cliente (não encontrado).");
-            }
-            $stmt->close();
-
-        } else { // prestadora / profissional
-            // avaliações
-            $stmt = $conexao->prepare("
-                DELETE FROM avaliacoes
-                WHERE (avaliador_tipo = 'prestadora' AND avaliador_id = ?)
-                   OR (avaliado_tipo   = 'prestadora' AND avaliado_id = ?)
-            ");
-            $stmt->bind_param("ii", $id, $id);
-            $stmt->execute();
-            $stmt->close();
-
-            // agenda
-            $stmt = $conexao->prepare("DELETE FROM agenda WHERE id_usuario = ?");
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-            $stmt->close();
-
-            // solicitacoes onde é prestadora
-            $stmt = $conexao->prepare("DELETE FROM solicitacoes WHERE id_prestadora = ?");
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-            $stmt->close();
-
-            // notificacoes (verifique se há notificações armazenadas pra prestadora também)
-            $stmt = $conexao->prepare("DELETE FROM notificacoes WHERE id_usuario = ?");
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-            $stmt->close();
-
-            // apagar prestadora
-            $stmt = $conexao->prepare("DELETE FROM prestadora WHERE id_usuario = ?");
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-
-            if ($stmt->affected_rows === 0) {
-                throw new Exception("Não foi possível apagar prestadora (não encontrada).");
-            }
-            $stmt->close();
-        }
-
-        // tudo ok -> commit
-        mysqli_commit($conexao);
-
-        // encerrar sessão e redirecionar
-        session_destroy();
-        echo "<script>document.addEventListener('DOMContentLoaded',function(){mostrarModal('Conta excluída com sucesso. Redirecionando...'); setTimeout(function(){window.location.href='../html/Pagina_Inicial.html';},1200);});</script>";
-        exit;
-
-    } catch (Exception $e) {
-        mysqli_rollback($conexao);
-        $msg = addslashes($e->getMessage() . ' | MySQL: ' . mysqli_error($conexao));
-        echo "<script>document.addEventListener('DOMContentLoaded',function(){mostrarModal('Erro ao excluir conta: {$msg}');});</script>";
-        // não exit aqui se você quiser continuar execução
-    }
-}
 
 ?>
