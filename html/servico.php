@@ -135,6 +135,7 @@ if ($logado) {
 $resultMedia = mysqli_query($conexao, $sqlMedia);
 $mediaAvaliacoes = mysqli_fetch_assoc($resultMedia)['media'];
 $mediaAvaliacoes = $mediaAvaliacoes ? number_format($mediaAvaliacoes, 1) : "0.0";
+//print_r($_SESSION); 
 ?>
 
 <!DOCTYPE html>
