@@ -169,7 +169,6 @@ if($row['passou_cadastro'] == 1){
             <textarea id="servicos" name="servicos" placeholder="Pequeno detalhamento dos serviços prestados e valores a serem cobrados"></textarea>
 
 <div class="botoes">
-    <button class="btn-excluir" name="excluir" id="excluir">EXCLUIR CONTA</button>
     <button class="btn-salvar" name="salvar" id="salvar">SALVAR ALTERAÇÕES</button>
 </div>
 
