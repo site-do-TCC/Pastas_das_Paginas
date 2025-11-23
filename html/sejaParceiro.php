@@ -83,11 +83,11 @@
   <div class="blocoimg">
     <h1 class="titulo">Seja um Parceiro</h1>
     <div class="imagens">
-      <img src="../img/adicionarFoto.png" alt="Imagem exemplo 1">
-      <img src="../img/adicionarFoto.png" alt="Imagem exemplo 2">
-      <img src="../img/adicionarFoto.png" alt="Imagem exemplo 3">
-      <img src="../img/adicionarFoto.png" alt="Imagem exemplo 4">
-      <img src="../img/adicionarFoto.png" alt="Imagem exemplo 5">
+      <img src="../img\Natalia-Icon.jpg" alt="Imagem exemplo 1">
+      <img src="../img\Murilo-Icon.jpg" alt="Imagem exemplo 2">
+      <img src="../img\Kaue-Icon.jpg" alt="Imagem exemplo 3">
+      <img src="../img\Jacob-Icon.jpg" alt="Imagem exemplo 4">
+      <img src="../img\Case-Icon.jpg" alt="Imagem exemplo 5">
     </div>
 
     <div class="form-texto">
