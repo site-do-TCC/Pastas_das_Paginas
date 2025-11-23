@@ -7,6 +7,13 @@ ini_set('display_errors', 1);
 session_start();
 include_once(__DIR__ . '/../php/conexao.php');
 
+if($_SESSION['tipo'] === 'cliente'){
+    $href= "..\html\bemVindoCliente.php";
+}elseif($_SESSION['tipo'] === 'profissional'){
+     $href= "..\html\bemVindoPrestadora.php";
+}
+    
+
 if (!isset($conexao) || !($conexao instanceof mysqli)) {
     die("Erro interno: conexão inválida.");
 }
@@ -153,6 +160,9 @@ if (isset($_POST['excluir'])) {
 
     </nav>
 </header>
+
+
+
 
  <!-- Mensagem -->
     <div id="modalErro" class="modal">
@@ -338,6 +348,7 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo'])) {
     echo "<script>
     document.addEventListener('DOMContentLoaded', function() {
         mostrarModal('Sessão inválida. Faça login novamente.');
+        window.location.href = '\login.php';
     });
     </script>";
     exit;
