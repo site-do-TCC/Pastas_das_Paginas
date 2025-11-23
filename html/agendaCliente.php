@@ -172,7 +172,47 @@ function mesPorExtenso($mes) {
     </div>
 </header>
 
+<!-- 
+========================
+// BOTÃO VOLTAR
+========================
+-->
+<style>
+  .arrow-animated {
+    color: #917ba4;
+    padding: 20px 40px;
+    width: 30px;  
+    height: 30px; 
+    animation: floatLeft 1.6s ease-in-out infinite;
+  }
+
+  @keyframes floatLeft {
+    0%   { transform: translateX(0); }
+    50%  { transform: translateX(-2px); }
+    100% { transform: translateX(0); }
+  }
+</style>
+<a href="bemVindoCliente.php" >
+<svg xmlns="http://www.w3.org/2000/svg" 
+     width="20" height="20" fill="currentColor" 
+     class="bi bi-arrow-left arrow-animated"
+     viewBox="0 0 16 16">
+  <path fill-rule="evenodd" 
+        d="M5.854 4.146a.5.5 0 0 1 0 .708L3.707 7H14.5a.5.5 0 0 1 0 1H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/>
+</svg>
+</a>
+<!-- 
+========================
+// BOTÃO VOLTAR
+========================
+-->
+
+
 <main class="agenda-container">
+
+
+
+
 
     <h1 class="titulo-agenda">Minha Agenda</h1>
 

@@ -118,7 +118,7 @@ $stmt = $conexao->prepare("SELECT imgperfil FROM prestadora WHERE id_usuario = ?
       <div class="perfil-area">
         <span class="nome"><?php echo htmlspecialchars($nome); ?></span>
         <img src="<?php echo htmlspecialchars($img); ?>" alt="Foto de perfil" class="perfil-foto">
-        <button class="menu-icon" id="menu-btn">&#9776;</button>
+        
       </div>
     </nav>
   </header>

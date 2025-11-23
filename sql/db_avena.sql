@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 22-Nov-2025 às 03:26
+-- Tempo de geração: 23-Nov-2025 às 20:11
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -42,7 +42,10 @@ CREATE TABLE `agenda` (
 
 INSERT INTO `agenda` (`id`, `id_usuario`, `tipo_usuario`, `data_evento`, `anotacao`, `criado_em`) VALUES
 (2, 3, 'cliente', '2025-11-20', 'AnotaÃ§Ã£o pra amanhÃ£', '2025-11-19 20:12:52'),
-(3, 3, 'cliente', '2025-12-12', 'awd', '2025-11-19 20:13:06');
+(3, 3, 'cliente', '2025-12-12', 'awd', '2025-11-19 20:13:06'),
+(4, 4, 'cliente', '2025-11-24', 'Marcar o cabelo com a Geisa. MARCAR ATÃ‰ DIA 24', '2025-11-22 16:34:37'),
+(5, 23, 'prestadora', '2025-11-27', 'Cabelo com o Lucas', '2025-11-22 16:35:59'),
+(6, 4, 'cliente', '2025-11-25', 'Cabelo com a geisa', '2025-11-22 16:37:19');
 
 -- --------------------------------------------------------
 
@@ -94,7 +97,8 @@ CREATE TABLE `cliente` (
 --
 
 INSERT INTO `cliente` (`id_usuario`, `nome`, `email`, `senha`, `imgperfil`, `criado_em`, `cliente_telefone`, `cliente_localizacao`, `cliente_facebook`, `cliente_instagram`, `passou_cadastro`) VALUES
-(3, 'Teste', 'teste@gmail.com', 'teste123', '../ImgPerfilCliente/perfil_3.jpeg', '2025-11-03 17:54:34', '', 'awdawda', '', '', 1);
+(3, 'Teste', 'teste@gmail.com', 'teste123', '../ImgPerfilCliente/perfil_3.jpeg', '2025-11-03 17:54:34', '', 'awdawda', '', '', 1),
+(4, 'Lucas Vitor', 'lucasvitor@gmail.com', 'lucas', '../ImgPerfilCliente/perfil_4.jpg', '2025-11-22 19:33:12', '(11)997342852', 'Rua Xingo Katanaedo', 'http://faceboock/lucasvitor', '@lucasvitor', 1);
 
 -- --------------------------------------------------------
 
@@ -157,7 +161,8 @@ INSERT INTO `notificacoes` (`id`, `id_usuario`, `id_solicitacao`, `mensagem`, `v
 (11, 3, 19, 'Seu pedido foi aceito pela prestadora.', 1, '2025-11-19 18:06:49'),
 (12, 3, 15, 'Seu pedido foi aceito pela prestadora.', 1, '2025-11-19 18:35:34'),
 (13, 3, 18, 'Sua solicitaÃ§Ã£o foi recusado pela prestadora.', 1, '2025-11-20 15:27:05'),
-(14, 3, 21, 'Seu pedido foi recusado pela prestadora.', 1, '2025-11-20 15:31:03');
+(14, 3, 21, 'Seu pedido foi recusado pela prestadora.', 1, '2025-11-20 15:31:03'),
+(15, 4, 22, 'Seu pedido foi aceito pela prestadora.', 1, '2025-11-22 16:35:45');
 
 -- --------------------------------------------------------
 
@@ -191,9 +196,10 @@ CREATE TABLE `prestadora` (
 --
 
 INSERT INTO `prestadora` (`id_usuario`, `nome`, `email`, `senha`, `criado_em`, `imgperfil`, `banner1`, `banner2`, `banner3`, `empresa_nome`, `empresa_telefone`, `empresa_email`, `empresa_localizacao`, `empresa_facebook`, `empresa_instagram`, `empresa_biografia`, `empresa_servicos`, `passou_cadastro`) VALUES
-(1, 'Teste', 'teste@gmail.com', '123', '2025-10-14 22:01:16', '../ImgPerfilPrestadoras/perfil_1.webp', '../ImgBannersPrestadoras/banner1_id_1.jpg', '../ImgBannersPrestadoras/banner2_id_1.jpg', '../ImgBannersPrestadoras/banner3_id_1.jpg', 'Teste', '12345', 'teste@gmail.com', 'Sp', 'http://localhost/Programacao_TCC_Avena/html/EdicaoPerfil.php', 'teste@gmail.com', 'testetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetesteteste', 'etestetesteaaa aaaaa\naaaaaaaaaaaaaaaaaaaa aaaaaaaaaa', 1),
+(1, 'Flavia Gomes', 'flavia@gmail.com', 'flavia', '2025-11-23 18:26:29', '../ImgPerfilPrestadoras/perfil_1.jpg', '../ImgBannersPrestadoras/banner1_id_1.jpg', '../ImgBannersPrestadoras/banner2_id_1.jpg', '../ImgBannersPrestadoras/banner3_id_1.jpg', 'Teste', '12345', 'teste@gmail.com', 'Rua Dirceu', 'http://localhost/Programacao_TCC_Avena/html/EdicaoPerfil.php', 'teste@gmail.com', 'testetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetesteteste', 'etestetesteaaa aaaaa\naaaaaaaaaaaaaaaaaaaa aaaaaaaaaa', 1),
 (2, 'Mulittle', 'muriloalves.fonseca08@gmail.com', 'EFlSs', '2025-11-12 14:33:07', '../ImgPerfilPrestadoras/perfil_2.png', '../ImgBannersPrestadoras/banner1_id_2.jpg', '../ImgBannersPrestadoras/banner2_id_2.webp', '../ImgBannersPrestadoras/banner3_id_2.png', 'Mulittle', '(11)9722075060', 'muriloalves.fonseca08@gmail.com', 'Sp - Ferraz de Vasconcelos', 'http://FoiBanidoessapembra.com', 'murilimodeiocolica@gmail', 'Trabalho muito trabalho trabalho eu muito trabalho dimais', 'Trabalho muito trabalho trabalho eu muito trabalho dimais', 1),
-(22, 'awdawd', 'awd@awd', '123', '2025-11-11 15:58:57', '../ImgPerfilPrestadoras/perfil_22.jpg', '../ImgBannersPrestadoras/banner1_id_22.jpg', '../ImgBannersPrestadoras/banner2_id_22.png', '../ImgBannersPrestadoras/banner3_id_22.jpg', 'Testeedicao', '1211111111111', 'testeedicao@gmail.com', 'lalalalalala', 'http://localhost/Programacao_TCC_Avena/html/EdicaoPerfil.php', '@cachorrofeiodapreula', 'awdawdawd', 'awdawdw', 1);
+(22, 'awdawd', 'awd@awd', '123', '2025-11-11 15:58:57', '../ImgPerfilPrestadoras/perfil_22.jpg', '../ImgBannersPrestadoras/banner1_id_22.jpg', '../ImgBannersPrestadoras/banner2_id_22.png', '../ImgBannersPrestadoras/banner3_id_22.jpg', 'Testeedicao', '1211111111111', 'testeedicao@gmail.com', 'lalalalalala', 'http://localhost/Programacao_TCC_Avena/html/EdicaoPerfil.php', '@cachorrofeiodapreula', 'awdawdawd', 'awdawdw', 1),
+(23, 'Geisa', 'geisaAM@gmail.com', 'geisa', '2025-11-22 19:29:45', '../ImgPerfilPrestadoras/perfil_23.jpg', '../ImgBannersPrestadoras/banner1_id_23.jpg', '../ImgBannersPrestadoras/banner2_id_23.jpg', '../ImgBannersPrestadoras/banner3_id_23.jpg', 'Geisa Alves Macedo', '(11) 972207560', 'geisaAM@gmail.com', 'Rua Ruthemberg Alvarez de Alcantara', 'http://localhost/Programacao_TCC_Avena/html/AdicaoServicoPrestadora.php', '@geisaestetica', 'FaÃ§o serviÃ§os de estÃ©tica no geral. Lorem ipsum daiso Kar tine donsapir lomano taricader thead for malu', 'Unha: 10R$, Cabelo: 20$, PÃ©s: 30R$', 1);
 
 -- --------------------------------------------------------
 
@@ -218,7 +224,8 @@ INSERT INTO `solicitacoes` (`id`, `id_contratante`, `id_prestadora`, `data_solic
 (18, 3, 1, '2025-11-19 13:27:24', 'recusado'),
 (19, 3, 2, '2025-11-19 13:29:10', 'aceito'),
 (20, 3, 2, '2025-11-19 13:30:46', 'recusado'),
-(21, 3, 2, '2025-11-20 15:29:17', 'recusado');
+(21, 3, 2, '2025-11-20 15:29:17', 'recusado'),
+(22, 4, 23, '2025-11-22 16:35:01', 'aceito');
 
 --
 -- Índices para tabelas despejadas
@@ -280,7 +287,7 @@ ALTER TABLE `solicitacoes`
 -- AUTO_INCREMENT de tabela `agenda`
 --
 ALTER TABLE `agenda`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `avaliacoes`
@@ -292,7 +299,7 @@ ALTER TABLE `avaliacoes`
 -- AUTO_INCREMENT de tabela `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `curso`
@@ -304,19 +311,19 @@ ALTER TABLE `curso`
 -- AUTO_INCREMENT de tabela `notificacoes`
 --
 ALTER TABLE `notificacoes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de tabela `prestadora`
 --
 ALTER TABLE `prestadora`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de tabela `solicitacoes`
 --
 ALTER TABLE `solicitacoes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Restrições para despejos de tabelas

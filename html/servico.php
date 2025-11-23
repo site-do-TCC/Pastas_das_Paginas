@@ -89,14 +89,18 @@ $id_usuario = $logado ? intval($_SESSION['id_usuario']) : null;
 $profLog = null;
 if ($logado) {
     if ($_SESSION['tipo'] === 'profissional') {
+        $href = '..\html\bemVindoPrestadora.php';
         $sqlPrestadora = "SELECT nome, imgperfil FROM prestadora WHERE id_usuario = ".$id_usuario;
         $resultadoPrestadora = mysqli_query($conexao, $sqlPrestadora);
         $profLog = mysqli_fetch_assoc($resultadoPrestadora);
     } else {
+        $href = '..\html\bemVindoCliente.php';
         $sqlCliente = "SELECT nome, imgperfil FROM cliente WHERE id_usuario = ".$id_usuario;
         $resultadoCliente = mysqli_query($conexao, $sqlCliente);
         $profLog = mysqli_fetch_assoc($resultadoCliente);
     }
+}else {
+    $href = '..\html\Pagina_Inicial.html';
 }
 
 
@@ -170,7 +174,7 @@ $mediaAvaliacoes = $mediaAvaliacoes ? number_format($mediaAvaliacoes, 1) : "0.0"
   </header>
 
   <nav class="breadcrumb">
-    <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html" style="text-decoration:none;">
+    <a href= <?= $href?> style="text-decoration:none;">
 
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
         <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>

@@ -97,10 +97,12 @@ $id_usuario = $logado ? intval($_SESSION['id_usuario']) : null;
 $profLog = null;
 if ($logado) {
     if ($_SESSION['tipo'] === 'profissional') {
+        $href = '..\html\bemVindoPrestadora.php';
         $sqlPrestadora = "SELECT nome, imgperfil FROM prestadora WHERE id_usuario = ".$id_usuario;
         $resultadoPrestadora = mysqli_query($conexao, $sqlPrestadora);
         $profLog = mysqli_fetch_assoc($resultadoPrestadora);
     } else {
+        $href = '..\html\bemVindoCliente.php';
         $sqlCliente = "SELECT nome, imgperfil FROM cliente WHERE id_usuario = ".$id_usuario;
         $resultadoCliente = mysqli_query($conexao, $sqlCliente);
         $profLog = mysqli_fetch_assoc($resultadoCliente);
@@ -182,6 +184,41 @@ if ($logado) {
   <?php } ?>
 
 </header>
+
+<!-- 
+========================
+// BOTÃO VOLTAR
+========================
+-->
+<style>
+  .arrow-animated {
+    padding: 20px 40px;
+    width: 30px;  
+    height: 30px; 
+    animation: floatLeft 1.6s ease-in-out infinite;
+  }
+
+  @keyframes floatLeft {
+    0%   { transform: translateX(0); }
+    50%  { transform: translateX(-2px); }
+    100% { transform: translateX(0); }
+  }
+</style>
+<a href= <?= $href?> style="text-decoration:none;">
+<svg xmlns="http://www.w3.org/2000/svg" 
+     width="20" height="20" fill="currentColor" 
+     class="bi bi-arrow-left arrow-animated"
+     viewBox="0 0 16 16">
+  <path fill-rule="evenodd" 
+        d="M5.854 4.146a.5.5 0 0 1 0 .708L3.707 7H14.5a.5.5 0 0 1 0 1H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/>
+</svg>
+</a>
+<!-- 
+========================
+// BOTÃO VOLTAR
+========================
+-->
+
 
 <!-- ===============================
  Breadcrumb

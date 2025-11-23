@@ -19,20 +19,37 @@ session_start();
 
 
 
+<body>
 <header>
     <nav>
         <div class="logo">
             <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
         </div>
-        <div class="menu">
 
-            <button class="menu-icon" id="menu-btn">&#9776;</button>
-        </div>
     </nav>
 </header>
 
+ <!-- Mensagem -->
+    <div id="modalErro" class="modal">
+        <div class="modal-content">
+            <p id="mensagemErro">...</p>
+            <button onclick="fecharModal()">OK</button>
+        </div>
+    </div>
 
-<body>
+
+    <!-- Modal de Confirmação -->
+<div id="modalConfirmar" class="modal">
+  <div class="modal-content">
+      <p id="mensagemConfirmar">Tem certeza que deseja excluir sua conta?</p>
+
+      <div class="modal-buttons">
+          <button id="btnConfirmar" class="btn-confirmar">Excluir</button>
+          <button id="btnCancelar" class="btn-cancelar">Cancelar</button>
+      </div>
+  </div>
+</div>
+
     <!-- ===============================
      Banner de Consentimento de Cookies - Singularity Solutions
      =============================== -->
@@ -121,17 +138,25 @@ session_start();
             </div> <!-- Fim das colunas -->
     </div>
 <div class="botoes">
-    <button class="btn-excluir" name="excluir" id="excluir">EXCLUIR CONTA</button>
+
+    <button type="button" onclick="confirmarExclusao()" class="btn-excluir">
+  EXCLUIR CONTA
+</button>
+
     <button class="btn-salvar" name="salvar" id="salvar">SALVAR ALTERAÇÕES</button>
 </div>
 <a href="\Programacao_TCC_Avena\php\sair.php" class="btn-deslogar">DESLOGAR</a>
 </div>
 
 
-</body>
-<script rel="preload" src="\Programacao_TCC_Avena\js\EdicaoPerfilCliente.js"></script>
-<script src="../js/cadastro.js"></script>
+
+<!-- ===============================
+   <script src="../js/cadastro.js"></script> 
+    <script src="\Programacao_TCC_Avena\js\EdicaoPerfil.js"></script>
+ =============================== -->
+<script src="\Programacao_TCC_Avena\js\EdicaoPerfilCliente.js"></script>
 <script src="\Programacao_TCC_Avena\js\cookies.js"></script> 
+</body>
 </html>
 
 
@@ -146,11 +171,21 @@ ini_set('display_errors', 1);
 include_once(__DIR__ . '/../php/conexao.php');
 
 if (!isset($conexao) || !($conexao instanceof mysqli)) {
-    die("❌ Erro: variável \$conexao não é uma instância válida de mysqli.<br>");
+    echo "<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        mostrarModal('Erro interno: conexão inválida com o banco de dados.');
+    });
+    </script>";
+    exit;
 }
 
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo'])) {
-    die("Sessão inválida. Faça login novamente.");
+    echo "<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        mostrarModal('Sessão inválida. Faça login novamente.');
+    });
+    </script>";
+    exit;
 }
 
 $id_usuario = $_SESSION['id_usuario'];
@@ -159,7 +194,7 @@ if (isset($_POST['salvar'])) {
 
     if ($_SESSION['tipo'] == 'cliente') {
 
-        // Atualiza a imagem
+        // Atualiza foto
         if (isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil']['name'])) {
             $uploadDirRel = "../ImgPerfilCliente/";
             $uploadDirAbs = __DIR__ . "/../ImgPerfilCliente/";
@@ -187,7 +222,7 @@ if (isset($_POST['salvar'])) {
         $nome = $_POST['nome'] ?? '';
         $email = $_POST['email'] ?? '';
 
-        // ⚠️ Verifica se o e-mail já existe em outro usuário
+        // EMAIL JÁ EXISTE
         if (!empty($email)) {
             $sqlCheckEmail = "SELECT id_usuario FROM cliente WHERE email = ? AND id_usuario != ?";
             $stmtCheck = $conexao->prepare($sqlCheckEmail);
@@ -196,14 +231,18 @@ if (isset($_POST['salvar'])) {
             $stmtCheck->store_result();
 
             if ($stmtCheck->num_rows > 0) {
-                echo "❌ Este e-mail já está cadastrado em outra conta.<br>";
+                echo "<script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    mostrarModal('Este e-mail já está cadastrado em outra conta.');
+                });
+                </script>";
                 $stmtCheck->close();
                 exit;
             }
             $stmtCheck->close();
         }
 
-        // UPDATE protegido com CASE WHEN
+        // UPDATE
         $sql = "UPDATE cliente SET
             senha = CASE WHEN ? = '' THEN senha ELSE ? END,
             cliente_localizacao = CASE WHEN ? = '' THEN cliente_localizacao ELSE ? END,
@@ -212,7 +251,7 @@ if (isset($_POST['salvar'])) {
         WHERE id_usuario = ?";
 
         $stmt = $conexao->prepare($sql);
-        $stmt->bind_param("ssssssssi", 
+        $stmt->bind_param("ssssssssi",
             $senha, $senha,
             $localizacao, $localizacao,
             $nome, $nome,
@@ -221,25 +260,24 @@ if (isset($_POST['salvar'])) {
         );
 
         if ($stmt->execute()) {
-            echo "✅ Dados atualizados com sucesso!<br>";
+            echo '<script>window.location.href = "\bbemVindoCliente.php";</script>';
 
-            // Atualiza sessão
             if (!empty($email)) $_SESSION['email'] = $email;
             if (!empty($senha)) $_SESSION['senha'] = $senha;
         } else {
-            echo "Erro ao atualizar: " . $stmt->error;
+            echo "<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                mostrarModal('Erro ao atualizar: " . addslashes($stmt->error) . "');
+            });
+            </script>";
         }
 
         $stmt->close();
-    } 
+    }
 
-    //---------------------------------------
-    // Parte da profissional
-    //---------------------------------------
-
+    // PROFISSIONAL
     if ($_SESSION['tipo'] == 'profissional') {
 
-        // Atualiza a imagem
         if (isset($_FILES['fotoPerfil']) && !empty($_FILES['fotoPerfil']['name'])) {
             $uploadDirRel = "../ImgPerfilPrestadoras/";
             $uploadDirAbs = __DIR__ . "/../ImgPerfilPrestadoras/";
@@ -261,13 +299,12 @@ if (isset($_POST['salvar'])) {
             }
         }
 
-        // Campos
         $senha = $_POST['senha'] ?? '';
         $localizacao = $_POST['localizacao'] ?? '';
         $nome = $_POST['nome'] ?? '';
         $email = $_POST['email'] ?? '';
 
-        // ⚠️ Verifica se o e-mail já existe em outra prestadora
+        // EMAIL EXISTENTE
         if (!empty($email)) {
             $sqlCheckEmail = "SELECT id_usuario FROM prestadora WHERE email = ? AND id_usuario != ?";
             $stmtCheck = $conexao->prepare($sqlCheckEmail);
@@ -276,14 +313,17 @@ if (isset($_POST['salvar'])) {
             $stmtCheck->store_result();
 
             if ($stmtCheck->num_rows > 0) {
-                echo "❌ Este e-mail já está cadastrado em outra conta.<br>";
+                echo "<script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    mostrarModal('Este e-mail já está cadastrado em outra conta.');
+                });
+                </script>";
                 $stmtCheck->close();
                 exit;
             }
             $stmtCheck->close();
         }
 
-        // UPDATE
         $sql = "UPDATE prestadora SET
             senha = CASE WHEN ? = '' THEN senha ELSE ? END,
             empresa_localizacao = CASE WHEN ? = '' THEN empresa_localizacao ELSE ? END,
@@ -292,7 +332,7 @@ if (isset($_POST['salvar'])) {
         WHERE id_usuario = ?";
 
         $stmt = $conexao->prepare($sql);
-        $stmt->bind_param("ssssssssi", 
+        $stmt->bind_param("ssssssssi",
             $senha, $senha,
             $localizacao, $localizacao,
             $nome, $nome,
@@ -301,42 +341,130 @@ if (isset($_POST['salvar'])) {
         );
 
         if ($stmt->execute()) {
-            echo "✅ Dados atualizados com sucesso!<br>";
+            echo '<script>window.location.href = "\bbemVindoPrestadora.php";</script>';
 
             if (!empty($email)) $_SESSION['email'] = $email;
             if (!empty($senha)) $_SESSION['senha'] = $senha;
         } else {
-            echo "Erro ao atualizar: " . $stmt->error;
+            echo "<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                mostrarModal('Erro ao atualizar: " . addslashes($stmt->error) . "');
+            });
+            </script>";
         }
 
         $stmt->close();
     }
 }
-//Excluir conta
-if (isset($_POST['excluir'])) { if ($_SESSION['tipo'] == 'cliente') { 
-    $sqlDelete = "DELETE FROM cliente WHERE id_usuario = ?"; $stmtDelete = $conexao->prepare($sqlDelete); $stmtDelete->bind_param("i", $id_usuario); 
-    if ($stmtDelete->execute()){
-        echo "✅ Conta excluída com sucesso!<br>"; 
-        session_destroy(); 
-        echo "<script>window.location.href='../html/Pagina_Inicial.html';</script>"; 
-        exit; 
-    } 
-    else{
-       echo "Erro ao excluir conta: " . $stmtDelete->error; 
-    } 
-    $stmtDelete->close(); 
-} if ($_SESSION['tipo'] == 'profissional') { 
-    $sqlDelete = "DELETE FROM prestadora WHERE id_usuario = ?"; 
-    $stmtDelete = $conexao->prepare($sqlDelete); 
-    $stmtDelete->bind_param("i", $id_usuario); 
-    if ($stmtDelete->execute()) { 
-        echo "✅ Conta excluída com sucesso!<br>"; 
-        session_destroy(); 
-        echo "<script>window.location.href='../html/Pagina_Inicial.html';</script>"; 
-        exit; 
-} else{ 
-    echo "Erro ao excluir conta: " . $stmtDelete->error; } $stmtDelete->close(); 
-} 
 
+// EXCLUSÃO DE CONTA
+// chamada: colocar dentro da sua página onde você já tem session e $conexao
+if (isset($_POST['excluir'])) {
+    if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo'])) {
+        echo "<script>document.addEventListener('DOMContentLoaded',function(){mostrarModal('Sessão inválida.');});</script>";
+        exit;
+    }
+
+    $id = (int) $_SESSION['id_usuario'];
+    $tipo = $_SESSION['tipo']; // 'cliente' ou 'profissional' (ou 'prestadora' conforme seu sistema)
+
+    // iniciar transação
+    mysqli_begin_transaction($conexao);
+
+    try {
+        if ($tipo === 'cliente') {
+            // avaliações (avaliador ou avaliado)
+            $stmt = $conexao->prepare("
+                DELETE FROM avaliacoes
+                WHERE (avaliador_tipo = 'cliente' AND avaliador_id = ?)
+                   OR (avaliado_tipo   = 'cliente' AND avaliado_id = ?)
+            ");
+            $stmt->bind_param("ii", $id, $id);
+            $stmt->execute();
+            $stmt->close();
+
+            // agenda
+            $stmt = $conexao->prepare("DELETE FROM agenda WHERE id_usuario = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $stmt->close();
+
+            // notificacoes
+            $stmt = $conexao->prepare("DELETE FROM notificacoes WHERE id_usuario = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $stmt->close();
+
+            // solicitacoes (quando é contratante)
+            $stmt = $conexao->prepare("DELETE FROM solicitacoes WHERE id_contratante = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $stmt->close();
+
+            // por fim apagar cliente
+            $stmt = $conexao->prepare("DELETE FROM cliente WHERE id_usuario = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+
+            if ($stmt->affected_rows === 0) {
+                throw new Exception("Não foi possível apagar cliente (não encontrado).");
+            }
+            $stmt->close();
+
+        } else { // prestadora / profissional
+            // avaliações
+            $stmt = $conexao->prepare("
+                DELETE FROM avaliacoes
+                WHERE (avaliador_tipo = 'prestadora' AND avaliador_id = ?)
+                   OR (avaliado_tipo   = 'prestadora' AND avaliado_id = ?)
+            ");
+            $stmt->bind_param("ii", $id, $id);
+            $stmt->execute();
+            $stmt->close();
+
+            // agenda
+            $stmt = $conexao->prepare("DELETE FROM agenda WHERE id_usuario = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $stmt->close();
+
+            // solicitacoes onde é prestadora
+            $stmt = $conexao->prepare("DELETE FROM solicitacoes WHERE id_prestadora = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $stmt->close();
+
+            // notificacoes (verifique se há notificações armazenadas pra prestadora também)
+            $stmt = $conexao->prepare("DELETE FROM notificacoes WHERE id_usuario = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $stmt->close();
+
+            // apagar prestadora
+            $stmt = $conexao->prepare("DELETE FROM prestadora WHERE id_usuario = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+
+            if ($stmt->affected_rows === 0) {
+                throw new Exception("Não foi possível apagar prestadora (não encontrada).");
+            }
+            $stmt->close();
+        }
+
+        // tudo ok -> commit
+        mysqli_commit($conexao);
+
+        // encerrar sessão e redirecionar
+        session_destroy();
+        echo "<script>document.addEventListener('DOMContentLoaded',function(){mostrarModal('Conta excluída com sucesso. Redirecionando...'); setTimeout(function(){window.location.href='../html/Pagina_Inicial.html';},1200);});</script>";
+        exit;
+
+    } catch (Exception $e) {
+        mysqli_rollback($conexao);
+        $msg = addslashes($e->getMessage() . ' | MySQL: ' . mysqli_error($conexao));
+        echo "<script>document.addEventListener('DOMContentLoaded',function(){mostrarModal('Erro ao excluir conta: {$msg}');});</script>";
+        // não exit aqui se você quiser continuar execução
+    }
 }
+
 ?>
