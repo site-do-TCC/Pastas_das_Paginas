@@ -7,13 +7,6 @@ ini_set('display_errors', 1);
 session_start();
 include_once(__DIR__ . '/../php/conexao.php');
 
-if($_SESSION['tipo'] === 'cliente'){
-    $href= "..\html\bemVindoCliente.php";
-}elseif($_SESSION['tipo'] === 'profissional'){
-     $href= "..\html\bemVindoPrestadora.php";
-}
-    
-
 if (!isset($conexao) || !($conexao instanceof mysqli)) {
     die("Erro interno: conexão inválida.");
 }
