@@ -117,14 +117,18 @@ $id_usuario = $logado ? intval($_SESSION['id_usuario']) : null;
 $profLog = null;
 if ($logado) {
     if ($_SESSION['tipo'] === 'profissional') {
+        $href = '..\html\bemVindoPrestadora.php';
         $sqlPrestadora = "SELECT nome, imgperfil FROM prestadora WHERE id_usuario = ".$id_usuario;
         $resultadoPrestadora = mysqli_query($conexao, $sqlPrestadora);
         $profLog = mysqli_fetch_assoc($resultadoPrestadora);
     } else {
+        $href = '..\html\bemVindoCliente.php';
         $sqlCliente = "SELECT nome, imgperfil FROM cliente WHERE id_usuario = ".$id_usuario;
         $resultadoCliente = mysqli_query($conexao, $sqlCliente);
         $profLog = mysqli_fetch_assoc($resultadoCliente);
     }
+}else {
+    $href = '..\html\Pagina_Inicial.html';
 }
 
 

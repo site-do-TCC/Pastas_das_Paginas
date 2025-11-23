@@ -3,7 +3,8 @@
 
 include_once(__DIR__ . '/../php/conexao.php');
 
-// Limpa vestígios antigos
+//print_r($_SESSION);
+
 $_SESSION['id_prestadora'] = null;
 
 // Função segura para obter perfil com verificação da coluna imgperfil

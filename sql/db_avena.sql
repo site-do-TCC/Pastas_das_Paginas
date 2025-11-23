@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 22-Nov-2025 às 03:26
+-- Tempo de geração: 23-Nov-2025 às 20:11
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -42,7 +42,10 @@ CREATE TABLE `agenda` (
 
 INSERT INTO `agenda` (`id`, `id_usuario`, `tipo_usuario`, `data_evento`, `anotacao`, `criado_em`) VALUES
 (2, 3, 'cliente', '2025-11-20', 'AnotaÃ§Ã£o pra amanhÃ£', '2025-11-19 20:12:52'),
-(3, 3, 'cliente', '2025-12-12', 'awd', '2025-11-19 20:13:06');
+(3, 3, 'cliente', '2025-12-12', 'awd', '2025-11-19 20:13:06'),
+(4, 4, 'cliente', '2025-11-24', 'Marcar o cabelo com a Geisa. MARCAR ATÃ‰ DIA 24', '2025-11-22 16:34:37'),
+(5, 23, 'prestadora', '2025-11-27', 'Cabelo com o Lucas', '2025-11-22 16:35:59'),
+(6, 4, 'cliente', '2025-11-25', 'Cabelo com a geisa', '2025-11-22 16:37:19');
 
 -- --------------------------------------------------------
 
@@ -158,7 +161,8 @@ INSERT INTO `notificacoes` (`id`, `id_usuario`, `id_solicitacao`, `mensagem`, `v
 (11, 3, 19, 'Seu pedido foi aceito pela prestadora.', 1, '2025-11-19 18:06:49'),
 (12, 3, 15, 'Seu pedido foi aceito pela prestadora.', 1, '2025-11-19 18:35:34'),
 (13, 3, 18, 'Sua solicitaÃ§Ã£o foi recusado pela prestadora.', 1, '2025-11-20 15:27:05'),
-(14, 3, 21, 'Seu pedido foi recusado pela prestadora.', 1, '2025-11-20 15:31:03');
+(14, 3, 21, 'Seu pedido foi recusado pela prestadora.', 1, '2025-11-20 15:31:03'),
+(15, 4, 22, 'Seu pedido foi aceito pela prestadora.', 1, '2025-11-22 16:35:45');
 
 -- --------------------------------------------------------
 
@@ -220,7 +224,8 @@ INSERT INTO `solicitacoes` (`id`, `id_contratante`, `id_prestadora`, `data_solic
 (18, 3, 1, '2025-11-19 13:27:24', 'recusado'),
 (19, 3, 2, '2025-11-19 13:29:10', 'aceito'),
 (20, 3, 2, '2025-11-19 13:30:46', 'recusado'),
-(21, 3, 2, '2025-11-20 15:29:17', 'recusado');
+(21, 3, 2, '2025-11-20 15:29:17', 'recusado'),
+(22, 4, 23, '2025-11-22 16:35:01', 'aceito');
 
 --
 -- Índices para tabelas despejadas
@@ -289,7 +294,7 @@ ALTER TABLE `solicitacoes`
 -- AUTO_INCREMENT de tabela `agenda`
 --
 ALTER TABLE `agenda`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `avaliacoes`
@@ -313,7 +318,7 @@ ALTER TABLE `curso`
 -- AUTO_INCREMENT de tabela `notificacoes`
 --
 ALTER TABLE `notificacoes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de tabela `prestadora`
@@ -325,7 +330,7 @@ ALTER TABLE `prestadora`
 -- AUTO_INCREMENT de tabela `solicitacoes`
 --
 ALTER TABLE `solicitacoes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Restrições para despejos de tabelas
