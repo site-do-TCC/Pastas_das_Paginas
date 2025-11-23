@@ -158,7 +158,7 @@ if (!isset($conexao) || !($conexao instanceof mysqli)) {
     //echo "✅ Conexão MySQLi válida.<br>";
 }
 
-print_r($_SESSION);
+//print_r($_SESSION);
 
 if (isset($_POST['salvar'])) {
 

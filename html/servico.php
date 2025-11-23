@@ -74,7 +74,7 @@ if ($logado) {
     }
 }
 
-print_r($_SESSION); 
+//print_r($_SESSION); 
 ?>
 
 <!DOCTYPE html>
