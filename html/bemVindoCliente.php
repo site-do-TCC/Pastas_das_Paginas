@@ -6,10 +6,12 @@ error_reporting(E_ALL);
 session_start();
 include_once('../php/conexao.php');
 
-// Definições padrão para evitar undefined variable warnings
-$nome = 'Usuário';
-$img = '../img/SemFoto.jpg';
-
+//$nome = "Usuário";
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['email']) || $_SESSION['tipo'] == 'profissional'){
+    echo '<script> window.location.href = "\login.php"</script>';
+    session_destroy();
+    exit;
+}
 
 if (!isset($conexao)) {
     die("Erro: conexão com o banco não encontrada. Verifique ../php/conexao.php");
