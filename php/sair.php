@@ -1,7 +1,17 @@
 <?php
-     session_start();
-     unset($_SESSION['email']);
-     unset($_SESSION['senha']);
-     unset($_SESSION['id_usuario']);
-     header('Location: \Programacao_TCC_Avena\html\login.php');
+session_start();
+
+// Limpa toda a sessão para evitar sobras (cliente/prestadora)
+$_SESSION = [];
+if (ini_get("session.use_cookies")) {
+     $params = session_get_cookie_params();
+     setcookie(session_name(), '', time() - 42000,
+          $params['path'], $params['domain'],
+          $params['secure'], $params['httponly']
+     );
+}
+session_destroy();
+
+header('Location: /Programacao_TCC_Avena/html/login.php');
+exit;
 ?>
