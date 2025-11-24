@@ -257,13 +257,6 @@ ALTER TABLE `curso`
   ADD PRIMARY KEY (`id_curso`);
 
 --
--- Índices para tabela `mensagem`
---
-ALTER TABLE `mensagem`
-  ADD PRIMARY KEY (`id_mensagem`),
-  ADD KEY `id_chat` (`id_chat`),
-  ADD KEY `id_para` (`id_para`),
-  ADD KEY `idx_unread` (`id_chat`,`id_para`,`lido`);
 -- Índices para tabela `notificacoes`
 --
 ALTER TABLE `notificacoes`
@@ -337,17 +330,6 @@ ALTER TABLE `solicitacoes`
 --
 
 --
--- Limitadores para a tabela `chat`
---
-ALTER TABLE `chat`
-  ADD CONSTRAINT `chat_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_usuario`),
-  ADD CONSTRAINT `chat_ibfk_2` FOREIGN KEY (`id_prestadora`) REFERENCES `prestadora` (`id_usuario`);
-
---
--- Limitadores para a tabela `mensagem`
---
-ALTER TABLE `mensagem`
-  ADD CONSTRAINT `mensagem_ibfk_1` FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`);
 -- Limitadores para a tabela `notificacoes`
 --
 ALTER TABLE `notificacoes`

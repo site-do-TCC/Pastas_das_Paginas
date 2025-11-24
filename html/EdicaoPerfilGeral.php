@@ -144,8 +144,7 @@ if (isset($_POST['excluir'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edição de Perfil</title>
-    <link rel="stylesheet" href="/Programacao_TCC_Avena/css/header_nav.css">
-    <link rel="stylesheet" href="/Programacao_TCC_Avena/css/EdicaoPerfil.css">
+    <link rel="stylesheet" href="\Programacao_TCC_Avena\css\EdicaoPerfil.css">
 
 </head>
 

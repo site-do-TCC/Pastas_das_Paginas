@@ -7,31 +7,15 @@ include_once(__DIR__ . '/../php/conexao.php'); // ajuste caminho se precisar
 
 // -------------------- TRATAMENTO DO POST --------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['solicitar'])) {
-  // Detecta id do cliente logado usando novo padrão de sessão
-  $id_contratante = null;
-  if (!empty($_SESSION['cliente']['id_usuario'])) {
-    $id_contratante = (int)$_SESSION['cliente']['id_usuario'];
-  } elseif (!empty($_SESSION['prestadora']['id_usuario'])) {
-    // Se for prestadora tentando solicitar, pode bloquear ou tratar diferente; aqui apenas impede.
-    if (!empty($_POST['ajax'])) {
-      header('Content-Type: application/json');
-      echo json_encode(['ok'=>false,'erro'=>'Prestadoras não podem solicitar serviços.']);
-      exit;
-    } else {
-      header("Location: ../html/login.php");
-      exit;
+
+
+    // ID DO CLIENTE LOGADO
+    if (!isset($_SESSION['id_usuario'])) {
+        header("Location: ../html/login.php");
+        exit;
     }
-  }
-  if (!$id_contratante) {
-    if (!empty($_POST['ajax'])) {
-      header('Content-Type: application/json');
-      echo json_encode(['ok'=>false,'erro'=>'Faça login para solicitar.']);
-      exit;
-    } else {
-      header("Location: ../html/login.php");
-      exit;
-    }
-  }
+
+    $id_contratante = intval($_SESSION['id_usuario']);
 
     // ID DA PRESTADORA
     $id_prestadora = intval($_POST['id_prestadora']);
@@ -47,22 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['solicitar'])) {
     mysqli_stmt_close($insert);
 
     if ($ok) {
-        if (!empty($_POST['ajax'])) {
-          header('Content-Type: application/json');
-          echo json_encode(['ok'=>true,'id_prestadora'=>$id_prestadora]);
-          exit;
-        } else {
-          header("Location: servico.php?id_prestadora={$id_prestadora}&success=1");
-          exit;
-        }
+        header("Location: servico.php?id_prestadora={$id_prestadora}&success=1");
+        exit;
     } else {
-        if (!empty($_POST['ajax'])) {
-          header('Content-Type: application/json');
-          echo json_encode(['ok'=>false,'erro'=>'Erro ao inserir solicitação.']);
-          exit;
-        } else {
-          echo "<script>mostrarModal('Erro ao solicitar serviço. Veja se id_contratante e id_prestadora existem.');</script>";
-        }
+        echo "<script>mostrarModal('Erro ao solicitar serviço. Veja se id_contratante e id_prestadora existem.');</script>";
     }
 }
 // -------------------- FIM TRATAMENTO POST --------------------
@@ -135,7 +107,6 @@ if ($logado) {
 $resultMedia = mysqli_query($conexao, $sqlMedia);
 $mediaAvaliacoes = mysqli_fetch_assoc($resultMedia)['media'];
 $mediaAvaliacoes = $mediaAvaliacoes ? number_format($mediaAvaliacoes, 1) : "0.0";
-//print_r($_SESSION); 
 ?>
 
 <!DOCTYPE html>
@@ -144,10 +115,9 @@ $mediaAvaliacoes = $mediaAvaliacoes ? number_format($mediaAvaliacoes, 1) : "0.0"
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= htmlspecialchars($prof['nome']) ?> | Avena</title>
-  <link rel="stylesheet" href="../css/servico.css">
-  <link rel="stylesheet" href="../css/header_nav.css">
+  <link rel="stylesheet" href="\Programacao_TCC_Avena\css\servico.css">
 </head>
-<body class="fixed-header-page">
+<body>
 
    <!-- ===============================
      Banner de Consentimento de Cookies - Singularity Solutions
@@ -177,67 +147,31 @@ $mediaAvaliacoes = $mediaAvaliacoes ? number_format($mediaAvaliacoes, 1) : "0.0"
         </div>
     </div>
 
-  <?php include_once(__DIR__ . '/../php/header_nav.php'); ?>
-  <style>
-    /* Failsafe: garante visibilidade e posicionamento do botão do menu */
-    .global-header .menu-icon { display:inline-block !important; visibility:visible !important; width:auto !important; height:auto !important; }
-    /* Eleva z-index do menu aberto para evitar ficar atrás de outros elementos */
-    #menu.show { z-index: 9999 !important; }
-  </style>
-  <script>
-    // Diagnóstico + reinserção agressiva se ainda ausente
-    (function(){
-      function ensureMenuBtn(){
-        var btn = document.getElementById('menu-btn');
-        var cluster = document.querySelector('.global-header .menu-cluster');
-        if(!btn && cluster){
-          btn = document.createElement('button');
-          btn.id='menu-btn'; btn.className='menu-icon'; btn.type='button'; btn.innerHTML='\u2630';
-          cluster.appendChild(btn);
-        }
-        if(btn){
-          // Força estilos inline caso CSS não tenha carregado
-          btn.style.background='#917ba4';
-          btn.style.color='#fff';
-          btn.style.fontSize='2.2em';
-          btn.style.border='none';
-          btn.style.cursor='pointer';
-          btn.style.padding='0 6px 4px';
-        }
-        var menu = document.getElementById('menu');
-        if(btn && menu && !btn.dataset.bound){
-          btn.addEventListener('click', function(){
-            menu.classList.toggle('show');
-            if(!menu.classList.contains('show')){ menu.classList.add('hidden'); } else { menu.classList.remove('hidden'); }
-          });
-          btn.dataset.bound='1';
-        }
-      }
-      console.log('[DEBUG] Inicializando ensureMenuBtn.');
-      console.log('[DEBUG] menu-btn antes:', document.getElementById('menu-btn'));
-      console.log('[DEBUG] menu nav antes:', document.getElementById('menu'));
-      ensureMenuBtn();
-      setTimeout(ensureMenuBtn,500);
-      setTimeout(ensureMenuBtn,1200);
-    })();
-  </script>
-  <script>
-  // Injeção de fallback: se o botão não veio do include, cria um novo
-  (function(){
-    var existing = document.getElementById('menu-btn');
-    if(!existing){
-      var cluster = document.querySelector('.global-header .menu-cluster');
-      if(cluster){
-        var btn = document.createElement('button');
-        btn.id = 'menu-btn';
-        btn.className = 'menu-icon';
-        btn.type = 'button';
-        btn.innerHTML = '&#9776;';
-        cluster.appendChild(btn);
-      }
-    }
-  })();
-  </script>
+  <header class="header">
+    <div class="logo">
+      <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
+    </div>
+    <!-- Botão do perfil se não estiver logado -->
+    <a href="..\html\login.php" class="btn-entrar" id="btn-entrar">ENTRAR</a>
+    <!-- Fim do botão do perfil se não estiver logado -->
+
+
+    <!-- ===============================================
+         Área do perfil se tiver logado (VAI DENTRO DA HEADER)
+    ====================================================-->
+    <?php if(isset($_SESSION['id_usuario'])){?>
+    <div class="perfil-area" id="perfil-area">
+      <span class="nome"><?php echo htmlspecialchars($profLog['nome']); ?></span>
+      <img src="<?php echo htmlspecialchars($profLog['imgperfil']); ?>" alt="Foto de perfil" class="perfil-foto">
+    </div>
+
+    <?php } ?>
+    <!-- ======================================================
+          Fim da área do perfil se estiver logado (VAI DENTRO DA HEADER)
+    =============================================================-->
+
+
+  </header>
 
   <nav class="breadcrumb">
     <a href= <?= $href?> style="text-decoration:none;">
@@ -287,7 +221,6 @@ $mediaAvaliacoes = $mediaAvaliacoes ? number_format($mediaAvaliacoes, 1) : "0.0"
               <form method="POST" action="">
                 <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($id_usuario) ?>">
                 <input type="hidden" name="id_prestadora" value="<?= htmlspecialchars($id_prestadora) ?>">
-                <input type="hidden" name="ajax" value="1">
                 <?php if($_SESSION['tipo'] === 'profissional'): ?>
                   <button type="button" onclick="mostrarModal('Prestadoras não podem solicitar serviços.');" class="solicitar-btn">
                     Solicitar Serviço
@@ -318,7 +251,23 @@ $mediaAvaliacoes = $mediaAvaliacoes ? number_format($mediaAvaliacoes, 1) : "0.0"
       </div>
     </section>
   </main>
-  <!-- login.js será carregado uma vez ao final -->
+  <script src="../js/login.js"></script>
+  <script>
+    // ===========================================================
+    // Exibir ou ocultar o botão "ENTRAR" com base no status de login. Se estiver logado as informações do perfil aparecem
+    // ===========================================================
+      const logado = <?= json_encode($logado) ?>;
+      if (!logado) {
+        document.getElementById("perfil-area").style.display = "none";
+        document.getElementById("btn-entrar").style.display = "block";
+      } else {
+        document.getElementById("perfil-area").style.display = "block";
+        document.getElementById("btn-entrar").style.display = "none";
+      }
+    // ===========================================================
+    // Fim do exibir ou ocultar o botão "ENTRAR" com base no status de login. Se estiver logado as informações do perfil aparecem
+    // ===========================================================    
+  </script>
 </body>
 <script src="../js/login.js"></script>
 <script>
@@ -330,24 +279,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (success) {
         mostrarModal("Solicitação enviada com sucesso!");
-        // Força exibição imediata da badge de chat no nav indicando novo chat disponível
-        try {
-          const badge = document.getElementById('global-chat-badge');
-          if (badge) {
-            // Notificação de solicitação: vermelho (não roxo)
-            badge.style.display = 'inline-block';
-            badge.classList.remove('new-chat');
-            badge.style.background = '#dc2626';
-            badge.style.animation = 'pulseBadge 1.3s ease-in-out infinite';
-          }
-          // Dispara evento customizado para outros scripts que queiram reagir
-          document.dispatchEvent(new CustomEvent('chatPlaceholderCreated', { detail:{ source:'solicitacao', ts: Date.now() } }));
-        } catch(e) { /* silencia */ }
-        // Limpa o parâmetro success da URL para evitar reexibir modal ao voltar/atualizar
-        try {
-          const cleanUrl = window.location.pathname + '?id_prestadora=<?= (int)$id_prestadora ?>';
-          window.history.replaceState({}, document.title, cleanUrl);
-        } catch(e) { /* ignore */ }
     }
 
     if (erro) {
@@ -355,68 +286,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script>
-<script>
-// Intercepta envio para AJAX e evita reload/redirect
-(function(){
-  const form = document.getElementById('solicitacao-form');
-  if(!form || form.__boundAjax) return; form.__boundAjax = true;
-  form.addEventListener('submit', async function(ev){
-    // Se for prestadora, deixa lógica padrão do botão bloquear
-    if (form.querySelector('button[onclick]')) return;
-    ev.preventDefault();
-    const btn = form.querySelector('button[type="submit"]');
-    if(btn){ btn.disabled = true; btn.textContent = 'Enviando...'; }
-    try {
-      const fd = new FormData(form);
-      const r = await fetch(window.location.href, { method:'POST', body: fd, credentials:'same-origin' });
-      let data=null; try{ data = await r.json(); }catch{}
-      if(data && data.ok){
-        mostrarModal('Solicitação enviada com sucesso!');
-        // Badge vermelha imediata
-        const badge = document.getElementById('global-chat-badge');
-        if(badge){ badge.style.display='inline-block'; badge.classList.remove('new-chat'); badge.style.background='#dc2626'; }
-        // Limpa marca visto para forçar futura notificação se vier mensagem
-        localStorage.removeItem('chatLastSeenMaxId');
-      } else {
-        mostrarModal(data?.erro || 'Falha ao solicitar.');
-      }
-    } catch(e){ mostrarModal('Erro de rede ao solicitar.'); }
-    finally { if(btn){ btn.disabled=false; btn.textContent='Solicitar Serviço'; } }
-  });
-})();
-</script>
 <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
-<script>
-// Fallback para garantir funcionamento do botão de menu caso algum script sobrescreva
-(function(){
-  function bindMenu(){
-    var btn = document.getElementById('menu-btn');
-    var menu = document.getElementById('menu');
-    if(btn && menu && !btn.dataset.bound){
-      btn.addEventListener('click', function(){
-        menu.classList.toggle('show');
-        if(!menu.classList.contains('show')){ menu.classList.add('hidden'); } else { menu.classList.remove('hidden'); }
-      });
-      btn.dataset.bound = '1';
-    }
-  }
-  bindMenu();
-  setTimeout(bindMenu, 800);
-})();
-</script>
-<script>
-// Fallback genérico: captura cliques no botão mesmo sem listener (delegação)
-(function(){
-  document.addEventListener('click', function(ev){
-    if(ev.target && ev.target.id === 'menu-btn'){
-      var menu = document.getElementById('menu');
-      if(menu){
-        menu.classList.toggle('show');
-        if(!menu.classList.contains('show')){ menu.classList.add('hidden'); } else { menu.classList.remove('hidden'); }
-        console.log('[DEBUG] Toggle via delegação. Estado show:', menu.classList.contains('show'));
-      }
-    }
-  });
-})();
-</script>
 </html>
