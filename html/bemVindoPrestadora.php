@@ -9,6 +9,12 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['email']) || $_SESSION['
     exit;
 }
 
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['email']) || $_SESSION['tipo'] == 'cliente'){
+    echo '<script> window.location.href = "\login.php"</script>';
+    session_destroy();
+    exit;
+}
+
 if (!isset($conexao)) {
     die("Erro: conexão com o banco não encontrada. Verifique ../php/conexao.php");
 }
