@@ -1,8 +1,20 @@
-
 <?php
 session_start();
 
+if (!isset($_SESSION['id_usuario']) && !isset($_SESSION['email'])){
+    echo '<script> window.location.href = "\login.php"</script>';
+}
 
+echo  $_SESSION["email"];
+echo  $_SESSION["tipo"];
+$email = $_SESSION['email'];
+$sql = "SELECT * FROM cliente WHERE email = '$email'";
+$result = $conexao->query($sql);
+$row = $result->fetch_assoc();
+
+if($row['passou_cadastro'] == 1){
+   header('Location: \Programacao_TCC_Avena\html\bemVindoCliente.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -129,7 +141,6 @@ session_start();
             </div> <!-- Fim das colunas -->
     </div>
 <div class="botoes">
-    <button class="btn-excluir" name="excluir" id="excluir">EXCLUIR CONTA</button>
     <button class="btn-salvar" name="salvar" id="salvar">SALVAR ALTERAÇÕES</button>
 </div>
 <a href="\Programacao_TCC_Avena\php\sair.php" class="btn-deslogar">DESLOGAR</a>
@@ -158,7 +169,7 @@ if (!isset($conexao) || !($conexao instanceof mysqli)) {
     //echo "✅ Conexão MySQLi válida.<br>";
 }
 
-print_r($_SESSION);
+//print_r($_SESSION);
 
 if (isset($_POST['salvar'])) {
 

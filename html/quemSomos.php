@@ -71,7 +71,7 @@
       <h1>Quem Somos</h1>
 
       <div class="banner">
-        <img src="../img/gestao-tempo.jpeg" alt="Imagem decorativa">
+        <img src="../img\banner_qm_somos.jpg" alt="Imagem decorativa">
       </div>
     </div>
 <div class="sobre-container">
@@ -94,7 +94,7 @@
       </div>
 
       <div class="imagem-final">
-        <img src="../img/gestao-tempo.jpeg" alt="Imagem ilustrativa" class="img-lado">
+        <img src="../img\Singularity -logo.jpeg" alt="Imagem ilustrativa" class="img-lado">
       </div>
 </div>
     </section>

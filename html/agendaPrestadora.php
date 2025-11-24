@@ -9,6 +9,7 @@ require_once "../php/conexao.php";
 // ==========================
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: ../html/login.php");
+    session_destroy();
     exit;
 }
 if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'profissional') {

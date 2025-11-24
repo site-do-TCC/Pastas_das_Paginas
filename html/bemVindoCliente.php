@@ -8,7 +8,11 @@ session_start();
 include_once('../php/conexao.php');
 
 //$nome = "Usuário";
-
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['email']) || $_SESSION['tipo'] == 'profissional'){
+    echo '<script> window.location.href = "\login.php"</script>';
+    session_destroy();
+    exit;
+}
 
 if (!isset($conexao)) {
     die("Erro: conexão com o banco não encontrada. Verifique ../php/conexao.php");

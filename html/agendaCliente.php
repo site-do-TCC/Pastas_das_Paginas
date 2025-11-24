@@ -5,9 +5,10 @@ ini_set('display_errors', 1);
 require_once "../php/conexao.php";
 
 // Verifica se o usuário está logado
-if (!isset($_SESSION['id_usuario'])) {
-    header("Location: login.php");
-    exit();
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['email']) || $_SESSION['tipo'] == 'profissional'){
+    echo '<script> window.location.href = "\login.php"</script>';
+    session_destroy();
+    exit;
 }
 
 $idUsuario = $_SESSION['id_usuario'];

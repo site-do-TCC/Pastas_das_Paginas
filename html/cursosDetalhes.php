@@ -7,6 +7,14 @@ session_start();
 include_once(__DIR__ . '/../php/conexao.php');
 mysqli_set_charset($conexao, "utf8mb4");
 
+if((!isset($_SESSION['email']) == true) || (!isset($_SESSION['senha']) == true || $_SESSION['tipo'] == 'cliente')){
+        unset($_SESSION['email']);
+        unset($_SESSION['senha']);
+        header('Location: \Programacao_TCC_Avena\html\login.php');
+        }else{
+            $logado = $_SESSION['email'];
+        }
+
  //Verifica se foi passado um ID na URL
 if (!isset($_GET['id_curso'])) {
     header("Location: cursos.php");

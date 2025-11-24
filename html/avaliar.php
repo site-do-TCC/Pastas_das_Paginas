@@ -5,13 +5,13 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 include_once(__DIR__ . '/../php/conexao.php');
-
-
-// VERIFICA LOGIN
-if (!isset($_SESSION["id_usuario"])) {
-    echo "Erro: usuário não logado";
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['email']) || $_SESSION['tipo'] == 'cliente'){
+    echo '<script> window.location.href = "\login.php"</script>';
+    session_destroy();
     exit;
 }
+
+
 
 $avaliador_id = $_SESSION["id_usuario"];
 $avaliador_tipo = $_SESSION["tipo"]; // cliente ou profissional

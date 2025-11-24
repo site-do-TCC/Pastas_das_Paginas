@@ -5,8 +5,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 include_once(__DIR__ . '/../php/conexao.php');
 
-if(!isset($_SESSION["id_usuario"]) || !isset($_SESSION["tipo"])) {
-    echo "Erro: usuário não logado";
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['email']) || $_SESSION['tipo'] == 'cliente'){
+    echo '<script> window.location.href = "\login.php"</script>';
+    session_destroy();
     exit;
 }
 
