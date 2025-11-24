@@ -6,13 +6,15 @@ mysqli_set_charset($conexao, 'utf8mb4');
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Detecta dinamicamente colunas de anexos para evitar erro se migração não aplicada
-$hasTipo = false; $hasArquivo = false;
+// Detecta dinamicamente colunas para evitar erro se migração não aplicada
+$hasTipo = false; $hasArquivo = false; $hasLido = false;
 try {
     $rc1 = $conexao->query("SHOW COLUMNS FROM mensagem LIKE 'tipo'");
     if ($rc1 && $rc1->num_rows) $hasTipo = true;
     $rc2 = $conexao->query("SHOW COLUMNS FROM mensagem LIKE 'arquivo'");
     if ($rc2 && $rc2->num_rows) $hasArquivo = true;
+    $rc3 = $conexao->query("SHOW COLUMNS FROM mensagem LIKE 'lido'");
+    if ($rc3 && $rc3->num_rows) $hasLido = true;
 } catch (Exception $e) {
     // Ignora
 }
@@ -108,6 +110,14 @@ try {
         $ins->close();
     }
 
+    // Removido registro de visita para manter indicador de novo chat até primeira mensagem real
+
+    // Se existir coluna lido: marcar como lido todas as mensagens destinadas ao usuário atual
+    if ($hasLido && $current_user_id) {
+        $upd = $conexao->prepare('UPDATE mensagem SET lido=1 WHERE id_chat=? AND id_para=? AND lido=0');
+        if ($upd) { $upd->bind_param('ii', $id_chat, $current_user_id); $upd->execute(); $upd->close(); }
+    }
+
     // pega mensagens (ajusta conforme presença de colunas tipo/arquivo)
     $messages = [];
     $cols = "id_mensagem, id_de, id_para, conteudo, enviado_em";
@@ -132,6 +142,12 @@ try {
                         $rawConteudo = trim(preg_replace('/\[\[ATTACH:type=[^;]+;file=[^\]]+\]\]/','',$rawConteudo));
                     }
                 }
+                // Determina o "papel" (role) do remetente com base nos ids do chat
+                $fromRole = null;
+                if (isset($m['id_de'])) {
+                    if ($m['id_de'] == $id_cliente) { $fromRole = 'cliente'; }
+                    elseif ($m['id_de'] == $id_prestadora) { $fromRole = 'prestadora'; }
+                }
                 $messages[] = [
                     'id' => isset($m['id_mensagem']) ? (int)$m['id_mensagem'] : null,
                     'de' => isset($m['id_de']) ? (int)$m['id_de'] : null,
@@ -139,7 +155,8 @@ try {
                     'conteudo' => $rawConteudo,
                     'enviado_em' => isset($m['enviado_em']) ? $m['enviado_em'] : null,
                     'tipo' => $tipoMsg,
-                    'arquivo' => $arquivoMsg
+                    'arquivo' => $arquivoMsg,
+                    'from_role' => $fromRole
                 ];
             }
         }
@@ -159,12 +176,23 @@ try {
     $other = ($r3 && $r3->num_rows) ? $r3->fetch_assoc() : null;
     $stmt3->close();
 
+    // Marca visita a chat vazio para remover bolinha roxa em próximas listagens
+    if (!isset($_SESSION['visited_empty_chats'])) $_SESSION['visited_empty_chats'] = [];
+    if (count($messages) === 0) {
+        $_SESSION['visited_empty_chats'][$id_chat] = 1;
+    }
+
     echo json_encode([
         'ok' => true,
         'id_chat' => $id_chat,
         'current_user_id' => $current_user_id,
+        'current_role' => $current['role'],
+        'id_cliente' => $id_cliente,
+        'id_prestadora' => $id_prestadora,
         'other' => $other,
-        'messages' => $messages
+        'messages' => $messages,
+        'unread_cleared' => true,
+        'is_empty' => count($messages) === 0
     ], JSON_UNESCAPED_UNICODE);
     exit;
 

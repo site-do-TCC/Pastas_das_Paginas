@@ -1,20 +1,21 @@
-// Pegar o botão e o menu
-const menuBtn = document.getElementById("menu-btn");
-const menulogin = document.getElementById("menulogin");
-
-// Quando clicar no botão, alternar classe
-menuBtn.addEventListener("click", () => {
-  menulogin.classList.toggle("show");
-});
-
-
-//Informação
-function mostrarModal(mensagem) {
-  document.getElementById("mensagemErro").innerText = mensagem;
-  document.getElementById("modalErro").style.display = "flex"; 
-}
-
-
-function fecharModal() {
-  document.getElementById("modalErro").style.display = "none";
+// Guard prevents redeclaration if script included multiple times
+if (!window.__loginInit) {
+  window.__loginInit = true;
+  const menuBtn = document.getElementById("menu-btn");
+  const menulogin = document.getElementById("menulogin");
+  if (menuBtn && menulogin) {
+    menuBtn.addEventListener("click", () => {
+      menulogin.classList.toggle("show");
+    });
+  }
+  window.mostrarModal = function(mensagem){
+    const msgEl = document.getElementById("mensagemErro");
+    const modal = document.getElementById("modalErro");
+    if (msgEl) msgEl.innerText = mensagem;
+    if (modal) modal.style.display = "flex";
+  };
+  window.fecharModal = function(){
+    const modal = document.getElementById("modalErro");
+    if (modal) modal.style.display = "none";
+  };
 }

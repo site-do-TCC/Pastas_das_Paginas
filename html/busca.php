@@ -5,16 +5,40 @@ ini_set('display_errors', 1);
 session_start();
 include_once(__DIR__ . '/../php/conexao.php');
 
-print_r($_SESSION);
-
+// Limpa vestígios antigos
 $_SESSION['id_prestadora'] = null;
 
-if (isset($_SESSION['id_usuario'])) {
+// Função segura para obter perfil com verificação da coluna imgperfil
+function obterPerfil($conexao, $tabela, $idUsuario) {
+  $perfil = ['nome'=>null,'imgperfil'=>null];
+  $tabelaSegura = ($tabela === 'cliente' || $tabela === 'prestadora') ? $tabela : null;
+  if (!$tabelaSegura) { return $perfil; }
+  $hasImg = false;
+  $colRes = $conexao->query("SHOW COLUMNS FROM $tabelaSegura LIKE 'imgperfil'");
+  if ($colRes && $colRes->num_rows > 0) { $hasImg = true; }
+  $select = $hasImg ? "SELECT nome, imgperfil FROM $tabelaSegura WHERE id_usuario = ? LIMIT 1" : "SELECT nome FROM $tabelaSegura WHERE id_usuario = ? LIMIT 1";
+  $stmt = $conexao->prepare($select);
+  if ($stmt) {
+    $stmt->bind_param('i', $idUsuario);
+    if ($stmt->execute()) {
+      $r = $stmt->get_result();
+      if ($r && $r->num_rows) {
+        $dados = $r->fetch_assoc();
+        $perfil['nome'] = $dados['nome'] ?? null;
+        if ($hasImg) { $perfil['imgperfil'] = $dados['imgperfil'] ?? null; }
+      }
+    }
+    $stmt->close();
+  }
+  return $perfil;
+}
 
-$sqlUsuario = "SELECT nome, imgperfil FROM cliente WHERE id_usuario = ".$_SESSION['id_usuario'];
-$resultadoCliente = mysqli_query($conexao, $sqlUsuario);
-$profLog = mysqli_fetch_assoc($resultadoCliente);
-$id_usuario = isset($_SESSION['id_usuario']) ? intval($_SESSION['id_usuario']) : null;
+// Detecta sessão
+$perfilLogado = ['nome'=>null,'imgperfil'=>null];
+if (!empty($_SESSION['cliente']['id_usuario'])) {
+  $perfilLogado = obterPerfil($conexao, 'cliente', (int)$_SESSION['cliente']['id_usuario']);
+} elseif (!empty($_SESSION['prestadora']['id_usuario'])) {
+  $perfilLogado = obterPerfil($conexao, 'prestadora', (int)$_SESSION['prestadora']['id_usuario']);
 }
 
 
@@ -44,9 +68,10 @@ $total = mysqli_num_rows($resultado);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profissionais Próximas | Avena</title>
-  <link rel="stylesheet" href="\Programacao_TCC_Avena\css\busca.css">
+  <link rel="stylesheet" href="/Programacao_TCC_Avena/css/header_nav.css">
+  <link rel="stylesheet" href="/Programacao_TCC_Avena/css/busca.css">
 </head>
-<body>
+<body class="fixed-header-page">
 
     <!-- ===============================
      Banner de Consentimento de Cookies - Singularity Solutions
@@ -67,38 +92,11 @@ $total = mysqli_num_rows($resultado);
   </div>
   </div>
 
-  <!-- Cabeçalho -->
-  <header class="header">
-    <div class="logo">
-      <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena" href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"></a>
-    </div>
-    <div class="search-bar">
-      <div>
-        <input 
-          type="text" 
-          placeholder="Manicure" 
-          class="search-input" 
-          id="search_servico" 
-          name="search_servico" 
-          value="<?= htmlspecialchars($search_servico) ?>"
-        >
-        <span class="divider"></span> /
-        <input 
-          type="text" 
-          placeholder="Cidade ou Estado" 
-          class="location-input" 
-          id="search_localizacao" 
-          name="search_localizacao" 
-          value="<?= htmlspecialchars($search_localizacao) ?>"
-        >
-      </div>
-      <button onclick="ProcurarServico()" class="pesquisa-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-        </svg>  
-      </button>
-    </div>
-  </header>
+  <!-- Header compartilhado -->
+  <?php $renderSearchBar = true; include_once(__DIR__ . '/../php/header_nav.php'); ?>
+
+  <!-- Barra de busca abaixo do header -->
+  <!-- Barra de busca agora inline no header -->
 
   <!-- Caminho de navegação -->
   <nav class="breadcrumb">
@@ -145,6 +143,30 @@ $total = mysqli_num_rows($resultado);
   </main>
 
   <script>
+    // Fallback robusto: reforça a existência e binding do botão de menu
+    (function(){
+      function ensureBtn(){
+        var btn = document.getElementById('menu-btn');
+        var cluster = document.querySelector('.global-header .menu-cluster');
+        if(!btn && cluster){
+          btn = document.createElement('button');
+          btn.id='menu-btn'; btn.className='menu-icon'; btn.type='button'; btn.innerHTML='&#9776;';
+          cluster.appendChild(btn);
+        }
+        var menu = document.getElementById('menu');
+        if(btn && menu && !btn.dataset.bound){
+          btn.addEventListener('click', function(){
+            menu.classList.toggle('show');
+            if(!menu.classList.contains('show')){ menu.classList.add('hidden'); } else { menu.classList.remove('hidden'); }
+          });
+          btn.dataset.bound='1';
+        }
+      }
+      ensureBtn();
+      setTimeout(ensureBtn, 600);
+      document.addEventListener('readystatechange', function(){ if(document.readyState==='complete'){ ensureBtn(); } });
+    })();
+
     document.addEventListener("DOMContentLoaded", () => {
       const hearts = document.querySelectorAll(".heart-btn");
       hearts.forEach(btn => {
@@ -171,5 +193,5 @@ $total = mysqli_num_rows($resultado);
     }
   </script>
 </body>
-<script src="\Programacao_TCC_Avena\js\cookies.js"></script>
+<script src="/Programacao_TCC_Avena/js/cookies.js"></script>
 </html>

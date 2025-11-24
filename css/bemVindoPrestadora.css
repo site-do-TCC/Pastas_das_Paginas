@@ -119,7 +119,8 @@ nav {
 /* Cores */
 .editar-perfil { background: rgba(228, 92, 92, 0.9); }
 .editar-servicos { background: rgba(139, 115, 201, 0.9); }
-.mensagens { background: rgba(188, 168, 228, 0.9); }
+.mensagens { background: #ff7f86; position:relative; }
+.mensagens .badge-dot { position:absolute; top:8px; right:14px; display:none; }
 .avaliacoes { background: rgba(243, 123, 131, 0.9); }
 .cursos { background: rgba(228, 92, 92, 0.9); }
 .agenda { background: rgba(139, 115, 201, 0.9); }

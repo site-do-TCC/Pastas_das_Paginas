@@ -154,8 +154,10 @@ nav {
 }
 
 .mensagens {
-  background: rgba(188, 168, 228, 0.9);
+  background: #ff7f86; /* mesma cor do botão enviar mensagem */
+  position: relative;
 }
+.mensagens .badge-dot { position:absolute; top:8px; right:14px; display:none; }
 
 .avaliacoes {
   background: rgba(243, 123, 131, 0.9);

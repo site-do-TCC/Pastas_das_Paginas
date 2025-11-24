@@ -37,30 +37,15 @@ try {
                    p.id_usuario AS other_id,
                    p.nome AS other_name,
                    COALESCE(p.imgperfil, '../img/SemFoto.jpg') AS other_photo,
-                   (
-                       SELECT id_mensagem
-                       FROM mensagem m
-                       WHERE m.id_chat = c.id_chat
-                       ORDER BY m.id_mensagem DESC
-                       LIMIT 1
-                   ) AS last_message_id,
-                   (
-                       SELECT conteudo
-                       FROM mensagem m
-                       WHERE m.id_chat = c.id_chat
-                       ORDER BY m.id_mensagem DESC
-                       LIMIT 1
-                   ) AS last_message,
-                   (
-                       SELECT enviado_em
-                       FROM mensagem m
-                       WHERE m.id_chat = c.id_chat
-                       ORDER BY m.id_mensagem DESC
-                       LIMIT 1
-                   ) AS last_message_time
+                   (SELECT id_mensagem FROM mensagem m WHERE m.id_chat = c.id_chat ORDER BY m.id_mensagem DESC LIMIT 1) AS last_message_id,
+                   (SELECT conteudo FROM mensagem m WHERE m.id_chat = c.id_chat ORDER BY m.id_mensagem DESC LIMIT 1) AS last_message,
+                   (SELECT enviado_em FROM mensagem m WHERE m.id_chat = c.id_chat ORDER BY m.id_mensagem DESC LIMIT 1) AS last_message_time,
+                   (SELECT COUNT(*) FROM mensagem m WHERE m.id_chat = c.id_chat) AS message_count,
+                   (SELECT COUNT(*) FROM mensagem m WHERE m.id_chat = c.id_chat AND m.id_para = ? AND m.lido = 0) AS unread_count
             FROM chat c
             INNER JOIN prestadora p ON p.id_usuario = c.id_prestadora
             WHERE c.id_cliente = ?
+              AND EXISTS (SELECT 1 FROM solicitacoes s WHERE s.id_contratante = c.id_cliente AND s.id_prestadora = c.id_prestadora)
             ORDER BY last_message_time DESC, c.id_chat DESC";
     } else {
         $sql = "
@@ -68,30 +53,15 @@ try {
                    cl.id_usuario AS other_id,
                    cl.nome AS other_name,
                    '../img/SemFoto.jpg' AS other_photo,
-                   (
-                       SELECT id_mensagem
-                       FROM mensagem m
-                       WHERE m.id_chat = c.id_chat
-                       ORDER BY m.id_mensagem DESC
-                       LIMIT 1
-                   ) AS last_message_id,
-                   (
-                       SELECT conteudo
-                       FROM mensagem m
-                       WHERE m.id_chat = c.id_chat
-                       ORDER BY m.id_mensagem DESC
-                       LIMIT 1
-                   ) AS last_message,
-                   (
-                       SELECT enviado_em
-                       FROM mensagem m
-                       WHERE m.id_chat = c.id_chat
-                       ORDER BY m.id_mensagem DESC
-                       LIMIT 1
-                   ) AS last_message_time
+                   (SELECT id_mensagem FROM mensagem m WHERE m.id_chat = c.id_chat ORDER BY m.id_mensagem DESC LIMIT 1) AS last_message_id,
+                   (SELECT conteudo FROM mensagem m WHERE m.id_chat = c.id_chat ORDER BY m.id_mensagem DESC LIMIT 1) AS last_message,
+                   (SELECT enviado_em FROM mensagem m WHERE m.id_chat = c.id_chat ORDER BY m.id_mensagem DESC LIMIT 1) AS last_message_time,
+                   (SELECT COUNT(*) FROM mensagem m WHERE m.id_chat = c.id_chat) AS message_count,
+                   (SELECT COUNT(*) FROM mensagem m WHERE m.id_chat = c.id_chat AND m.id_para = ? AND m.lido = 0) AS unread_count
             FROM chat c
             INNER JOIN cliente cl ON cl.id_usuario = c.id_cliente
             WHERE c.id_prestadora = ?
+              AND EXISTS (SELECT 1 FROM solicitacoes s WHERE s.id_contratante = c.id_cliente AND s.id_prestadora = c.id_prestadora)
             ORDER BY last_message_time DESC, c.id_chat DESC";
     }
 
@@ -99,12 +69,22 @@ try {
     if (!$stmt) {
         throw new Exception('Erro ao preparar consulta: ' . $conexao->error);
     }
-    $stmt->bind_param('i', $idAtual);
+    // Bind: primeiro para unread_count subselect (id_para), segundo para WHERE (id_cliente ou id_prestadora)
+    $stmt->bind_param('ii', $idAtual, $idAtual);
     $stmt->execute();
     $res = $stmt->get_result();
 
     $chats = [];
+    $hasBadge = false; // indica se deve mostrar bolinha no botão global de mensagens
     while ($row = $res->fetch_assoc()) {
+        $messageCount = isset($row['message_count']) ? (int)$row['message_count'] : 0;
+        $unreadCount  = isset($row['unread_count']) ? (int)$row['unread_count'] : 0;
+        $newChat      = ($messageCount === 0); // chat disponível mas sem mensagens ainda
+        if ($newChat && isset($_SESSION['visited_empty_chats'][$row['id_chat']])) {
+            // Já foi aberto pelo usuário; não mostrar mais bolinha roxa
+            $newChat = false;
+        }
+        if ($unreadCount > 0 || $newChat) { $hasBadge = true; }
         $chats[] = [
             'id' => (int) $row['other_id'],
             'chatId' => (int) $row['id_chat'],
@@ -113,13 +93,74 @@ try {
             'lastMessageId' => isset($row['last_message_id']) ? (int) $row['last_message_id'] : null,
             'lastMessage' => $row['last_message'] ?? '',
             'lastMessageTime' => $row['last_message_time'] ?? null,
-            'online' => false
+            'online' => false,
+            'unread' => $unreadCount,
+            'messageCount' => $messageCount,
+            'newChat' => $newChat
         ];
     }
 
     $stmt->close();
 
-    echo json_encode(['ok' => true, 'chats' => $chats], JSON_UNESCAPED_UNICODE);
+    // Adiciona placeholders de solicitacoes sem chat criado (após ler chats existentes)
+    if ($isCliente) {
+        $sqlSolic = "SELECT s.id_prestadora AS other_id, p.nome AS other_name, COALESCE(p.imgperfil,'../img/SemFoto.jpg') AS other_photo
+                     FROM solicitacoes s
+                     INNER JOIN prestadora p ON p.id_usuario = s.id_prestadora
+                     WHERE s.id_contratante = ?
+                       AND NOT EXISTS (SELECT 1 FROM chat c WHERE c.id_cliente = s.id_contratante AND c.id_prestadora = s.id_prestadora)";
+    } else {
+        $sqlSolic = "SELECT s.id_contratante AS other_id, cl.nome AS other_name, '../img/SemFoto.jpg' AS other_photo
+                     FROM solicitacoes s
+                     INNER JOIN cliente cl ON cl.id_usuario = s.id_contratante
+                     WHERE s.id_prestadora = ?
+                       AND NOT EXISTS (SELECT 1 FROM chat c WHERE c.id_cliente = s.id_contratante AND c.id_prestadora = s.id_prestadora)";
+    }
+    if ($sol = $conexao->prepare($sqlSolic)) {
+        $sol->bind_param('i', $idAtual);
+        if ($sol->execute()) {
+            $rsSol = $sol->get_result();
+            while ($r2 = $rsSol->fetch_assoc()) {
+                $hasBadge = true; // novo chat disponível (placeholder)
+                $chats[] = [
+                    'id' => (int)$r2['other_id'],
+                    'chatId' => 0,
+                    'name' => $r2['other_name'],
+                    'photo' => $r2['other_photo'],
+                    'lastMessageId' => null,
+                    'lastMessage' => '',
+                    'lastMessageTime' => null,
+                    'online' => false,
+                    'unread' => 0,
+                    'messageCount' => 0,
+                    'newChat' => true
+                ];
+            }
+        }
+        $sol->close();
+    }
+
+    if (empty($chats)) {
+        // Placeholder chat Avena
+        $chats[] = [
+            'id' => 0,
+            'chatId' => 0,
+            'name' => 'Avena',
+            'photo' => '/Programacao_TCC_Avena/img/avenaChat.png',
+            'lastMessageId' => null,
+            'lastMessage' => 'Este é o chat, onde você pode conversar com o prestador ou com o cliente para acertar os detalhes do serviço.',
+            'lastMessageTime' => null,
+            'online' => false,
+            'placeholder' => true
+        ];
+    }
+
+    echo json_encode([
+        'ok' => true,
+        'badge' => $hasBadge ? 1 : 0,
+        'role' => $current['role'],
+        'chats' => $chats
+    ], JSON_UNESCAPED_UNICODE);
     exit;
 
 } catch (Exception $e) {

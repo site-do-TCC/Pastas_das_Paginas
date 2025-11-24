@@ -13,26 +13,18 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edição de Perfil</title>
-    <link rel="stylesheet" href="\Programacao_TCC_Avena\css\EdicaoPerfil.css">
+    <link rel="stylesheet" href="/Programacao_TCC_Avena/css/header_nav.css">
+    <link rel="stylesheet" href="/Programacao_TCC_Avena/css/EdicaoPerfil.css">
 
 </head>
 
 
 
-<header>
-    <nav>
-        <div class="logo">
-            <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
-        </div>
-        <div class="menu">
-
-            <button class="menu-icon" id="menu-btn">&#9776;</button>
-        </div>
-    </nav>
-</header>
+<body class="fixed-header-page">
+<?php include_once(__DIR__ . '/../php/header_nav.php'); ?>
 
 
-<body>
+<!-- body já aberto acima com classe fixed-header-page -->
     <!-- ===============================
      Banner de Consentimento de Cookies - Singularity Solutions
      =============================== -->

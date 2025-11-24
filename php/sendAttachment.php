@@ -165,16 +165,20 @@ try {
     $row = $conexao->query('SELECT enviado_em FROM mensagem WHERE id_mensagem = '.$id_mensagem.' LIMIT 1')->fetch_assoc();
     $enviado_em = $row['enviado_em'] ?? null;
 
+    // Sempre retorna tipo/arquivo para render imediato no frontend, mesmo se colunas não existirem
+    // Em caso de migração incompleta, envia também um fallback_marker que poderá ser usado para reconstrução
     jsonOut([
-        'ok'=>true,
-        'id_mensagem'=>$id_mensagem,
-        'enviado_em'=>$enviado_em,
-        'tipo'=>$hasTipo ? $tipoArmazenado : 'text',
-    'arquivo'=>$hasArquivo ? $destRel : null,
-        'texto'=>($texto !== '' ? $texto : ''),
-        'mime'=>$mime,
-        'tamanho'=>$size,
-        'colunas'=>['lido'=>$hasLido,'tipo'=>$hasTipo,'arquivo'=>$hasArquivo]
+        'ok' => true,
+        'id_mensagem' => $id_mensagem,
+        'enviado_em' => $enviado_em,
+        'tipo' => $tipoArmazenado,
+        'arquivo' => $destRel,
+        'texto' => ($texto !== '' ? $texto : ''),
+        'caption' => ($texto !== '' ? $texto : ''),
+        'mime' => $mime,
+        'tamanho' => $size,
+        'fallback_marker' => (!$hasTipo || !$hasArquivo) ? $marker : null,
+        'colunas' => ['lido' => $hasLido, 'tipo' => $hasTipo, 'arquivo' => $hasArquivo]
     ]);
 } catch (mysqli_sql_exception $e) {
     error_log('sendAttachment mysqli: '.$e->getMessage());

@@ -112,6 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // fetchChatList: manter lastMessage atualizado e sinalizar não lidas
+  // Marca supressão de som ao clicar botões
+  window.__SUPPRESS_SOUND_TS = 0;
+  function suppressSound(ms=900){ window.__SUPPRESS_SOUND_TS = Date.now()+ms; }
+  if (sendBtn && !sendBtn.__sndSup) { sendBtn.__sndSup = true; sendBtn.addEventListener('click', ()=>suppressSound()); }
+  if (attachBtn && !attachBtn.__sndSup){ attachBtn.__sndSup = true; attachBtn.addEventListener('click', ()=>suppressSound()); }
+
   async function fetchChatList() {
     const resp = await fetch('/Programacao_TCC_Avena/php/getChatList.php', { credentials:'same-origin', cache:'no-store' });
     if (!resp.ok) throw new Error('HTTP ' + resp.status + ' - ' + (await resp.text()));
@@ -120,9 +126,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const prev = window.chats || [];
     const incoming = Array.isArray(data.chats) ? data.chats : [];
+    // Detecta chats novos (sem mensagens ainda) para mostrar banner
+    if (data.role && data.role !== window.chatRole) { window.chatRole = data.role; }
+    const anyNewChat = incoming.some(c => c.newChat);
+    if (anyNewChat) { showNewChatBanner(); } else { hideNewChatBanner(); }
     const updated = incoming.map(nc => {
       const exist = prev.find(p => p.id === nc.id) || {};
       const id = nc.id, isActive = (id === window.activeChatId);
+      const isPlaceholder = !!nc.placeholder;
       const lastId   = nc.lastMessageId ?? exist.lastMessageId ?? null;
       const lastText = nc.lastMessage   ?? exist.lastMessage   ?? '';
       const lastTime = nc.lastMessageTime ?? exist.lastMessageTime ?? null;
@@ -138,18 +149,25 @@ document.addEventListener('DOMContentLoaded', () => {
       const wasUnread = Number(exist.unread || 0) > 0;
       const nowUnread = (!isActive && lastId && lastId > lastRead && lastId !== lastSent) ? 1 : 0;
 
-      if (!wasUnread && nowUnread) window.__SND__?.playNew();
+      if (!wasUnread && nowUnread) {
+        if (!(Date.now() < window.__SUPPRESS_SOUND_TS)) window.__SND__?.playNew();
+      }
 
       return {
         id,
+        chatId: (typeof nc.chatId !== 'undefined' ? nc.chatId : exist.chatId) || null,
         name: nc.name,
         photo: nc.photo,
         online: !!nc.online,
         lastMessage: lastText,
         lastMessageId: lastId,
         lastMessageTime: lastTime,
-        unread: nowUnread,
-        hasNewMessage: !!nowUnread
+        unread: isPlaceholder ? 0 : nowUnread,
+        hasNewMessage: isPlaceholder ? false : !!nowUnread,
+        placeholder: isPlaceholder,
+        placeholderText: isPlaceholder ? nc.lastMessage : null,
+        messageCount: typeof nc.messageCount === 'number' ? nc.messageCount : null,
+        newChat: !!nc.newChat
       };
     });
 
@@ -175,14 +193,48 @@ document.addEventListener('DOMContentLoaded', () => {
     return window.chats;
   }
 
+  // ===== Notificação de novo chat disponível (sem mensagens) =====
+  let newChatBannerEl = null;
+  function ensureNewChatBanner(){
+    if (!newChatBannerEl) {
+      newChatBannerEl = document.createElement('div');
+      newChatBannerEl.id = 'new-chat-banner';
+      newChatBannerEl.style.position = 'absolute';
+      newChatBannerEl.style.top = '0';
+      newChatBannerEl.style.left = '0';
+      newChatBannerEl.style.right = '0';
+      newChatBannerEl.style.padding = '10px 14px';
+      newChatBannerEl.style.background = '#dc2626';
+      newChatBannerEl.style.color = '#fff';
+      newChatBannerEl.style.fontSize = '14px';
+      newChatBannerEl.style.fontWeight = '600';
+      newChatBannerEl.style.textAlign = 'center';
+      newChatBannerEl.style.zIndex = '50';
+      newChatBannerEl.style.cursor = 'pointer';
+      newChatBannerEl.style.boxShadow = '0 2px 6px rgba(0,0,0,.25)';
+      newChatBannerEl.addEventListener('click', () => {
+        const target = (window.chats||[]).find(c => c.newChat);
+        if (target) {
+          window.openChat?.(target.id, { force:true });
+          target.newChat = false;
+          hideNewChatBanner();
+        }
+      });
+      const container = document.querySelector('#chat-container') || document.body;
+      container.appendChild(newChatBannerEl);
+    }
+    let roleTxt = 'Novo chat disponível! Você pode iniciar conversa para acertar detalhes do serviço.';
+    if (window.chatRole === 'cliente') roleTxt = 'O chat do prestador está disponível.';
+    else if (window.chatRole === 'prestadora') roleTxt = 'O chat do cliente está disponível.';
+    newChatBannerEl.textContent = roleTxt;
+    return newChatBannerEl;
+  }
+  function showNewChatBanner(){ ensureNewChatBanner(); if (newChatBannerEl) newChatBannerEl.style.display='block'; }
+  function hideNewChatBanner(){ if (newChatBannerEl) newChatBannerEl.style.display='none'; }
+
   async function fetchOpenChat(otherId) {
     try {
-      const resp = await fetch(
-        `/Programacao_TCC_Avena/php/openChat.php?other_id=${encodeURIComponent(
-          otherId
-        )}`,
-        { credentials: "same-origin" }
-      );
+      const resp = await fetch(`/Programacao_TCC_Avena/php/openChat.php?other_id=${encodeURIComponent(otherId)}`,{ credentials:'same-origin' });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       return await resp.json();
     } catch (err) {
@@ -275,11 +327,17 @@ document.addEventListener('DOMContentLoaded', () => {
       item.dataset.name = chat.name || '';
       item.dataset.lastMessage = (chat.lastMessage || '').toString();
       if (q) item.style.display=''; else item.style.display='';
-      // unread dot
-      const shouldShowDot = chat.id !== activeChatId && ((chat.unread ?? 0) > 0 || chat.hasNewMessage);
+      // Dot colors: purple for brand new empty chat, red for unread messages.
+      const isNewEmpty = chat.newChat && (chat.messageCount === 0 || chat.lastMessageId == null);
+      const shouldShowDot = chat.id !== activeChatId && (isNewEmpty || (chat.unread ?? 0) > 0 || chat.hasNewMessage);
       let dot = item.querySelector('.chat-dot');
-      if (shouldShowDot && !dot) { dot = document.createElement('span'); dot.className='chat-dot'; item.appendChild(dot); }
-      else if (!shouldShowDot && dot && !dot.classList.contains('fade-out')) {
+      if (shouldShowDot && !dot) {
+        dot = document.createElement('span');
+        dot.className = 'chat-dot' + (isNewEmpty ? ' new-chat' : '');
+        item.appendChild(dot);
+      } else if (dot && shouldShowDot) {
+        if (isNewEmpty) dot.classList.add('new-chat'); else dot.classList.remove('new-chat');
+      } else if (!shouldShowDot && dot && !dot.classList.contains('fade-out')) {
         dot.classList.add('fade-out');
         const removeFn = () => { dot?.remove(); };
         dot.addEventListener('transitionend', removeFn, { once:true });
@@ -364,37 +422,121 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(()=>{ if(messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight; },50);
     requestAnimationFrame(()=>{ if(messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight; });
     upgradeLinkCards();
+    // Garantir que intro permanece enquanto não houver mensagens reais
+    if (messages.length === 0 && !messagesEl.querySelector('.system-intro')) {
+      const intro = document.createElement('div');
+      intro.className = 'msg system-intro';
+      intro.textContent = 'Discuta sobre o serviço com o prestador ou cliente aqui.';
+      intro.style.background = '#f3f4f6';
+      intro.style.color = '#374151';
+      intro.style.borderRadius = '12px';
+      intro.style.padding = '10px 14px';
+      intro.style.fontSize = '14px';
+      intro.style.fontStyle = 'italic';
+      intro.style.maxWidth = '640px';
+      messagesEl.appendChild(intro);
+    }
   }
 
   window.renderMessages = renderMessages;
   window.renderChatList = renderChatList;
 
   async function openChat(otherId) {
+    if (!otherId && otherId !== 0) return;
+    // Detecta placeholder antes de qualquer chamada backend
+    const placeholderChat = chats.find(c => c.id === otherId && c.placeholder);
+    if (placeholderChat) {
+      activeChatId = placeholderChat.id;
+      window.activeChatId = activeChatId;
+      // Renderiza mensagem placeholder sem buscar mensagens reais
+      if (messagesEl) {
+        messagesEl.innerHTML = '';
+        const div = document.createElement('div');
+        div.className = 'msg incoming';
+        div.style.maxWidth = '640px';
+        div.textContent = placeholderChat.placeholderText || placeholderChat.lastMessage || 'Chat indisponível.';
+        messagesEl.appendChild(div);
+      }
+      if (userNameEl) userNameEl.textContent = placeholderChat.name || 'Avena';
+      if (userPhotoEl) userPhotoEl.style.backgroundImage = `url('${placeholderChat.photo || '/Programacao_TCC_Avena/img/avenaChat.png'}')`;
+      // Desativa interação
+      if (sendBtn) { sendBtn.disabled = true; sendBtn.style.opacity = '0.4'; }
+      if (attachBtn) { attachBtn.disabled = true; attachBtn.style.opacity = '0.4'; }
+      if (messageInput) { messageInput.disabled = true; messageInput.placeholder = 'Chat indisponível'; }
+      // Marca como visto: remove newChat para tirar bolinha
+      placeholderChat.newChat = false;
+      renderChatList(chats);
+      return; // Não prossegue para backend
+    }
+
     if (!otherId) return;
+    // Habilita botões de teste se existirem
+    setTimeout(()=>{ if(typeof window.__enableTestButtons==='function'){ window.__enableTestButtons(); } }, 100);
     const data = await fetchOpenChat(otherId);
     if (!data || !data.ok) return;
 
     currentUserId = data.current_user_id ?? null;
+    const currentRole = data.current_role || null;
+    // Se mudou de role (login diferente) limpa estado antigo para não reaproveitar marcações 'me'
+    if (window.chatRole && currentRole && window.chatRole !== currentRole) {
+      chats = []; chatHistories = {}; activeChatId = null; lastMsgIdMap = {}; localStorage.removeItem('chat_state');
+    }
+    window.chatRole = currentRole;
     const chat = chats.find((c) => c.id === otherId) || {
       id: otherId,
       name: data.other?.nome ?? "Usuário",
     };
+    // (placeholder já tratado antes)
     activeChatId = chat.id;
     window.activeChatId = activeChatId; // <- mantém global
 
-    const messages = (data.messages || []).map((m) => ({
-      id: m.id,
-      from: m.de === currentUserId ? "me" : "them",
-      text: m.conteudo,
-      enviado_em: m.enviado_em,
-      // Inclui campos de anexo para não perder ao trocar de chat
-      tipo: m.tipo || 'text',
-      arquivo: m.arquivo || null
-    }));
+    const messages = (data.messages || []).map((m) => {
+      const fromRole = m.from_role || null;
+      const from = (fromRole && currentRole) ? (fromRole === currentRole ? 'me' : 'them') : (m.de === currentUserId ? 'me' : 'them');
+      return {
+        id: m.id,
+        from,
+        text: m.conteudo,
+        enviado_em: m.enviado_em,
+        tipo: m.tipo || 'text',
+        arquivo: m.arquivo || null,
+        from_role: fromRole
+      };
+    });
 
     chatHistories[otherId] = messages;
     window.chatHistories = chatHistories; // <- mantém global
     renderMessages?.(messages);
+
+    // Atualiza objeto do chat com id_chat real para habilitar botões de teste
+    try {
+      const realChatId = data.id_chat || null;
+      const existing = chats.find(c => c.id === otherId);
+      const lastIdUpdate = messages.length ? messages[messages.length-1].id || null : null;
+      if (existing) {
+        existing.chatId = realChatId;
+        existing.lastMessageId = lastIdUpdate;
+        existing.lastMessage = messages.length ? (messages[messages.length-1].text || '') : '';
+        existing.lastMessageTime = messages.length ? (messages[messages.length-1].enviado_em || null) : null;
+        existing.messageCount = messages.length;
+        existing.newChat = messages.length === 0;
+      } else {
+        chats.push({
+          id: otherId,
+          chatId: realChatId,
+          name: headerName,
+          photo: headerPhoto,
+          lastMessageId: lastIdUpdate,
+          lastMessage: messages.length ? (messages[messages.length-1].text || '') : '',
+          lastMessageTime: messages.length ? (messages[messages.length-1].enviado_em || null) : null,
+          unread: 0,
+          messageCount: messages.length,
+          newChat: messages.length === 0
+        });
+      }
+      window.chats = chats;
+      if (typeof window.__enableTestButtons === 'function') { window.__enableTestButtons(); }
+    } catch(e) { /* silencia */ }
 
     // limpa status de digitação imediatamente ao trocar de chat
     try {
@@ -412,12 +554,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const lastId = Array.isArray(messages) && messages.length ? (messages[messages.length-1].id || 0) : 0;
     if (lastId) setLastReadId(otherId, lastId);
     const c = (chats || []).find(x => x.id === otherId);
-    if (c) { c.unread = 0; c.hasNewMessage = false; }
+    if (c) { c.unread = 0; c.hasNewMessage = false; /* mantém newChat para mostrar ponto roxo até primeira mensagem */ }
+    // Remove somente ponto vermelho de unread; preserva roxo de novo chat
+    const itemEl = document.querySelector(`.chat-item[data-chat-id='${CSS.escape(String(otherId))}'] .chat-dot:not(.new-chat)`);
+    if (itemEl) itemEl.remove();
+    // Mensagem de sistema se chat vazio (intro)
+    if (!messages.length && messagesEl && !messagesEl.querySelector('.system-intro')) {
+      const intro = document.createElement('div');
+      intro.className = 'msg system-intro';
+      intro.textContent = 'Discuta sobre o serviço com o prestador ou cliente aqui.';
+      intro.style.background = '#f3f4f6';
+      intro.style.color = '#374151';
+      intro.style.borderRadius = '12px';
+      intro.style.padding = '10px 14px';
+      intro.style.fontSize = '14px';
+      intro.style.fontStyle = 'italic';
+      intro.style.maxWidth = '640px';
+      messagesEl.appendChild(intro);
+    }
+    // Esconde badge global imediatamente
+    const gBadge = document.getElementById('global-chat-badge'); if (gBadge) gBadge.style.display='none';
     renderChatList(chats || []);
     window.chats = chats; // <- mantém global
     // reinicia polling de presença do outro usuário
     startPresencePolling();
     saveState();
+    // Atualiza lista do servidor para garantir chatId preenchido em placeholders recém-criados
+    try { await fetchChatList(); if (typeof window.__enableTestButtons === 'function') window.__enableTestButtons(); } catch {}
   }
 
   // Expor openChat com guarda contra auto-switch (só abre se for ação do usuário ou se já for o chat ativo)
@@ -616,7 +779,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderChatList(filtered);
       }
 
-      if (activeChatId) {
+      if (activeChatId && activeChatId !== 0) {
         const open = await fetchOpenChat(activeChatId);
         if (sendBtn && !sendBtn.__stagedBound) {
           sendBtn.__stagedBound = true;
@@ -625,6 +788,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!activeChatId) return;
             const text = messageInput.value.trim();
             // If there are staged attachments, send them sequentially first with caption
+            const removeIntro = () => {
+              const intro = messagesEl?.querySelector('.msg.system-intro');
+              if (intro) intro.remove();
+            };
             if (pendingAttachments.length) {
               const files = [...pendingAttachments];
               pendingAttachments = []; renderPendingAttachments();
@@ -636,8 +803,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 let r; try { r = await sendAttachment(activeChatId, f, first ? text : ''); } catch(e){ r={ok:false, erro:e.message}; }
                 const hist = chatHistories[activeChatId]; const idx = hist.findIndex(x => x.id === placeholder.id); if (idx>=0) hist.splice(idx,1);
                 if (r.ok) {
-                  const msg = { id:r.id_mensagem, from:'me', text:r.texto||'', tipo:r.tipo, arquivo:r.arquivo, enviado_em:r.enviado_em, tamanho:r.tamanho };
-                  hist.push(msg); const chat = chats.find(c=>c.id===activeChatId); if (chat) chat.lastMessage = msg.text || ('['+msg.tipo+']');
+                  // Fallback parse caso migração incompleta tenha retornado marker
+                  let tipo = r.tipo;
+                  let arquivo = r.arquivo;
+                  if ((!arquivo || tipo === 'text') && r.fallback_marker) {
+                    const mm = r.fallback_marker.match(/type=([^;]+);file=([^\]]+)/);
+                    if (mm) { tipo = mm[1]; arquivo = mm[2]; }
+                  }
+                  const msg = { id:r.id_mensagem, from:'me', text:r.texto||'', tipo, arquivo, enviado_em:r.enviado_em, tamanho:r.tamanho };
+                  hist.push(msg);
+                  const chat = chats.find(c=>c.id===activeChatId); if (chat){ chat.lastMessage = msg.text || ('['+msg.tipo+']'); chat.messageCount = (chat.messageCount||0)+1; chat.newChat = false; }
+                  removeIntro();
                   renderMessages(hist); pinScrollBottom(); window.onMessageSent?.(activeChatId, r.id_mensagem);
                 } else {
                   hist.push({ id:'fail_'+Date.now(), from:'me', text:'Falha: '+(r.erro||'erro upload') }); renderMessages(hist); pinScrollBottom();
@@ -656,7 +832,8 @@ document.addEventListener('DOMContentLoaded', () => {
               chatHistories[activeChatId] = chatHistories[activeChatId] || [];
               chatHistories[activeChatId].push(msg);
               renderMessages(chatHistories[activeChatId]); pinScrollBottom();
-              const chat = chats.find(c=>c.id===activeChatId); if (chat) chat.lastMessage = text;
+              const chat = chats.find(c=>c.id===activeChatId); if (chat){ chat.lastMessage = text; chat.messageCount = (chat.messageCount||0)+1; chat.newChat = false; }
+              removeIntro();
               if (result.id_mensagem) { lastMsgIdMap[activeChatId] = result.id_mensagem; setLastReadId(activeChatId, result.id_mensagem); }
               renderChatList(chats); messageInput.value=''; window.onMessageSent?.(activeChatId, (result.id_mensagem||result.id)); saveState();
             }
@@ -667,6 +844,31 @@ document.addEventListener('DOMContentLoaded', () => {
           const photo = (open.other && open.other.photo) || (chat && chat.photo) || "../img/SemFoto.jpg";
           if (userNameEl) userNameEl.textContent = name;
           if (userPhotoEl) userPhotoEl.style.backgroundImage = `url('${photo}')`;
+        }
+        // ===== Merge de novas mensagens (inclui anexos) mesmo após bind inicial =====
+        if (open && open.ok && Array.isArray(open.messages)) {
+          const role = open.current_role || window.chatRole || null;
+          const meId = open.current_user_id ?? null;
+          const hist = chatHistories[activeChatId] || [];
+          const remote = open.messages.map(m => {
+            const fromRole = m.from_role || null;
+            const from = (fromRole && role) ? (fromRole === role ? 'me' : 'them') : (m.de === meId ? 'me' : 'them');
+            return { id:m.id, from, text:m.conteudo, enviado_em:m.enviado_em, tipo:m.tipo||'text', arquivo:m.arquivo||null, from_role:fromRole };
+          });
+          const numericLocal = hist.filter(h => typeof h.id === 'number').map(h => h.id);
+          const numericRemote = remote.filter(r => typeof r.id === 'number').map(r => r.id);
+          const lastLocal = numericLocal.length ? Math.max(...numericLocal) : 0;
+          const lastRemote = numericRemote.length ? Math.max(...numericRemote) : 0;
+          // Se remoto avançou (inclui novos anexos), substitui histórico completo para evitar perda de ordenação/anexos.
+          if (!hist.length || lastRemote > lastLocal) {
+            chatHistories[activeChatId] = remote;
+            window.chatHistories = chatHistories;
+            renderMessages?.(remote);
+            if (lastRemote) setLastReadId(activeChatId, lastRemote);
+            const row = (chats || []).find(c => c.id === activeChatId);
+            if (row && remote.length) row.lastMessage = remote[remote.length - 1].text || ('[' + remote[remote.length - 1].tipo + ']');
+            renderChatList(chats || []);
+          }
         }
       }
       saveState();
@@ -791,7 +993,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const latest = await fetchChatList();
     if (latest.length > 0) chats = latest;
     renderChatList(chats);
-    if (activeChatId) {
+    // Auto abre primeiro chat da lista se nenhum ativo restaurado
+    if (!activeChatId && chats.length) {
+      try {
+        const first = chats[0];
+        if (first.placeholder || first.id === 0) {
+          // Apenas ativa placeholder sem backend
+          window.openChat?.(first.id, { force:true });
+        } else {
+          await window.openChat?.(first.id, { force:true });
+        }
+      }
+      catch(e){ console.warn('[chat] auto-open falhou:', e); }
+    } else if (activeChatId) {
       renderMessages(chatHistories[activeChatId] || []);
     }
     startPolling();
@@ -879,6 +1093,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const item = ev.target.closest('.chat-item');
       if (!item) return;
       try { window.__SND__?.unlock?.(); } catch {}
+      // Suprime som de nova mensagem próximo à navegação
+      window.__SUPPRESS_SOUND_TS = Date.now()+900;
       window.__USER_NAV_TS = Date.now();
       const id = Number(item.dataset.chatId);
       if (id) window.openChat?.(id, { force: true });
@@ -1027,13 +1243,15 @@ async function refreshActiveChatOnce() {
     if (!data || !data.ok) return;
 
     const me = Number(data.current_user_id ?? 0);
+    const role = data.current_role || window.chatRole || null;
     const remote = (data.messages || []).map(m => ({
       id: m.id ?? m.id_mensagem,
-      from: Number(m.de ?? m.id_de) === me ? 'me' : 'them',
+      from: (m.from_role && role) ? (m.from_role === role ? 'me' : 'them') : (Number(m.de ?? m.id_de) === me ? 'me' : 'them'),
       text: String(m.conteudo ?? '').trim(),
       enviado_em: m.enviado_em || null,
       tipo: m.tipo || 'text',
-      arquivo: m.arquivo || null
+      arquivo: m.arquivo || null,
+      from_role: m.from_role || null
     }));
 
     window.chatHistories = window.chatHistories || {};

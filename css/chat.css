@@ -13,82 +13,29 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Inter", sans-serif;
-    overflow: hidden;
-
+    /* overflow hidden removido para permitir menus/elementos flutuarem corretamente */
 }
 
 body {
- 
-  background: linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88)),
-              url("../img/fundo-cliente.jpg") no-repeat center center fixed;
-  background-size: cover;
-
-  color: #545454;
-  padding-top: 70px;
+    background: linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88)),
+                            url("../img/fundo-cliente.jpg") no-repeat center center fixed;
+    background-size: cover;
+    color: #545454;
+    /* padding-top removido para alinhar com header compartilhado não fixo */
 }
+
+html, body { height: 100%; }
 
 /* ================= HEADER ================= */
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: #917ba4;
-  height: 65px;
-  padding: 10px 40px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  z-index: 1;
-}
-
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo img {
-  height: 35px;
-  cursor: pointer;
-}
-
-.perfil-area {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.nome {
-  font-weight: 600;
-  color: #fff;
-}
-
-.perfil-foto {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  object-fit: cover;
-}
-
-.menu {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
-.menu-icon {
-    background: #917ba4;
-    border: none;
-    font-size: 2em;
-    color: white;
-    cursor: pointer;
-}
+/* Regras antigas de header substituídas pelo header compartilhado (.global-header) */
+/* Mantido apenas ajustes específicos se necessário futuramente */
 
 /* ================= MAIN LAYOUT ================= */
 .chat-container {
     display: flex;
-    height: calc(100vh - 90px);
-
+    min-height: calc(100vh - 72px);
+    height: calc(100vh - 72px);
+    overflow: hidden; /* impede que conteúdo empurre barra de input */
 }
 
 /* SIDEBAR */
@@ -146,17 +93,28 @@ nav {
 
 .chat-item .meta {
     flex: 1;
+    min-width: 0; /* permite o flex item encolher */
+    overflow: hidden; /* impede o conteúdo de ultrapassar */
 }
 
 .chat-item h4 {
     font-size: 18px;
     color: #3b3b3b;
     margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .chat-item p {
     color: #6b6b6b;
     font-size: 14px;
+    /* Truncar mensagens muito longas com reticências */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
 }
 
 /* Unread purple dot */
@@ -200,7 +158,7 @@ nav {
     flex-direction: column;
     background: #fff;
     min-width: 0;
-
+    height: 100%;
 }
 
 /* chat header inside content */
@@ -273,10 +231,10 @@ nav {
 /* messages area */
 .chat-messages {
     flex: 1;
-    /* Aproxima ainda mais das bordas; remove excesso de "centro" */
-    padding: 24px 6px 26px 6px;
+    padding: 24px 10px 16px 10px;
     overflow-y: auto;
     background: linear-gradient(#ffffff, #fbfbfb);
+    overscroll-behavior: contain;
 }
 
 /* bubble styles */
@@ -574,9 +532,13 @@ body.lightbox-open { overflow: hidden; }
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 26px 36px;
+    padding: 22px 36px 24px 36px;
     border-top: 1px solid rgba(145, 123, 164, 0.06);
     background: #fff;
+    position: sticky;
+    bottom: 0;
+    z-index: 40; /* acima da barra de anexos */
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
 }
 .chat-input.drag-hover {
     outline: 2px dashed #917ba4;
@@ -593,6 +555,9 @@ body.lightbox-open { overflow: hidden; }
     background: #fff;
     border-top: 1px solid rgba(145,123,164,0.06);
     border-bottom: 1px solid rgba(145,123,164,0.08);
+    position: sticky;
+    bottom: 0; /* gruda quando existir scroll acima */
+    z-index: 30;
 }
 .attachments-bar[hidden] { display:none; }
 .attachment-chip {
