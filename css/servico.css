@@ -1,5 +1,18 @@
+@font-face {
+  font-family: "Birthstone";
+  src: url("/Programacao_TCC_Avena/fonts/paginaInicial/Birthstone/Birthstone-Regular.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Mulish";
+  src: url("/Programacao_TCC_Avena/fonts/paginaInicial/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Mulish', sans-serif;
   margin: 0;
   background-color: #fafafa;
   
@@ -109,11 +122,37 @@ body p, h1, h2, h3 {
 .abaixo-img{
   flex-direction: column; 
 } 
+
+/*===========================================
+ ESTILIZAÇÃO DA ÁREA DE PERFIL NA HEARDER 
+ ============================================*/
+
 .perfil {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+.perfil-area {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.nome {
+  font-weight: 600;
+  color: #fff;
+}
+
+.perfil-foto {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
+}
+
+/* ================================================
+    FIM DA ESTILIZAÇÃO DA ÁREA DE PERFIL NA HEARDER 
+====================================================*/
 
 .topo {
   display: flex;
@@ -126,6 +165,51 @@ body p, h1, h2, h3 {
   margin: 0;
 }
 
+
+
+.hidden {
+  display: none;
+}
+
+/* Quando ativo */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(0px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(20px);
+  }
+}
+.show {
+  margin-top:1%;
+  z-index: 1;
+  animation: fadeInUp 1s ease forwards;
+  margin-left: 84%;
+  height:auto;
+  border-radius: 10%;
+  padding:2%;
+  position: absolute;
+  opacity: 70%;
+  background-color: #f5f5f5;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  display: block;
+}
+.show a{
+  color: #4a4a4a;
+  font-size: 1.2em;
+  text-decoration: none;
+}
+.show ul{
+  padding:1% 1%;
+  text-align:center;
+}
+.show li{
+  padding: 12px 15px;
+  list-style: none;
+}
+/* Fundo escuro transparente */
 .modal {
   display: none; /* começa escondido */
   position: fixed;
@@ -186,6 +270,10 @@ body p, h1, h2, h3 {
   from { opacity: 0; transform: scale(0.9); }
   to   { opacity: 1; transform: scale(1); }
 }
+
+
+
+
 .cookie-banner {
   position: fixed;
   bottom: 20px;

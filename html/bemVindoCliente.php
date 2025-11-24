@@ -7,20 +7,21 @@ session_start();
 
 include_once('../php/conexao.php');
 
-$nome = "Usuário";
+//$nome = "Usuário";
 
 
 if (!isset($conexao)) {
     die("Erro: conexão com o banco não encontrada. Verifique ../php/conexao.php");
 }
 
-if (!empty($_SESSION['id_cliente'])) {
-    $idCliente = (int) $_SESSION['id_cliente'];
+if (!empty($_SESSION['id_usuario'])) {
+    $id_usuario = $_SESSION['id_usuario'];
 
     $stmt = $conexao->prepare("SELECT nome FROM cliente WHERE id_usuario = ?");
     if ($stmt === false) {
+
     } else {
-        $stmt->bind_param("i", $idCliente);
+        $stmt->bind_param("i", $id_usuario);
         $executou = $stmt->execute();
         if ($executou) {
             $resultado = $stmt->get_result();
@@ -28,6 +29,7 @@ if (!empty($_SESSION['id_cliente'])) {
                 $row = $resultado->fetch_assoc();
                 if (!empty($row['nome'])) {
                     $nome = $row['nome'];
+                    
                 }
             } else {
                 
@@ -36,6 +38,30 @@ if (!empty($_SESSION['id_cliente'])) {
             
         }
         $stmt->close();
+        
+    }
+    $stmt = $conexao->prepare("SELECT imgperfil FROM cliente WHERE id_usuario = ?");
+    if ($stmt === false) {
+
+    } else {
+        $stmt->bind_param("i", $id_usuario);
+        $executou = $stmt->execute();
+        if ($executou) {
+            $resultado = $stmt->get_result();
+            if ($resultado && $resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                if (!empty($row['imgperfil'])) {
+                    $img = $row['imgperfil'];
+                    
+                }
+            } else {
+                
+            }
+        } else {
+            
+        }
+        $stmt->close();
+        
     }
 }
 ?>
@@ -56,6 +82,42 @@ if (!empty($_SESSION['id_cliente'])) {
 </head>
 <body>
 
+  <!-- ===============================
+       Menu Lateral
+       =============================== -->
+  <nav id="menu" class="hidden">
+    <ul>
+      <li><a href=".\quemSomos.php">Quem somos</a></li>
+      <li><a href=".\cadastro.php">Cadastrar-se</a></li>
+      <hr>
+      <li><a href=".\sejaParceiro.php">Seja um Parceiro</a></li>
+      <li><a href=".\Pagina_Inicial.html"><span class="Home">Home</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- ===============================
+       Banner de Consentimento de Cookies
+       =============================== -->
+  <div id="cookie-banner" class="cookie-banner">
+    <div class="cookie-content">
+      <h4>Privacidade e Cookies</h4>
+      <p>
+        A Singularity Solutions utiliza cookies para oferecer uma experiência mais personalizada,
+        melhorar o desempenho da plataforma e garantir o funcionamento seguro dos serviços.
+        Ao aceitar, você concorda com o uso de cookies conforme nossa
+        <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">
+          Política de Privacidade
+        </a>.
+      </p>
+      <div class="cookie-buttons">
+        <button id="accept-cookies" class="cookie-btn accept">Aceitar</button>
+        <button id="decline-cookies" class="cookie-btn decline">Recusar</button>
+      </div>
+    </div>
+  </div>
+
+
+
 
   <header>
     <nav>
@@ -66,10 +128,14 @@ if (!empty($_SESSION['id_cliente'])) {
       </div>
 
       <div class="perfil-area">
-        <span class="nome"><?php echo htmlspecialchars($nome); ?></span>
+        <span class="nome"><?php echo $nome ?></span>
 
        
+<<<<<<< HEAD
         <img src=../img/SemFoto.jpg alt="Foto de perfil" class="perfil-foto">
+=======
+        <img src="<?php  echo $img?>" alt="Foto de perfil" class="perfil-foto">
+>>>>>>> 1bf3fa5a244c77948e9af337c91f329663d2725f
 
      
         <button class="menu-icon" id="menu-btn">&#9776;</button>
@@ -78,19 +144,14 @@ if (!empty($_SESSION['id_cliente'])) {
   </header>
 
 
-  <nav id="menulogin" class="hidden">
-    <ul>
-      <li><a href="sobre.html"><span class="quemSomos">Quem somos</span></a></li>
-      <li><a href="cadastro.php">Cadastrar-se</a></li>
-      <hr>
-      <li><a href="contato.html">Seja um Parceiro</a></li>
-      <li><a href="suporte.html">Suporte</a></li>
-    </ul>
-  </nav>
+  
+
+
+
 
   <main class="conteudo">
     <div class="container">
-      <h2>Bem-vindo de volta, <?php echo htmlspecialchars($nome); ?>!</h2>
+      <h2>Bem-vindo de volta, <?php echo $nome; ?>!</h2>
       <p>Encontre prestadoras de serviços qualificadas para as suas necessidades.</p>
 
       <div class="botoes">
@@ -102,10 +163,12 @@ if (!empty($_SESSION['id_cliente'])) {
     </div>
   </main>
 
-  <script src="../js/login.js"></script> 
+ 
   <script>
    
    (<?php echo json_encode($_SESSION); ?>);
   </script>
 </body>
+   <script src="../js/login.js"></script> 
+  <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
 </html>

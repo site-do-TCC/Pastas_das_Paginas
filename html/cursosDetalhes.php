@@ -5,6 +5,7 @@ ini_set('display_errors', 1);
 
 session_start();
 include_once(__DIR__ . '/../php/conexao.php');
+mysqli_set_charset($conexao, "utf8mb4");
 
  //Verifica se foi passado um ID na URL
 if (!isset($_GET['id_curso'])) {
@@ -13,12 +14,67 @@ if (!isset($_GET['id_curso'])) {
 }
 
 $id_curso = intval($_GET['id_curso']);
-$sql = "SELECT * FROM curso WHERE id_curso = $id_curso";
-$resultado = mysqli_query($conexao, $sql);
+$sqlcurso = "SELECT * FROM curso WHERE id_curso = $id_curso";
+$resultadocurso = mysqli_query($conexao, $sqlcurso);
 
-$prof = mysqli_fetch_assoc($resultado);
+$prof = mysqli_fetch_assoc($resultadocurso);
 $logado = isset($_SESSION['email']);
+
+
+if (!empty($_SESSION['id_usuario'])) {
+    $id_usuario = $_SESSION['id_usuario'];
+
+    $stmt = $conexao->prepare("SELECT nome FROM prestadora WHERE id_usuario = ?");
+    if ($stmt === false) {
+
+    } else {
+        $stmt->bind_param("i", $id_usuario);
+        $executou = $stmt->execute();
+        if ($executou) {
+            $resultado = $stmt->get_result();
+            if ($resultado && $resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                if (!empty($row['nome'])) {
+                    $nome = $row['nome'];
+                    
+                }
+            } else {
+                
+            }
+        } else {
+            
+        }
+        $stmt->close();
+        
+    }
+    $stmt = $conexao->prepare("SELECT imgperfil FROM prestadora WHERE id_usuario = ?");
+    if ($stmt === false) {
+
+    } else {
+        $stmt->bind_param("i", $id_usuario);
+        $executou = $stmt->execute();
+        if ($executou) {
+           
+            $resultado = $stmt->get_result();
+            if ($resultado && $resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                if (!empty($row['imgperfil'])) {
+                    $img = $row['imgperfil'];
+                    
+                }
+            } else {
+                
+            }
+        } else {
+            
+        }
+        $stmt->close();
+        
+    }
+}
 ?>
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -28,23 +84,74 @@ $logado = isset($_SESSION['email']);
     <link rel="stylesheet" href="../css/cursosDetalhes.css">
 </head>
 <body>
-    <header class="topo">
-        <div class="logo">
-            <img src="../imagens/logo-avena.png" alt="Logo Avena">
-        </div>
-        <div class="perfil">
-            <span>Geisa</span>
-            <img src="../imagens/foto-perfil.jpg" alt="Foto de perfil">
-        </div>
+
+
+<!-- ===============================
+       Menu Lateral
+       =============================== -->
+  <nav id="menu" class="hidden">
+    <ul>
+      <li><a href=".\quemSomos.php">Quem somos</a></li>
+      <li><a href=".\cadastro.php">Cadastrar-se</a></li>
+      <hr>
+      <li><a href=".\sejaParceiro.php">Seja um Parceiro</a></li>
+      <li><a href=".\Pagina_Inicial.html"><span class="Home">Home</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- ===============================
+       Banner de Consentimento de Cookies
+       =============================== -->
+  <div id="cookie-banner" class="cookie-banner">
+    <div class="cookie-content">
+      <h4>Privacidade e Cookies</h4>
+      <p>
+        A Singularity Solutions utiliza cookies para oferecer uma experiência mais personalizada,
+        melhorar o desempenho da plataforma e garantir o funcionamento seguro dos serviços.
+        Ao aceitar, você concorda com o uso de cookies conforme nossa
+        <a href="\Programacao_TCC_Avena\img\AVENA - Termos de Uso e Política de Privacidade.pdf" target="_blank">
+          Política de Privacidade
+        </a>.
+      </p>
+      <div class="cookie-buttons">
+        <button id="accept-cookies" class="cookie-btn accept">Aceitar</button>
+        <button id="decline-cookies" class="cookie-btn decline">Recusar</button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+   <header>
+    <nav>
+      <div class="logo">
+        <a href="Pagina_Inicial.html">
+          <img src="../img/logoAvena.png" alt="Logo Avena">
+        </a>
+      </div>
+
+      <div class="perfil-area">
+        <span class="nome"><?php echo $nome ?></span>
+        <img src="<?php echo $img?>" alt="Foto de perfil" class="perfil-foto">
+        <button class="menu-icon" id="menu-btn">&#9776;</button>
+      </div>
+    </nav>
     </header>
 
+
+
+
     <main class="container">
-        <h2><?=$prof['Nome'] ?></h2>
+        <h2><?= htmlspecialchars($prof['Nome']) ?></h2>
 
         <section class="conteudo">
             <div class="caixa">
                 <h3>Descrição Geral</h3>
-                <p><?= nl2br(htmlspecialchars($prof['descricao_geral'])) ?></p>
+                <p><?= nl2br(htmlspecialchars($prof['DescricaoGeral'])) ?></p>
             </div>
 
             <div class="caixa">
@@ -52,7 +159,7 @@ $logado = isset($_SESSION['email']);
                 <ul>
                     <?php
                         // Exemplo: você salva os tópicos separados por ponto e vírgula no banco
-                        $itens = explode(';', $prof['conteudo']);
+                        $itens = explode(';', $prof['Aprender']);
                         foreach ($itens as $item) {
                             echo "<li>" . htmlspecialchars(trim($item)) . "</li>";
                         }
@@ -62,13 +169,15 @@ $logado = isset($_SESSION['email']);
         </section>
 
         <div class="info">
-            <p><strong>Carga Horária:</strong> <?= htmlspecialchars($prof['carga_horaria']) ?> horas</p>
-            <p><strong>Nível:</strong> <?= htmlspecialchars($prof['nivel']) ?></p>
+            <p><strong>Carga Horária:</strong> <?= htmlspecialchars($prof['TempoTotal']) ?> horas</p>
+            <p><strong>Nível:</strong> <?= htmlspecialchars($prof['Nivel']) ?></p>
         </div>
 
         <div class="acoes">
-            <button class="btn" onclick="window.location.href='../videos/<?= htmlspecialchars($curso['video_url']) ?>'">Iniciar Curso</button>
+            <a href="<?= htmlspecialchars($prof['video'])?>" target="_blank"><button class="btn">Iniciar Curso</button><a>
         </div>
     </main>
 </body>
+<script src="../js/login.js"></script>
+  <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
 </html>

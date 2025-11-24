@@ -64,7 +64,7 @@ nav {
 }
 .btnEntrar:hover{
   font-weight: bolder;
-  font-size: 1.9em;
+  transform: scale(1.05); 
   background: #ff616a;
 }
 

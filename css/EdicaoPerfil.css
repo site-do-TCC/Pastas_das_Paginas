@@ -13,26 +13,7 @@
   font-style: normal;
 }
 
-@font-face {
-  font-family: "Poppins";
-  src: url("../fonts/edicaoPerfil/Poppins/Poppins-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
 
-@font-face {
-  font-family: "OpenSans-Bold";
-  src: url("../fonts/edicaoPerfil/Open_Sans/OpenSans-Bold.ttf") format("truetype");
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../fonts/edicaoPerfil/Inter/static/Inter_18pt-Bold.ttf") format("truetype");
-  font-weight: bold;
-  font-style: normal;
-}
 
 /* ================= RESET ================== */
 * {
@@ -134,7 +115,7 @@ body {
   border-radius: 10px;
   max-width: 900px;
   margin: 60px auto 110px auto;
-  font-family: "OpenSans-Bold";
+  font-family: "Mulish";
   color: #545454;
 }
 
@@ -144,7 +125,7 @@ body {
   gap: 40px;
   justify-content: center;
   margin-left: 8px;
-  font-family: "OpenSans-Bold";
+  font-family: "Mulish";
 }
 
 .colunaForm {
@@ -160,7 +141,7 @@ label {
   margin-bottom: 8px;
   margin-left: 2px;
   display: block;
-  font-family: "OpenSans-Bold";
+  font-family: "Mulish";
   color: #545454;
 }
 
@@ -190,12 +171,10 @@ textarea {
 /* ================= BOTÕES ================= */
 .botoes {
   display: flex;
-  gap: 80px;
-  margin-left: 342px;
-  font-family: "Inter";
-  white-space: nowrap;
-  height: 50px;
-  margin-top: 50px;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 35px;
+  width: 100%;
 }
 
 .btn-excluir {
@@ -248,34 +227,33 @@ textarea {
 }
 
 .coluna-esquerda {
+  transform: translateY(-10%);
   flex: 1;
   margin-left: -20px;
   margin-top: -50px;
 }
 
 .coluna-direita {
+  transform: translateY(-20%);
   flex: 1;
-  margin-top: -50px;
-  font-family: "OpenSans-Bold";
-  margin-left: -120px;
+  font-family: "Mulish";
 }
 
 .coluna-direita h4 {
   margin-bottom: 15px;
-  font-family: "OpenSans-Bold";
+  font-family: "Mulish";
   text-align: left;
 }
 
 .coluna-direita .fotos-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  justify-items: start;
+  grid-template-columns: 1fr;
+  gap: 25px;
 }
 
 .foto {
-  width: 200px;
-  height: 120px;
+  width: 280px;
+  height: 150px;
   background: #b6a4c4;
   border-radius: 20px;
   position: relative;
@@ -284,6 +262,11 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: .3s;
+}
+
+.foto:hover {
+  filter: brightness(0.95); 
 }
 
 .foto img {
@@ -300,6 +283,20 @@ textarea {
   cursor: pointer;
   color: #4b0055;
   font-weight: bold;
+
+  background: white;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.25);
+  transition: 0.2s;
+}
+
+.lixeira:hover {
+  background: #e8e8e8;
 }
 .cookie-banner {
   position: fixed;

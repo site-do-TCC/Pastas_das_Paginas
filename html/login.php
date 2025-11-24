@@ -39,7 +39,7 @@
         </div>
     </div>
 
-  <header>
+<header>
   <nav>
      <div class="logo">
        <a href="Pagina_Inicial.html">

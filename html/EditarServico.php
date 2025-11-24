@@ -1,8 +1,18 @@
 
 <?php
 session_start();
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include_once(__DIR__ . '/../php/conexao.php');
+print_r($_SESSION);
+echo  $_SESSION["email"];
+echo  $_SESSION["tipo"];
+$email = $_SESSION['email'];
+$sql = "SELECT * FROM prestadora WHERE email = '$email'";
+$result = $conexao->query($sql);
+$row = $result->fetch_assoc();
+
+
 ?>
 
 
@@ -62,13 +72,13 @@ include_once(__DIR__ . '/../php/conexao.php');
             <img src="\Programacao_TCC_Avena\img\meuPerfil.png" alt="Meu Perfil">
         </div>
 
-    <form method="POST" enctype="multipart/form-data" action="EdicaoPerfil.php">
+    <form method="POST" enctype="multipart/form-data" action="EditarServico.php">
 
 
 
         <div class="adicionarFoto">
             <!-- Input escondido -->
-            <input type="file" id="fotoPerfil" name="fotoPerfil" accept="image/*" hidden required>
+            <input type="file" id="fotoPerfil" name="fotoPerfil" accept="image/*" hidden >
 
             <!-- Círculo clicável -->
             <label for="fotoPerfil" class="circuloUpload">
@@ -94,25 +104,19 @@ include_once(__DIR__ . '/../php/conexao.php');
                 <div class="colunaForm1">
 
                     <div class="campo">
-                        <label for="nome">Nome</label>
-                        <input type="text" id="nome" name="nome" placeholder="Nome de sua empresa" required>
+                        <label for="nome">Nome da empresa</label>
+                        <input type="text" id="nome" name="nome" placeholder="Nome de sua empresa" >
                     </div>
 
                     <div class="campo">
-                        <label for="telefone">Telefone</label>
-                        <input type="tel" id="telefone" name="telefone" placeholder="Contato da empresa" required>
+                        <label for="telefone">Telefone da empresa</label>
+                        <input type="tel" id="telefone" name="telefone" placeholder="Contato da empresa" >
                     </div>
 
                     <div class="campo">
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email" placeholder="Email da empresa" required>
+                        <label for="email">E-mail da empresa</label>
+                        <input type="email" id="email" name="email" placeholder="Email da empresa" >
                     </div>
-
-
-
-
-
-
 
                 </div>
 
@@ -121,7 +125,7 @@ include_once(__DIR__ . '/../php/conexao.php');
 
                     <div class="campo">
                         <label for="localizacao">Localização</label>
-                        <input type="text" id="localizacao" name="localizacao" placeholder="Sua região de atuação" required>
+                        <input type="text" id="localizacao" name="localizacao" placeholder="Sua região de atuação" >
                     </div>
 
                     <div class="campo">
@@ -167,13 +171,13 @@ include_once(__DIR__ . '/../php/conexao.php');
   <div class="fotos-container">  
     
     <label for="Banner1" class="foto">
-      <input type="file" id="Banner1" name="Banner1" accept="image/*" required hidden>
+      <input type="file" id="Banner1" name="Banner1" accept="image/*"  hidden>
       <img id="previewBanner1" src="" alt="Banner 1" style="display:none;">
       <span class="lixeira">🗑</span>
     </label>
     <!-- Banner 2 -->
     <label for="Banner2" class="foto">
-      <input type="file" id="Banner2" name="Banner2" accept="image/*" required hidden>
+      <input type="file" id="Banner2" name="Banner2" accept="image/*"  hidden>
       <img id="previewBanner2" src="" alt="Banner 2" style="display:none;">
       <span class="lixeira">🗑</span>
     </label>
@@ -181,7 +185,7 @@ include_once(__DIR__ . '/../php/conexao.php');
     <!-- Banner 3 -->
     
         <label for="Banner3" class="foto" id="banner3">
-        <input type="file" id="Banner3" name="Banner3" accept="image/*" required hidden>
+        <input type="file" id="Banner3" name="Banner3" accept="image/*"  hidden>
         <img id="previewBanner3" src="" alt="Banner 3" style="display:none;">
         <span class="lixeira">🗑</span>
     </label>
@@ -219,10 +223,9 @@ if (isset($_POST['salvar'])) {
 
     // Recupera da sessão
     $email = $_SESSION['email'];
-    $senha = $_SESSION['senha'];
 
     // Busca o ID do usuário logado
-    $sql = "SELECT id_usuario FROM prestadora WHERE email = '$email' AND senha = '$senha'";
+    $sql = "SELECT id_usuario FROM prestadora WHERE email = '$email'";
     $result = $conexao->query($sql);
 
     if ($result && $result->num_rows > 0) {
@@ -372,23 +375,21 @@ if (isset($_POST['salvar'])) {
 
 
 //-----------------------------------------------------------------------------------------------------------------
+// Puxa os dados atuais do banco
+$sqlAtual = "SELECT * FROM prestadora WHERE id_usuario = '$id_usuario'";
+$resultAtual = mysqli_query($conexao, $sqlAtual);
+$dadosAtuais = mysqli_fetch_assoc($resultAtual);
 
-         
+// Mantém os antigos se o campo estiver vazio
+$empresa_nome = !empty($_POST['nome']) ? $_POST['nome'] : $dadosAtuais['empresa_nome'];
+$empresa_telefone = !empty($_POST['telefone']) ? $_POST['telefone'] : $dadosAtuais['empresa_telefone'];
+$empresa_email = !empty($_POST['email']) ? $_POST['email'] : $dadosAtuais['empresa_email'];
+$empresa_localizacao = !empty($_POST['localizacao']) ? $_POST['localizacao'] : $dadosAtuais['empresa_localizacao'];
+$empresa_facebook = !empty($_POST['facebook']) ? $_POST['facebook'] : $dadosAtuais['empresa_facebook'];
+$empresa_instagram = !empty($_POST['instagram']) ? $_POST['instagram'] : $dadosAtuais['empresa_instagram'];
+$empresa_biografia = !empty($_POST['biografia']) ? $_POST['biografia'] : $dadosAtuais['empresa_biografia'];
+$empresa_servicos = !empty($_POST['servicos']) ? $_POST['servicos'] : $dadosAtuais['empresa_servicos'];
 
-        
-
-
-
-
-
-$empresa_nome = $_POST['nome'];
-$empresa_telefone = $_POST['telefone'];
-$empresa_email = $_POST['email'];
-$empresa_localizacao = $_POST['localizacao'];
-$empresa_facebook = $_POST['facebook'];
-$empresa_instagram = $_POST['instagram'];
-$empresa_biografia = $_POST['biografia'];
-$empresa_servicos = $_POST['servicos'];
 
 
 
@@ -404,12 +405,17 @@ $sql = "UPDATE prestadora SET
         WHERE id_usuario='$id_usuario'";
 
 if (mysqli_query($conexao, $sql)) {
-    $sql = "UPDATE prestadora SET passou_cadastro = 1 WHERE id_usuario = $id_usuario";
+    $sql = "UPDATE prestadora SET passou_cadastro = 1 WHERE id_usuario = '$id_usuario'";
     mysqli_query($conexao, $sql);
+    echo "<script>window.location.href='../html/AdicaoServicoPrestadora.php';</script>";
 } else {
     echo "Erro ao atualizar: " . mysqli_error($conexao);
 }
-    
+
+
+
+
 }
+
 
 ?>

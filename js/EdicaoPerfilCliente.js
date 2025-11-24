@@ -44,27 +44,4 @@ function previewImagem(inputId, previewId) {
     }
   });
 }
-previewImagem('Banner1', 'previewBanner1');
-previewImagem('Banner2', 'previewBanner2');
-previewImagem('Banner3', 'previewBanner3');
-
-// Função para lixeira dos banners
-document.querySelectorAll('.foto').forEach((fotoContainer) => {
-  const trashBtn = fotoContainer.querySelector('.lixeira');
-  const input = fotoContainer.querySelector('input[type="file"]');
-  const preview = fotoContainer.querySelector('img');
-
-  trashBtn.addEventListener('click', (e) => {
-    e.preventDefault(); // impede abrir o input ao clicar na lixeira
-
-    // Some com a imagem
-    preview.src = "";
-    preview.style.display = 'none';
-
-    // Limpa o input
-    input.value = "";
-
-    console.log("Imagem removida");
-  });
-});
 

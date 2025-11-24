@@ -1,3 +1,8 @@
+<?php
+  session_start();
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -5,7 +10,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro - Avena</title>
   <link rel="stylesheet" href="\Programacao_TCC_Avena\css\cadastro.css">
-
 </head>
 <body>
 
@@ -159,7 +163,20 @@
     } else {
         $result = mysqli_query($conexao, "INSERT INTO prestadora(nome,email,senha) VALUES ('$nome','$email','$senha')");
         if ($result) {
-            echo "<script>window.location.href='../html/EdicaoPerfil.php';</script>";
+          
+          $stmt = $conexao->prepare("SELECT * FROM prestadora WHERE email = ? AND senha = ?");
+          $stmt->bind_param("ss", $email, $senha);
+          $stmt->execute();
+          $result = $stmt->get_result();
+
+          $dados = $result->fetch_assoc();
+          $_SESSION['id_usuario'] = $dados['id_usuario'];
+
+          $_SESSION['email'] = trim($_POST['email']);
+          $_SESSION['tipo'] = 'profissional';
+          $_SESSION['nome'] = $_POST['nome'];
+          $_SESSION['senha'] = trim($_POST['senha']);
+            echo "<script>window.location.href='../html/AdicaoServicoPrestadora.php';</script>";
             exit;
         } else {
             echo "<script>mostrarModal('Erro ao cadastrar');</script>";
@@ -174,6 +191,19 @@
     } else {
         $result = mysqli_query($conexao, "INSERT INTO cliente(nome,email,senha) VALUES ('$nome','$email','$senha')");
         if ($result) {
+            
+          $stmt = $conexao->prepare("SELECT * FROM cliente WHERE email = ? AND senha = ?");
+          $stmt->bind_param("ss", $email, $senha);
+          $stmt->execute();
+          $result = $stmt->get_result();
+
+          $dados = $result->fetch_assoc();
+          $_SESSION['id_usuario'] = $dados['id_usuario'];
+
+          $_SESSION['email'] = trim($_POST['email']);
+          $_SESSION['tipo'] = 'cliente';
+          $_SESSION['nome'] = $_POST['nome'];
+          $_SESSION['senha'] = trim($_POST['senha']);
             echo "<script>mostrarModal('Email cadastrado com sucesso!');</script>";
             exit;
         } else {
@@ -181,8 +211,9 @@
         }
     }
 }
-
-  }
+  
+}
+  
 ?>
 
 <script>
