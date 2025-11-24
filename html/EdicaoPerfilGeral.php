@@ -144,46 +144,18 @@ if (isset($_POST['excluir'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edição de Perfil</title>
-    <link rel="stylesheet" href="\Programacao_TCC_Avena\css\EdicaoPerfil.css">
+    <link rel="stylesheet" href="/Programacao_TCC_Avena/css/header_nav.css">
+    <link rel="stylesheet" href="/Programacao_TCC_Avena/css/EdicaoPerfil.css">
 
 </head>
 
 
 
-<body>
-<header>
-    <nav>
-        <div class="logo">
-            <a href="\Programacao_TCC_Avena\html\Pagina_Inicial.html"><img src="\Programacao_TCC_Avena\img\logoAvena.png" alt="Logo Avena"></a>
-        </div>
-
-    </nav>
-</header>
+<body class="fixed-header-page">
+<?php include_once(__DIR__ . '/../php/header_nav.php'); ?>
 
 
-
-
- <!-- Mensagem -->
-    <div id="modalErro" class="modal">
-        <div class="modal-content">
-            <p id="mensagemErro">...</p>
-            <button onclick="fecharModal()">OK</button>
-        </div>
-    </div>
-
-
-    <!-- Modal de Confirmação -->
-<div id="modalConfirmar" class="modal">
-  <div class="modal-content">
-      <p id="mensagemConfirmar">Tem certeza que deseja excluir sua conta?</p>
-
-      <div class="modal-buttons">
-          <button id="btnConfirmar" class="btn-confirmar">Excluir</button>
-          <button id="btnCancelar" class="btn-cancelar">Cancelar</button>
-      </div>
-  </div>
-</div>
-
+<!-- body já aberto acima com classe fixed-header-page -->
     <!-- ===============================
      Banner de Consentimento de Cookies - Singularity Solutions
      =============================== -->

@@ -1,67 +1,72 @@
 <?php
 session_start();
-include_once('conexao.php'); // inclui a conexão
 
 if(isset($_POST['submit']) && !empty($_POST['email']) && !empty($_POST['senha'])) {
+    
+    include_once('conexao.php');
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
 
-    $email = trim($_POST['email']);
-    $senha = trim($_POST['senha']);
-    $tipo = $_POST['tipo']; 
+    if ($_POST['tipo'] == 'profissional'){  
+        $sql = "SELECT * FROM prestadora WHERE email = '$email' and senha = '$senha'";
+        $result = $conexao->query($sql);
 
-    if($tipo === 'profissional') {
-        $stmt = $conexao->prepare("SELECT * FROM prestadora WHERE email = ? AND senha = ?");
-        $stmt->bind_param("ss", $email, $senha);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-
-        if($result->num_rows < 1){
-            header('Location: ../html/login.php?erro=1');
+        if(mysqli_num_rows($result) < 1){
+            unset($_SESSION['email']);
+            unset($_SESSION['senha']);
+            header('Location: /Programacao_TCC_Avena/html/login.php?erro=1');
             exit;
         } else {
             $dados = $result->fetch_assoc();
-            $_SESSION['id_usuario'] = $dados['id_usuario'];
+            // limpa qualquer traço de sessão de 'cliente' para evitar conflito de nomes/ids
+            unset($_SESSION['cliente']);
+            unset($_SESSION['id_cliente']);
+            
+            $_SESSION['prestadora'] = [
+                'nome' => $dados['nome'],
+                'id_usuario' => isset($dados['id_usuario']) ? $dados['id_usuario'] : (isset($dados['id_prestadora']) ? $dados['id_prestadora'] : null)
+            ];
+            $_SESSION['id_prestadora'] = $_SESSION['prestadora']['id_usuario'];
+            // regenerar id da sessão por segurança / evitar mistura de sessão antiga
+            session_regenerate_id(true);
             $_SESSION['tipo'] = 'profissional';
             $_SESSION['email'] = $email;
             $_SESSION['senha'] = $senha;
-            if ($dados['passou_cadastro'] < 1){
-                header('Location: ../html/AdicaoServicoPrestadora.php');
-            }else{
-                header('Location: ../html/bemVindoPrestadora.php');
-            }
+            header('Location: /Programacao_TCC_Avena/html/EdicaoPerfil.php');
             exit;
         }
+    } else {
+        $sql = "SELECT * FROM cliente WHERE email = '$email' and senha = '$senha'";
+        $result = $conexao->query($sql);
 
-    } elseif($tipo === 'cliente' || $tipo === 'contratante') {
-        $stmt = $conexao->prepare("SELECT * FROM cliente WHERE email = ? AND senha = ?");
-        $stmt->bind_param("ss", $email, $senha);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if($result->num_rows < 1){
-            header('Location: ../html/login.php?erro=1');
+        if(mysqli_num_rows($result) < 1){
+            unset($_SESSION['email']);
+            unset($_SESSION['senha']);
+            header('Location: /Programacao_TCC_Avena/html/login.php?erro=1');
             exit;
         } else {
+            // pega os dados do cliente e popula a sessão do mesmo modo que faz para prestadora
             $dados = $result->fetch_assoc();
-            $_SESSION['id_usuario'] = $dados['id_usuario']; 
+            // limpa sessão de 'prestadora' para evitar conflito
+            unset($_SESSION['prestadora']);
+            unset($_SESSION['id_prestadora']);
+            
+            $_SESSION['cliente'] = [
+                'nome' => isset($dados['nome']) ? $dados['nome'] : null,
+                'id_usuario' => isset($dados['id_usuario']) ? $dados['id_usuario'] : (isset($dados['id_cliente']) ? $dados['id_cliente'] : null)
+            ];
+            $_SESSION['id_cliente'] = $_SESSION['cliente']['id_usuario'];
+            session_regenerate_id(true);
             $_SESSION['tipo'] = 'cliente';
             $_SESSION['email'] = $email;
             $_SESSION['senha'] = $senha;
-            if ($dados['passou_cadastro'] < 1){
-                header('Location: ../html/AdicaoPerfilCliente.php');
-            }else{
-                header('Location: ../html/bemVindoCliente.php');
-            }
+            header('Location: /Programacao_TCC_Avena/html/bemVindoCliente.php');
             exit;
         }
-
-    } else {
-        header('Location: ../html/login.php?erro=3');
-        exit;
     }
 
 } else {
-    header('Location: ../html/login.php?erro=2');
+    header('Location: /Programacao_TCC_Avena/html/login.php?erro=2');
     exit;
 }
 ?>
