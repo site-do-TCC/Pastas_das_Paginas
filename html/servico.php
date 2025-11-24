@@ -13,12 +13,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['solicitar'])) {
     $id_contratante = (int)$_SESSION['cliente']['id_usuario'];
   } elseif (!empty($_SESSION['prestadora']['id_usuario'])) {
     // Se for prestadora tentando solicitar, pode bloquear ou tratar diferente; aqui apenas impede.
-    header("Location: ../html/login.php");
-    exit;
+    if (!empty($_POST['ajax'])) {
+      header('Content-Type: application/json');
+      echo json_encode(['ok'=>false,'erro'=>'Prestadoras não podem solicitar serviços.']);
+      exit;
+    } else {
+      header("Location: ../html/login.php");
+      exit;
+    }
   }
   if (!$id_contratante) {
-    header("Location: ../html/login.php");
-    exit;
+    if (!empty($_POST['ajax'])) {
+      header('Content-Type: application/json');
+      echo json_encode(['ok'=>false,'erro'=>'Faça login para solicitar.']);
+      exit;
+    } else {
+      header("Location: ../html/login.php");
+      exit;
+    }
   }
 
     // ID DA PRESTADORA
@@ -35,10 +47,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['solicitar'])) {
     mysqli_stmt_close($insert);
 
     if ($ok) {
-        header("Location: servico.php?id_prestadora={$id_prestadora}&success=1");
-        exit;
+        if (!empty($_POST['ajax'])) {
+          header('Content-Type: application/json');
+          echo json_encode(['ok'=>true,'id_prestadora'=>$id_prestadora]);
+          exit;
+        } else {
+          header("Location: servico.php?id_prestadora={$id_prestadora}&success=1");
+          exit;
+        }
     } else {
-        echo "<script>mostrarModal('Erro ao solicitar serviço. Veja se id_contratante e id_prestadora existem.');</script>";
+        if (!empty($_POST['ajax'])) {
+          header('Content-Type: application/json');
+          echo json_encode(['ok'=>false,'erro'=>'Erro ao inserir solicitação.']);
+          exit;
+        } else {
+          echo "<script>mostrarModal('Erro ao solicitar serviço. Veja se id_contratante e id_prestadora existem.');</script>";
+        }
     }
 }
 // -------------------- FIM TRATAMENTO POST --------------------
@@ -235,6 +259,7 @@ if ($id_usuario !== null) {
               <form method="POST" action="">
                 <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($id_usuario) ?>">
                 <input type="hidden" name="id_prestadora" value="<?= htmlspecialchars($id_prestadora) ?>">
+                <input type="hidden" name="ajax" value="1">
                 <?php if($_SESSION['tipo'] === 'profissional'): ?>
                   <button type="button" onclick="mostrarModal('Prestadoras não podem solicitar serviços.');" class="solicitar-btn">
                     Solicitar Serviço
@@ -301,6 +326,36 @@ document.addEventListener("DOMContentLoaded", function () {
         mostrarModal(erro);
     }
 });
+</script>
+<script>
+// Intercepta envio para AJAX e evita reload/redirect
+(function(){
+  const form = document.getElementById('solicitacao-form');
+  if(!form || form.__boundAjax) return; form.__boundAjax = true;
+  form.addEventListener('submit', async function(ev){
+    // Se for prestadora, deixa lógica padrão do botão bloquear
+    if (form.querySelector('button[onclick]')) return;
+    ev.preventDefault();
+    const btn = form.querySelector('button[type="submit"]');
+    if(btn){ btn.disabled = true; btn.textContent = 'Enviando...'; }
+    try {
+      const fd = new FormData(form);
+      const r = await fetch(window.location.href, { method:'POST', body: fd, credentials:'same-origin' });
+      let data=null; try{ data = await r.json(); }catch{}
+      if(data && data.ok){
+        mostrarModal('Solicitação enviada com sucesso!');
+        // Badge vermelha imediata
+        const badge = document.getElementById('global-chat-badge');
+        if(badge){ badge.style.display='inline-block'; badge.classList.remove('new-chat'); badge.style.background='#dc2626'; }
+        // Limpa marca visto para forçar futura notificação se vier mensagem
+        localStorage.removeItem('chatLastSeenMaxId');
+      } else {
+        mostrarModal(data?.erro || 'Falha ao solicitar.');
+      }
+    } catch(e){ mostrarModal('Erro de rede ao solicitar.'); }
+    finally { if(btn){ btn.disabled=false; btn.textContent='Solicitar Serviço'; } }
+  });
+})();
 </script>
 <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
 <script>
