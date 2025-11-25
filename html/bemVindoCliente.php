@@ -4,40 +4,69 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
+
 include_once('../php/conexao.php');
 
-// Definições padrão para evitar undefined variable warnings
-$nome = 'Usuário';
-$img = '../img/SemFoto.jpg';
-
+//$nome = "Usuário";
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['email']) || $_SESSION['tipo'] == 'profissional'){
+    echo '<script> window.location.href = "\login.php"</script>';
+    session_destroy();
+    exit;
+}
 
 if (!isset($conexao)) {
     die("Erro: conexão com o banco não encontrada. Verifique ../php/conexao.php");
 }
 
-// Detecta tipo de usuário na sessão (novo padrão em validarLogin.php)
-if (!empty($_SESSION['cliente']['id_usuario'])) {
-  $id_usuario = (int)$_SESSION['cliente']['id_usuario'];
-  // consulta nome
-  $stmt = $conexao->prepare('SELECT nome FROM cliente WHERE id_usuario = ? LIMIT 1');
-  if ($stmt) { $stmt->bind_param('i',$id_usuario); if ($stmt->execute()){ $res=$stmt->get_result(); if($res && $res->num_rows){ $row=$res->fetch_assoc(); if(!empty($row['nome'])) $nome=$row['nome']; } } $stmt->close(); }
-  // consulta imagem (se coluna existir)
-  if ($colRes = mysqli_query($conexao, "SHOW COLUMNS FROM cliente LIKE 'imgperfil'")) {
-    if (mysqli_num_rows($colRes)) {
-      $stmt = $conexao->prepare('SELECT imgperfil FROM cliente WHERE id_usuario = ? LIMIT 1');
-      if ($stmt) { $stmt->bind_param('i',$id_usuario); if($stmt->execute()){ $res=$stmt->get_result(); if($res && $res->num_rows){ $row=$res->fetch_assoc(); if(!empty($row['imgperfil'])) $img=$row['imgperfil']; } } $stmt->close(); }
+if (!empty($_SESSION['id_usuario'])) {
+    $id_usuario = $_SESSION['id_usuario'];
+
+    $stmt = $conexao->prepare("SELECT nome FROM cliente WHERE id_usuario = ?");
+    if ($stmt === false) {
+
+    } else {
+        $stmt->bind_param("i", $id_usuario);
+        $executou = $stmt->execute();
+        if ($executou) {
+            $resultado = $stmt->get_result();
+            if ($resultado && $resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                if (!empty($row['nome'])) {
+                    $nome = $row['nome'];
+                    
+                }
+            } else {
+                
+            }
+        } else {
+            
+        }
+        $stmt->close();
+        
     }
-  }
-} elseif (!empty($_SESSION['prestadora']['id_usuario'])) {
-  $id_usuario = (int)$_SESSION['prestadora']['id_usuario'];
-  $stmt = $conexao->prepare('SELECT nome FROM prestadora WHERE id_usuario = ? LIMIT 1');
-  if ($stmt) { $stmt->bind_param('i',$id_usuario); if ($stmt->execute()){ $res=$stmt->get_result(); if($res && $res->num_rows){ $row=$res->fetch_assoc(); if(!empty($row['nome'])) $nome=$row['nome']; } } $stmt->close(); }
-  if ($colRes = mysqli_query($conexao, "SHOW COLUMNS FROM prestadora LIKE 'imgperfil'")) {
-    if (mysqli_num_rows($colRes)) {
-      $stmt = $conexao->prepare('SELECT imgperfil FROM prestadora WHERE id_usuario = ? LIMIT 1');
-      if ($stmt) { $stmt->bind_param('i',$id_usuario); if($stmt->execute()){ $res=$stmt->get_result(); if($res && $res->num_rows){ $row=$res->fetch_assoc(); if(!empty($row['imgperfil'])) $img=$row['imgperfil']; } } $stmt->close(); }
+    $stmt = $conexao->prepare("SELECT imgperfil FROM cliente WHERE id_usuario = ?");
+    if ($stmt === false) {
+
+    } else {
+        $stmt->bind_param("i", $id_usuario);
+        $executou = $stmt->execute();
+        if ($executou) {
+            $resultado = $stmt->get_result();
+            if ($resultado && $resultado->num_rows > 0) {
+                $row = $resultado->fetch_assoc();
+                if (!empty($row['imgperfil'])) {
+                    $img = $row['imgperfil'];
+                    
+                }
+            } else {
+                
+            }
+        } else {
+            
+        }
+        $stmt->close();
+        
     }
-  }
 }
 
 
@@ -80,7 +109,6 @@ foreach ($notificacoes as $n) {
  
   <link rel="stylesheet" href="../css/Login.css">
   <link rel="stylesheet" href="../css/bemVindoCliente.css"> 
-  <link rel="stylesheet" href="/Programacao_TCC_Avena/public/chat-badge.css">
 </head>
 <body>
 
@@ -190,83 +218,17 @@ foreach ($notificacoes as $n) {
 
       <div class="botoes">
         <a href="busca.php" class="btn buscar">🔍 Buscar Serviços</a>
-        <a href="agenda.php" class="btn agenda">📅 Minha Agenda</a>
-        <a href="chat.php" class="btn mensagens" id="bv-cliente-mensagens">💬 Mensagens<span class="badge-dot" id="bv-cliente-chat-badge" style="display:none; width:12px; height:12px; background:#dc2626; border-radius:50%; margin-left:6px;"></span></a>
-        <a href="avaliacoes.php" class="btn avaliacoes">⭐ Minhas Avaliações</a>
+        <a href="agendaCliente.php" class="btn agenda">📅 Minha Agenda</a>
+        <a href="..\html\chat.php" class="btn mensagens">💬 Mensagens</a>
+        <a href="avaliarLista.php" class="btn avaliacoes">⭐ Minhas Avaliações</a>
       </div>
     </div>
   </main>
 
  
   <script>
-    // Inicialização de áudio única
-    (function(){
-      if(!window.__SND__){
-        const a=document.createElement('audio');
-        a.src='/Programacao_TCC_Avena/sounds/NovaMensagem.wav';
-        a.preload='auto';
-        a.style.display='none';
-        document.body.appendChild(a);
-        window.__SND__={playNew:()=>{try{a.currentTime=0;a.play();}catch(e){}}};
-      }
-    })();
-
-    const badgeMain = document.getElementById('bv-cliente-chat-badge');
-
-    let prevVisibleAny = false; let prevPulseAny = false;
-    let prevStats = { unread:0, maxId:0, newChats:0, initialized:false };
-    async function pollChats(){
-      try {
-        const r = await fetch('/Programacao_TCC_Avena/php/getChatList.php', { credentials:'same-origin', cache:'no-store' });
-        if(!r.ok) return; const data = await r.json(); if(!data.ok) return;
-        const chats = Array.isArray(data.chats) ? data.chats : [];
-        const anyNew = chats.some(c=>c.newChat);
-        const anyUnread = chats.some(c=>c.unread>0);
-        const show = anyNew || anyUnread;
-        const maxId = chats.reduce((m,c)=>Math.max(m,c.lastMessageId||0),0);
-        window.__BV_LAST_MAX_ID = maxId;
-        const lastSeen = parseInt(localStorage.getItem('chatLastSeenMaxId')||'0',10);
-        const shouldShow = (anyNew || maxId > lastSeen || (anyUnread && maxId > lastSeen));
-        if(badgeMain){
-          if(shouldShow){
-            badgeMain.style.display='inline-block';
-            if(anyNew){ badgeMain.classList.add('new-chat'); } else { badgeMain.classList.remove('new-chat'); }
-          } else {
-            badgeMain.style.display='none'; badgeMain.classList.remove('new-chat');
-          }
-        }
-        // Estatísticas para detecção de evento novo (tocar som)
-        const totalUnread = chats.reduce((s,c)=>s + (c.unread||0), 0);
-        const maxMsgId = chats.reduce((m,c)=> Math.max(m, c.lastMessageId||0), 0);
-        const newChatsCount = chats.reduce((s,c)=> s + (c.newChat?1:0), 0);
-        if(prevStats.initialized){
-          if(totalUnread > prevStats.unread || maxMsgId > prevStats.maxId || newChatsCount > prevStats.newChats){
-            window.__SND__?.playNew();
-          }
-        }
-        prevStats = { unread: totalUnread, maxId: maxMsgId, newChats: newChatsCount, initialized: true };
-        prevVisibleAny = show; prevPulseAny = anyNew;
-      } catch(e){ }
-    }
-    pollChats();
-    setInterval(pollChats, 1500); // poll mais rápido
-  </script>
-  <script>
-    // Marca visto e oculta badge ao clicar no botão Mensagens
-    (function(){
-      const btn = document.getElementById('bv-cliente-mensagens');
-      const badge = document.getElementById('bv-cliente-chat-badge');
-      if(btn && !btn.__clearBound){
-        btn.__clearBound = true;
-        btn.addEventListener('click', function(){
-          try {
-            const maxId = window.__BV_LAST_MAX_ID || 0;
-            localStorage.setItem('chatLastSeenMaxId', String(maxId));
-            if(badge){ badge.style.display='none'; }
-          } catch(e){}
-        });
-      }
-    })();
+   
+   (<?php echo json_encode($_SESSION); ?>);
   </script>
   <script>
 document.getElementById("btn-notificacoes").addEventListener("click", () => {
@@ -277,7 +239,6 @@ document.getElementById("btn-notificacoes").addEventListener("click", () => {
 });
 </script>
 </body>
-  <script src="../js/login.js"></script> 
-  
+   <script src="../js/login.js"></script> 
   <script src="\Programacao_TCC_Avena\js\cookies.js"></script>
 </html>

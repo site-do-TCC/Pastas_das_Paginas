@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
+<<<<<<< HEAD
 -- Tempo de geração: 24-Nov-2025 às 21:37
+=======
+-- Tempo de geração: 23-Nov-2025 às 20:11
+>>>>>>> master
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -25,6 +29,7 @@ SET time_zone = "+00:00";
 
 --
 -- Estrutura da tabela `agenda`
+<<<<<<< HEAD
 --
 
 CREATE TABLE `agenda` (
@@ -76,26 +81,54 @@ INSERT INTO `avaliacoes` (`id`, `avaliador_id`, `avaliador_tipo`, `avaliado_id`,
 
 --
 -- Estrutura da tabela `chat`
+=======
+>>>>>>> master
 --
 
-CREATE TABLE `chat` (
-  `id_chat` int(11) NOT NULL,
-  `id_cliente` int(11) NOT NULL,
-  `id_prestadora` int(11) NOT NULL,
+CREATE TABLE `agenda` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `tipo_usuario` enum('cliente','prestadora') NOT NULL,
+  `data_evento` date NOT NULL,
+  `anotacao` text NOT NULL,
   `criado_em` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Extraindo dados da tabela `chat`
+-- Extraindo dados da tabela `agenda`
 --
 
-INSERT INTO `chat` (`id_chat`, `id_cliente`, `id_prestadora`, `criado_em`) VALUES
-(1, 1, 2, '2025-10-22 23:35:06'),
-(2, 1, 1, '2025-10-31 20:44:17'),
-(3, 3, 2, '2025-10-31 20:44:28'),
-(4, 1, 3, '2025-10-31 20:44:49'),
-(20, 3, 1, '2025-11-02 00:26:14'),
-(21, 3, 3, '2025-11-02 00:26:16');
+INSERT INTO `agenda` (`id`, `id_usuario`, `tipo_usuario`, `data_evento`, `anotacao`, `criado_em`) VALUES
+(2, 3, 'cliente', '2025-11-20', 'AnotaÃ§Ã£o pra amanhÃ£', '2025-11-19 20:12:52'),
+(3, 3, 'cliente', '2025-12-12', 'awd', '2025-11-19 20:13:06'),
+(4, 4, 'cliente', '2025-11-24', 'Marcar o cabelo com a Geisa. MARCAR ATÃ‰ DIA 24', '2025-11-22 16:34:37'),
+(5, 23, 'prestadora', '2025-11-27', 'Cabelo com o Lucas', '2025-11-22 16:35:59'),
+(6, 4, 'cliente', '2025-11-25', 'Cabelo com a geisa', '2025-11-22 16:37:19');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `avaliacoes`
+--
+
+CREATE TABLE `avaliacoes` (
+  `id` int(11) NOT NULL,
+  `avaliador_id` int(11) NOT NULL,
+  `avaliador_tipo` enum('cliente','prestadora') NOT NULL,
+  `avaliado_id` int(11) NOT NULL,
+  `avaliado_tipo` enum('cliente','prestadora') NOT NULL,
+  `nota` int(11) NOT NULL,
+  `comentario` text,
+  `data_avaliacao` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `avaliacoes`
+--
+
+INSERT INTO `avaliacoes` (`id`, `avaliador_id`, `avaliador_tipo`, `avaliado_id`, `avaliado_tipo`, `nota`, `comentario`, `data_avaliacao`) VALUES
+(1, 3, 'cliente', 22, 'prestadora', 5, 'a', '2025-11-21 20:20:44'),
+(2, 1, 'prestadora', 3, 'cliente', 5, 'a', '2025-11-21 20:31:47');
 
 -- --------------------------------------------------------
 
@@ -442,6 +475,7 @@ INSERT INTO `solicitacoes` (`id`, `id_contratante`, `id_prestadora`, `data_solic
 
 --
 -- Índices para tabela `agenda`
+<<<<<<< HEAD
 --
 ALTER TABLE `agenda`
   ADD PRIMARY KEY (`id`);
@@ -454,11 +488,17 @@ ALTER TABLE `avaliacoes`
 
 --
 -- Índices para tabela `chat`
+=======
+>>>>>>> master
 --
-ALTER TABLE `chat`
-  ADD PRIMARY KEY (`id_chat`),
-  ADD KEY `id_cliente` (`id_cliente`),
-  ADD KEY `id_prestadora` (`id_prestadora`);
+ALTER TABLE `agenda`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `avaliacoes`
+--
+ALTER TABLE `avaliacoes`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Índices para tabela `cliente`
@@ -474,6 +514,7 @@ ALTER TABLE `curso`
   ADD PRIMARY KEY (`id_curso`);
 
 --
+<<<<<<< HEAD
 -- Índices para tabela `mensagem`
 --
 ALTER TABLE `mensagem`
@@ -483,6 +524,8 @@ ALTER TABLE `mensagem`
   ADD KEY `idx_unread` (`id_chat`,`id_para`,`lido`);
 
 --
+=======
+>>>>>>> master
 -- Índices para tabela `notificacoes`
 --
 ALTER TABLE `notificacoes`
@@ -511,6 +554,7 @@ ALTER TABLE `solicitacoes`
 
 --
 -- AUTO_INCREMENT de tabela `agenda`
+<<<<<<< HEAD
 --
 ALTER TABLE `agenda`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
@@ -523,9 +567,17 @@ ALTER TABLE `avaliacoes`
 
 --
 -- AUTO_INCREMENT de tabela `chat`
+=======
+>>>>>>> master
 --
-ALTER TABLE `chat`
-  MODIFY `id_chat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+ALTER TABLE `agenda`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de tabela `avaliacoes`
+--
+ALTER TABLE `avaliacoes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `cliente`
@@ -540,12 +592,15 @@ ALTER TABLE `curso`
   MODIFY `id_curso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
+<<<<<<< HEAD
 -- AUTO_INCREMENT de tabela `mensagem`
 --
 ALTER TABLE `mensagem`
   MODIFY `id_mensagem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
 
 --
+=======
+>>>>>>> master
 -- AUTO_INCREMENT de tabela `notificacoes`
 --
 ALTER TABLE `notificacoes`
@@ -568,6 +623,7 @@ ALTER TABLE `solicitacoes`
 --
 
 --
+<<<<<<< HEAD
 -- Limitadores para a tabela `chat`
 --
 ALTER TABLE `chat`
@@ -581,6 +637,8 @@ ALTER TABLE `mensagem`
   ADD CONSTRAINT `mensagem_ibfk_1` FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`);
 
 --
+=======
+>>>>>>> master
 -- Limitadores para a tabela `notificacoes`
 --
 ALTER TABLE `notificacoes`
