@@ -14,7 +14,7 @@
 /* Fundo */
 body {
   background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)),
-              url("../img/fundo-prestadora.jpg") no-repeat center center fixed;
+  url("../img/mulher-a-trabalhar-com-computador.avif") no-repeat center center fixed;
   background-size: cover;
   color: #545454;
   padding-top: 70px;

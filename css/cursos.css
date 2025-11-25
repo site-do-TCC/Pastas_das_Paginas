@@ -12,9 +12,14 @@
 }
 
 body {
-    background: #fff;
-    color: #333;
+    color: #545454;
+  padding-top: 30px;
+  background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)),
+  url("../img/mud.jpg") no-repeat center center fixed;
+  background-size: cover;
 }
+  
+
 header {
   z-index: 1;
   position: fixed;

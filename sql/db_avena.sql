@@ -3,8 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 03-Nov-2025 às 15:15
--- Tempo de geração: 19-Nov-2025 às 17:12
+-- Tempo de geração: 24-Nov-2025 às 21:37
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -21,6 +20,57 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `db_avena`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `agenda`
+--
+
+CREATE TABLE `agenda` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `tipo_usuario` enum('cliente','prestadora') NOT NULL,
+  `data_evento` date NOT NULL,
+  `anotacao` text NOT NULL,
+  `criado_em` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `agenda`
+--
+
+INSERT INTO `agenda` (`id`, `id_usuario`, `tipo_usuario`, `data_evento`, `anotacao`, `criado_em`) VALUES
+(2, 3, 'cliente', '2025-11-20', 'AnotaÃ§Ã£o pra amanhÃ£', '2025-11-19 20:12:52'),
+(3, 3, 'cliente', '2025-12-12', 'awd', '2025-11-19 20:13:06'),
+(4, 4, 'cliente', '2025-11-24', 'Marcar o cabelo com a Geisa. MARCAR ATÃ‰ DIA 24', '2025-11-22 16:34:37'),
+(5, 23, 'prestadora', '2025-11-27', 'Cabelo com o Lucas', '2025-11-22 16:35:59'),
+(6, 4, 'cliente', '2025-11-25', 'Cabelo com a geisa', '2025-11-22 16:37:19');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `avaliacoes`
+--
+
+CREATE TABLE `avaliacoes` (
+  `id` int(11) NOT NULL,
+  `avaliador_id` int(11) NOT NULL,
+  `avaliador_tipo` enum('cliente','prestadora') NOT NULL,
+  `avaliado_id` int(11) NOT NULL,
+  `avaliado_tipo` enum('cliente','prestadora') NOT NULL,
+  `nota` int(11) NOT NULL,
+  `comentario` text,
+  `data_avaliacao` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `avaliacoes`
+--
+
+INSERT INTO `avaliacoes` (`id`, `avaliador_id`, `avaliador_tipo`, `avaliado_id`, `avaliado_tipo`, `nota`, `comentario`, `data_avaliacao`) VALUES
+(1, 3, 'cliente', 22, 'prestadora', 5, 'a', '2025-11-21 20:20:44'),
+(2, 1, 'prestadora', 3, 'cliente', 5, 'a', '2025-11-21 20:31:47');
 
 -- --------------------------------------------------------
 
@@ -115,6 +165,190 @@ INSERT INTO `curso` (`id_curso`, `Nome`, `DescricaoGeral`, `Aprender`, `TempoTot
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `mensagem`
+--
+
+CREATE TABLE `mensagem` (
+  `id_mensagem` int(11) NOT NULL,
+  `id_chat` int(11) NOT NULL,
+  `id_de` int(11) NOT NULL,
+  `conteudo` text NOT NULL,
+  `enviado_em` datetime DEFAULT CURRENT_TIMESTAMP,
+  `id_para` int(11) NOT NULL,
+  `lido` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `mensagem`
+--
+
+INSERT INTO `mensagem` (`id_mensagem`, `id_chat`, `id_de`, `conteudo`, `enviado_em`, `id_para`, `lido`) VALUES
+(2, 1, 1, 'a', '2025-10-22 23:35:10', 0, 0),
+(4, 1, 1, 'aaaaaa', '2025-10-23 05:29:27', 0, 0),
+(5, 1, 1, 'rebound', '2025-10-31 17:23:29', 2, 0),
+(6, 1, 1, 'a', '2025-10-31 18:40:29', 2, 0),
+(7, 1, 1, 'aaa', '2025-10-31 18:40:42', 2, 0),
+(8, 1, 1, 'aaa', '2025-10-31 18:40:43', 2, 0),
+(9, 1, 1, 'aaa', '2025-10-31 18:40:46', 2, 0),
+(10, 1, 1, 'aaaa', '2025-10-31 18:40:49', 2, 0),
+(11, 1, 1, 'zaaa', '2025-10-31 20:10:20', 2, 0),
+(12, 1, 1, 'aaaa', '2025-10-31 20:10:25', 2, 0),
+(13, 1, 1, 'a', '2025-10-31 20:10:26', 2, 0),
+(14, 1, 1, 'a', '2025-10-31 20:10:26', 2, 0),
+(15, 1, 1, 'a', '2025-10-31 20:10:26', 2, 0),
+(16, 1, 1, 'a', '2025-10-31 20:10:26', 2, 0),
+(17, 1, 1, 'zz\\z\\z\\\\', '2025-10-31 20:11:59', 2, 0),
+(18, 1, 1, '\\z\\z\\z\\z', '2025-10-31 20:12:04', 2, 0),
+(19, 1, 1, 'a', '2025-10-31 20:28:37', 2, 0),
+(20, 1, 1, 'a', '2025-10-31 20:28:38', 2, 0),
+(21, 1, 1, 'aaa', '2025-10-31 20:33:09', 2, 0),
+(22, 1, 1, 'aaaa', '2025-10-31 20:33:20', 2, 0),
+(23, 1, 1, 'meu deus', '2025-10-31 20:44:41', 2, 0),
+(24, 2, 1, 'aaaa', '2025-10-31 20:44:54', 1, 0),
+(25, 2, 1, 'aaaa', '2025-10-31 20:44:56', 1, 0),
+(26, 2, 1, 'oi', '2025-10-31 20:52:11', 1, 0),
+(27, 1, 1, 'oi', '2025-11-01 20:59:42', 2, 0),
+(28, 1, 1, 'oi', '2025-11-01 21:07:14', 2, 0),
+(29, 1, 1, 'aaaaaaloo', '2025-11-01 21:07:31', 2, 0),
+(30, 1, 1, 'a', '2025-11-01 21:07:31', 2, 0),
+(31, 1, 1, 'a', '2025-11-01 21:07:32', 2, 0),
+(32, 1, 1, 'a', '2025-11-01 21:07:32', 2, 0),
+(33, 1, 1, 'a', '2025-11-01 21:07:32', 2, 0),
+(34, 1, 1, 'a', '2025-11-01 21:07:32', 2, 0),
+(35, 1, 1, 'a', '2025-11-01 21:07:32', 2, 0),
+(36, 1, 1, 'a', '2025-11-01 21:07:33', 2, 0),
+(37, 1, 1, 'a', '2025-11-01 21:07:33', 2, 0),
+(38, 4, 1, 'aaaaa', '2025-11-01 21:13:38', 3, 0),
+(39, 1, 1, 'aa', '2025-11-01 21:13:41', 2, 0),
+(40, 2, 1, 'aaa', '2025-11-01 21:13:43', 1, 0),
+(41, 4, 1, 'Oi mandinha', '2025-11-01 21:30:00', 3, 0),
+(42, 4, 1, 'oiiiiiii', '2025-11-01 21:30:23', 3, 0),
+(43, 4, 1, 'aaaaa', '2025-11-01 21:40:19', 3, 0),
+(44, 4, 1, 'aaaaa', '2025-11-01 21:40:23', 3, 0),
+(45, 4, 1, 'aaaaa', '2025-11-01 21:40:32', 3, 0),
+(46, 4, 1, 'aaaaa', '2025-11-01 21:40:32', 3, 0),
+(47, 4, 1, 'aaaaa', '2025-11-01 21:40:32', 3, 0),
+(48, 4, 1, 'aaaaa', '2025-11-01 21:40:32', 3, 0),
+(49, 4, 1, 'aaaaa', '2025-11-01 21:40:32', 3, 0),
+(50, 4, 1, 'aaaaa', '2025-11-01 21:40:32', 3, 0),
+(51, 4, 1, 'oix', '2025-11-01 21:40:38', 3, 0),
+(52, 4, 1, 'cuxin', '2025-11-01 21:41:21', 3, 0),
+(53, 4, 1, 'a', '2025-11-01 21:41:38', 3, 0),
+(54, 4, 1, 'aaaaaaaaaaaaaaaaaaaaaaaaaaa', '2025-11-01 21:42:49', 3, 0),
+(55, 4, 1, 'oi', '2025-11-01 21:51:25', 3, 0),
+(56, 4, 1, 'aaaaaaaaaaaaaaaaa', '2025-11-01 21:51:48', 3, 0),
+(57, 1, 1, 'aaa', '2025-11-01 21:51:51', 2, 0),
+(58, 2, 1, 'a', '2025-11-01 21:51:59', 1, 0),
+(59, 4, 1, 'aaaaaaa', '2025-11-01 22:49:24', 3, 0),
+(60, 4, 1, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '2025-11-01 22:57:07', 3, 0),
+(61, 4, 1, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '2025-11-01 22:59:34', 3, 0),
+(62, 4, 1, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '2025-11-01 22:59:36', 3, 0),
+(63, 4, 1, 'a', '2025-11-02 00:13:34', 3, 0),
+(64, 1, 1, 'a', '2025-11-02 00:13:40', 2, 0),
+(65, 4, 1, 'ô amandinha', '2025-11-02 00:14:17', 3, 0),
+(66, 4, 1, 'caralho', '2025-11-02 00:14:19', 3, 0),
+(67, 4, 1, 'acelera isso aê', '2025-11-02 00:14:24', 3, 0),
+(68, 2, 1, 'oie', '2025-11-02 00:15:27', 1, 0),
+(69, 2, 1, 'queridoooooooooooo', '2025-11-02 00:17:03', 1, 0),
+(70, 2, 1, 'nossa q oido', '2025-11-02 00:17:10', 1, 0),
+(71, 4, 1, 'puta', '2025-11-02 00:21:45', 3, 0),
+(72, 4, 1, 'aaaaaa', '2025-11-02 00:21:59', 3, 0),
+(73, 2, 1, 'oi', '2025-11-02 00:24:39', 1, 0),
+(74, 1, 1, 'ei', '2025-11-02 00:24:56', 2, 0),
+(75, 1, 1, 'ooieeee', '2025-11-02 00:25:16', 2, 0),
+(76, 2, 1, 'amoreco', '2025-11-02 00:25:25', 1, 0),
+(77, 21, 3, 'ei', '2025-11-02 00:26:49', 3, 0),
+(78, 21, 3, 'bonitinha', '2025-11-02 00:26:54', 3, 0),
+(79, 21, 3, 'que foi', '2025-11-02 00:28:07', 3, 0),
+(80, 20, 1, 'ooiiii', '2025-11-02 08:46:54', 3, 0),
+(81, 20, 1, 'ta apagando pq', '2025-11-02 08:47:11', 3, 0),
+(82, 20, 1, 'aaaaa', '2025-11-02 08:47:20', 3, 0),
+(83, 20, 1, 'aa', '2025-11-02 08:47:20', 3, 0),
+(84, 20, 1, 'aa', '2025-11-02 08:47:21', 3, 0),
+(85, 20, 1, 'a', '2025-11-02 08:47:21', 3, 0),
+(86, 20, 1, 'oioi', '2025-11-02 09:06:35', 3, 0),
+(87, 20, 1, 'aaaaaaaaaaaaa', '2025-11-02 09:06:59', 3, 0),
+(88, 20, 1, 'a', '2025-11-02 09:07:02', 3, 0),
+(89, 20, 1, 'a', '2025-11-02 09:07:03', 3, 0),
+(90, 20, 1, 'a', '2025-11-02 09:07:03', 3, 0),
+(91, 20, 1, 'a', '2025-11-02 09:07:04', 3, 0),
+(92, 20, 1, 'aaa', '2025-11-02 09:07:23', 3, 0),
+(93, 20, 1, 'aa', '2025-11-02 09:07:25', 3, 0),
+(94, 20, 1, 'a', '2025-11-02 09:10:17', 3, 0),
+(95, 20, 1, 'a', '2025-11-02 09:10:20', 3, 0),
+(96, 20, 1, 'a', '2025-11-02 09:10:21', 3, 0),
+(97, 20, 1, 'a', '2025-11-02 09:10:28', 3, 0),
+(98, 20, 1, 'a', '2025-11-02 09:10:31', 3, 0),
+(99, 20, 1, 'a', '2025-11-02 09:10:33', 3, 0),
+(100, 20, 1, 'a', '2025-11-02 09:10:34', 3, 0),
+(101, 20, 1, 'aa', '2025-11-02 09:10:36', 3, 0),
+(102, 1, 1, 'aaaaa', '2025-11-02 09:14:33', 2, 0),
+(103, 1, 1, 'aaaaa', '2025-11-02 09:15:19', 2, 0),
+(104, 20, 1, 'aaaaaa', '2025-11-02 09:15:23', 3, 0),
+(105, 20, 1, 'aaaaa', '2025-11-02 09:15:25', 3, 0),
+(106, 20, 1, 'aaaaaaaa', '2025-11-02 09:15:28', 3, 0),
+(107, 20, 1, 'a', '2025-11-02 09:53:25', 3, 0),
+(108, 20, 1, 'a', '2025-11-02 09:53:33', 3, 0),
+(109, 20, 1, 'a', '2025-11-02 09:53:36', 3, 0),
+(110, 20, 1, 'a', '2025-11-02 09:57:29', 3, 0),
+(111, 20, 1, 'aaaaaaaaaaaaaaaaaa', '2025-11-02 09:57:35', 3, 0),
+(112, 20, 1, 'aaaaaaaa', '2025-11-02 10:15:44', 3, 0),
+(113, 1, 1, 'cu', '2025-11-02 10:15:49', 2, 0),
+(114, 1, 1, 'oi', '2025-11-02 10:15:55', 2, 0),
+(115, 20, 1, 'aaaa', '2025-11-02 10:16:03', 3, 0),
+(116, 1, 1, 'aaaa', '2025-11-02 10:16:08', 2, 0),
+(117, 2, 1, 'amigo', '2025-11-02 20:26:10', 1, 0),
+(118, 20, 1, 'amanda', '2025-11-02 20:26:21', 3, 0),
+(119, 2, 1, 'oi', '2025-11-02 23:10:27', 1, 0),
+(120, 20, 1, 'aaa', '2025-11-02 23:25:23', 3, 0),
+(121, 2, 1, 'alo', '2025-11-03 10:39:26', 1, 0),
+(122, 2, 1, 'ooii', '2025-11-03 10:47:07', 1, 0),
+(123, 2, 1, 'aaaaaaaaaaaaaaaaaaaaaaaaa', '2025-11-03 10:47:42', 1, 0),
+(124, 2, 1, 'aaaaa', '2025-11-03 10:49:02', 1, 0),
+(125, 1, 1, 'a', '2025-11-03 10:49:22', 2, 0),
+(126, 1, 1, 'iu', '2025-11-03 10:55:29', 2, 0),
+(127, 1, 1, 'alo', '2025-11-03 10:55:51', 2, 0),
+(128, 4, 1, 'e', '2025-11-03 11:00:25', 3, 0),
+(129, 4, 1, 'oi', '2025-11-03 11:07:09', 3, 0),
+(130, 4, 1, 'a', '2025-11-03 11:07:14', 3, 0),
+(131, 4, 1, 'a', '2025-11-03 11:07:20', 3, 0),
+(132, 4, 1, 'a', '2025-11-03 11:07:20', 3, 0),
+(133, 2, 1, 'a', '2025-11-03 11:07:27', 1, 0),
+(134, 4, 1, 'aaaa', '2025-11-03 11:09:14', 3, 0),
+(135, 1, 1, 'a', '2025-11-03 11:09:19', 2, 0),
+(136, 4, 1, 'aaa', '2025-11-03 11:09:22', 3, 0),
+(137, 4, 1, 'a', '2025-11-03 11:09:27', 3, 0),
+(138, 4, 1, 'a', '2025-11-03 11:10:17', 3, 0),
+(139, 4, 1, 'a', '2025-11-03 11:10:21', 3, 0),
+(140, 4, 1, 'a', '2025-11-03 11:10:48', 3, 0),
+(141, 4, 1, 'a', '2025-11-03 11:10:52', 3, 0),
+(142, 4, 1, 'aa', '2025-11-03 11:10:57', 3, 0),
+(143, 4, 1, 'a', '2025-11-03 11:11:07', 3, 0),
+(144, 4, 1, 'a', '2025-11-03 11:11:19', 3, 0),
+(145, 4, 1, 'a', '2025-11-03 11:12:48', 3, 0),
+(146, 4, 1, 'a', '2025-11-03 11:12:59', 3, 0),
+(147, 4, 1, 'a', '2025-11-03 11:13:12', 3, 0),
+(148, 4, 1, 'aaa', '2025-11-03 11:13:19', 3, 0),
+(149, 4, 1, 'aa', '2025-11-03 11:13:19', 3, 0),
+(150, 4, 1, 'aa', '2025-11-03 11:13:20', 3, 0),
+(151, 4, 1, 'a', '2025-11-03 11:13:20', 3, 0),
+(152, 4, 1, 'aaa', '2025-11-03 11:13:36', 3, 0),
+(153, 2, 1, 'aaa', '2025-11-03 11:13:46', 1, 0),
+(154, 4, 1, 'a', '2025-11-03 11:14:27', 3, 0),
+(155, 4, 1, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '2025-11-03 11:39:06', 3, 0),
+(156, 4, 1, 'aaaa', '2025-11-03 11:53:34', 3, 0),
+(157, 4, 1, 'aaaa', '2025-11-03 11:54:28', 3, 0),
+(158, 4, 1, 'aaaa', '2025-11-03 11:55:17', 3, 0),
+(159, 4, 1, 'aloooooooooooo', '2025-11-03 12:01:27', 3, 0),
+(160, 4, 1, 'aloooooooooooo', '2025-11-03 12:01:34', 3, 0),
+(161, 4, 1, 'aloooooooooooo', '2025-11-03 12:01:34', 3, 0),
+(162, 4, 1, 'aloooooooooooo', '2025-11-03 12:01:34', 3, 0),
+(163, 4, 1, 'aaaa', '2025-11-03 12:04:26', 3, 0),
+(164, 4, 1, 'aaaa', '2025-11-03 12:04:43', 3, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `notificacoes`
 --
 
@@ -138,190 +372,6 @@ INSERT INTO `notificacoes` (`id`, `id_usuario`, `id_solicitacao`, `mensagem`, `v
 (13, 3, 18, 'Sua solicitaÃ§Ã£o foi recusado pela prestadora.', 1, '2025-11-20 15:27:05'),
 (14, 3, 21, 'Seu pedido foi recusado pela prestadora.', 1, '2025-11-20 15:31:03'),
 (15, 4, 22, 'Seu pedido foi aceito pela prestadora.', 1, '2025-11-22 16:35:45');
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `mensagem`
---
-
-CREATE TABLE `mensagem` (
-  `id_mensagem` int(11) NOT NULL,
-  `id_chat` int(11) NOT NULL,
-  `id_de` int(11) NOT NULL,
-  `conteudo` text NOT NULL,
-  `enviado_em` datetime DEFAULT CURRENT_TIMESTAMP,
-  `id_para` int(11) NOT NULL,
-  `lido` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Extraindo dados da tabela `mensagem`
---
-
-INSERT INTO `mensagem` (`id_mensagem`, `id_chat`, `id_de`, `conteudo`, `enviado_em`, `id_para`) VALUES
-(2, 1, 1, 'a', '2025-10-22 23:35:10', 0),
-(4, 1, 1, 'aaaaaa', '2025-10-23 05:29:27', 0),
-(5, 1, 1, 'rebound', '2025-10-31 17:23:29', 2),
-(6, 1, 1, 'a', '2025-10-31 18:40:29', 2),
-(7, 1, 1, 'aaa', '2025-10-31 18:40:42', 2),
-(8, 1, 1, 'aaa', '2025-10-31 18:40:43', 2),
-(9, 1, 1, 'aaa', '2025-10-31 18:40:46', 2),
-(10, 1, 1, 'aaaa', '2025-10-31 18:40:49', 2),
-(11, 1, 1, 'zaaa', '2025-10-31 20:10:20', 2),
-(12, 1, 1, 'aaaa', '2025-10-31 20:10:25', 2),
-(13, 1, 1, 'a', '2025-10-31 20:10:26', 2),
-(14, 1, 1, 'a', '2025-10-31 20:10:26', 2),
-(15, 1, 1, 'a', '2025-10-31 20:10:26', 2),
-(16, 1, 1, 'a', '2025-10-31 20:10:26', 2),
-(17, 1, 1, 'zz\\z\\z\\\\', '2025-10-31 20:11:59', 2),
-(18, 1, 1, '\\z\\z\\z\\z', '2025-10-31 20:12:04', 2),
-(19, 1, 1, 'a', '2025-10-31 20:28:37', 2),
-(20, 1, 1, 'a', '2025-10-31 20:28:38', 2),
-(21, 1, 1, 'aaa', '2025-10-31 20:33:09', 2),
-(22, 1, 1, 'aaaa', '2025-10-31 20:33:20', 2),
-(23, 1, 1, 'meu deus', '2025-10-31 20:44:41', 2),
-(24, 2, 1, 'aaaa', '2025-10-31 20:44:54', 1),
-(25, 2, 1, 'aaaa', '2025-10-31 20:44:56', 1),
-(26, 2, 1, 'oi', '2025-10-31 20:52:11', 1),
-(27, 1, 1, 'oi', '2025-11-01 20:59:42', 2),
-(28, 1, 1, 'oi', '2025-11-01 21:07:14', 2),
-(29, 1, 1, 'aaaaaaloo', '2025-11-01 21:07:31', 2),
-(30, 1, 1, 'a', '2025-11-01 21:07:31', 2),
-(31, 1, 1, 'a', '2025-11-01 21:07:32', 2),
-(32, 1, 1, 'a', '2025-11-01 21:07:32', 2),
-(33, 1, 1, 'a', '2025-11-01 21:07:32', 2),
-(34, 1, 1, 'a', '2025-11-01 21:07:32', 2),
-(35, 1, 1, 'a', '2025-11-01 21:07:32', 2),
-(36, 1, 1, 'a', '2025-11-01 21:07:33', 2),
-(37, 1, 1, 'a', '2025-11-01 21:07:33', 2),
-(38, 4, 1, 'aaaaa', '2025-11-01 21:13:38', 3),
-(39, 1, 1, 'aa', '2025-11-01 21:13:41', 2),
-(40, 2, 1, 'aaa', '2025-11-01 21:13:43', 1),
-(41, 4, 1, 'Oi mandinha', '2025-11-01 21:30:00', 3),
-(42, 4, 1, 'oiiiiiii', '2025-11-01 21:30:23', 3),
-(43, 4, 1, 'aaaaa', '2025-11-01 21:40:19', 3),
-(44, 4, 1, 'aaaaa', '2025-11-01 21:40:23', 3),
-(45, 4, 1, 'aaaaa', '2025-11-01 21:40:32', 3),
-(46, 4, 1, 'aaaaa', '2025-11-01 21:40:32', 3),
-(47, 4, 1, 'aaaaa', '2025-11-01 21:40:32', 3),
-(48, 4, 1, 'aaaaa', '2025-11-01 21:40:32', 3),
-(49, 4, 1, 'aaaaa', '2025-11-01 21:40:32', 3),
-(50, 4, 1, 'aaaaa', '2025-11-01 21:40:32', 3),
-(51, 4, 1, 'oix', '2025-11-01 21:40:38', 3),
-(52, 4, 1, 'cuxin', '2025-11-01 21:41:21', 3),
-(53, 4, 1, 'a', '2025-11-01 21:41:38', 3),
-(54, 4, 1, 'aaaaaaaaaaaaaaaaaaaaaaaaaaa', '2025-11-01 21:42:49', 3),
-(55, 4, 1, 'oi', '2025-11-01 21:51:25', 3),
-(56, 4, 1, 'aaaaaaaaaaaaaaaaa', '2025-11-01 21:51:48', 3),
-(57, 1, 1, 'aaa', '2025-11-01 21:51:51', 2),
-(58, 2, 1, 'a', '2025-11-01 21:51:59', 1),
-(59, 4, 1, 'aaaaaaa', '2025-11-01 22:49:24', 3),
-(60, 4, 1, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '2025-11-01 22:57:07', 3),
-(61, 4, 1, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '2025-11-01 22:59:34', 3),
-(62, 4, 1, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '2025-11-01 22:59:36', 3),
-(63, 4, 1, 'a', '2025-11-02 00:13:34', 3),
-(64, 1, 1, 'a', '2025-11-02 00:13:40', 2),
-(65, 4, 1, 'ô amandinha', '2025-11-02 00:14:17', 3),
-(66, 4, 1, 'caralho', '2025-11-02 00:14:19', 3),
-(67, 4, 1, 'acelera isso aê', '2025-11-02 00:14:24', 3),
-(68, 2, 1, 'oie', '2025-11-02 00:15:27', 1),
-(69, 2, 1, 'queridoooooooooooo', '2025-11-02 00:17:03', 1),
-(70, 2, 1, 'nossa q oido', '2025-11-02 00:17:10', 1),
-(71, 4, 1, 'puta', '2025-11-02 00:21:45', 3),
-(72, 4, 1, 'aaaaaa', '2025-11-02 00:21:59', 3),
-(73, 2, 1, 'oi', '2025-11-02 00:24:39', 1),
-(74, 1, 1, 'ei', '2025-11-02 00:24:56', 2),
-(75, 1, 1, 'ooieeee', '2025-11-02 00:25:16', 2),
-(76, 2, 1, 'amoreco', '2025-11-02 00:25:25', 1),
-(77, 21, 3, 'ei', '2025-11-02 00:26:49', 3),
-(78, 21, 3, 'bonitinha', '2025-11-02 00:26:54', 3),
-(79, 21, 3, 'que foi', '2025-11-02 00:28:07', 3),
-(80, 20, 1, 'ooiiii', '2025-11-02 08:46:54', 3),
-(81, 20, 1, 'ta apagando pq', '2025-11-02 08:47:11', 3),
-(82, 20, 1, 'aaaaa', '2025-11-02 08:47:20', 3),
-(83, 20, 1, 'aa', '2025-11-02 08:47:20', 3),
-(84, 20, 1, 'aa', '2025-11-02 08:47:21', 3),
-(85, 20, 1, 'a', '2025-11-02 08:47:21', 3),
-(86, 20, 1, 'oioi', '2025-11-02 09:06:35', 3),
-(87, 20, 1, 'aaaaaaaaaaaaa', '2025-11-02 09:06:59', 3),
-(88, 20, 1, 'a', '2025-11-02 09:07:02', 3),
-(89, 20, 1, 'a', '2025-11-02 09:07:03', 3),
-(90, 20, 1, 'a', '2025-11-02 09:07:03', 3),
-(91, 20, 1, 'a', '2025-11-02 09:07:04', 3),
-(92, 20, 1, 'aaa', '2025-11-02 09:07:23', 3),
-(93, 20, 1, 'aa', '2025-11-02 09:07:25', 3),
-(94, 20, 1, 'a', '2025-11-02 09:10:17', 3),
-(95, 20, 1, 'a', '2025-11-02 09:10:20', 3),
-(96, 20, 1, 'a', '2025-11-02 09:10:21', 3),
-(97, 20, 1, 'a', '2025-11-02 09:10:28', 3),
-(98, 20, 1, 'a', '2025-11-02 09:10:31', 3),
-(99, 20, 1, 'a', '2025-11-02 09:10:33', 3),
-(100, 20, 1, 'a', '2025-11-02 09:10:34', 3),
-(101, 20, 1, 'aa', '2025-11-02 09:10:36', 3),
-(102, 1, 1, 'aaaaa', '2025-11-02 09:14:33', 2),
-(103, 1, 1, 'aaaaa', '2025-11-02 09:15:19', 2),
-(104, 20, 1, 'aaaaaa', '2025-11-02 09:15:23', 3),
-(105, 20, 1, 'aaaaa', '2025-11-02 09:15:25', 3),
-(106, 20, 1, 'aaaaaaaa', '2025-11-02 09:15:28', 3),
-(107, 20, 1, 'a', '2025-11-02 09:53:25', 3),
-(108, 20, 1, 'a', '2025-11-02 09:53:33', 3),
-(109, 20, 1, 'a', '2025-11-02 09:53:36', 3),
-(110, 20, 1, 'a', '2025-11-02 09:57:29', 3),
-(111, 20, 1, 'aaaaaaaaaaaaaaaaaa', '2025-11-02 09:57:35', 3),
-(112, 20, 1, 'aaaaaaaa', '2025-11-02 10:15:44', 3),
-(113, 1, 1, 'cu', '2025-11-02 10:15:49', 2),
-(114, 1, 1, 'oi', '2025-11-02 10:15:55', 2),
-(115, 20, 1, 'aaaa', '2025-11-02 10:16:03', 3),
-(116, 1, 1, 'aaaa', '2025-11-02 10:16:08', 2),
-(117, 2, 1, 'amigo', '2025-11-02 20:26:10', 1),
-(118, 20, 1, 'amanda', '2025-11-02 20:26:21', 3),
-(119, 2, 1, 'oi', '2025-11-02 23:10:27', 1),
-(120, 20, 1, 'aaa', '2025-11-02 23:25:23', 3),
-(121, 2, 1, 'alo', '2025-11-03 10:39:26', 1),
-(122, 2, 1, 'ooii', '2025-11-03 10:47:07', 1),
-(123, 2, 1, 'aaaaaaaaaaaaaaaaaaaaaaaaa', '2025-11-03 10:47:42', 1),
-(124, 2, 1, 'aaaaa', '2025-11-03 10:49:02', 1),
-(125, 1, 1, 'a', '2025-11-03 10:49:22', 2),
-(126, 1, 1, 'iu', '2025-11-03 10:55:29', 2),
-(127, 1, 1, 'alo', '2025-11-03 10:55:51', 2),
-(128, 4, 1, 'e', '2025-11-03 11:00:25', 3),
-(129, 4, 1, 'oi', '2025-11-03 11:07:09', 3),
-(130, 4, 1, 'a', '2025-11-03 11:07:14', 3),
-(131, 4, 1, 'a', '2025-11-03 11:07:20', 3),
-(132, 4, 1, 'a', '2025-11-03 11:07:20', 3),
-(133, 2, 1, 'a', '2025-11-03 11:07:27', 1),
-(134, 4, 1, 'aaaa', '2025-11-03 11:09:14', 3),
-(135, 1, 1, 'a', '2025-11-03 11:09:19', 2),
-(136, 4, 1, 'aaa', '2025-11-03 11:09:22', 3),
-(137, 4, 1, 'a', '2025-11-03 11:09:27', 3),
-(138, 4, 1, 'a', '2025-11-03 11:10:17', 3),
-(139, 4, 1, 'a', '2025-11-03 11:10:21', 3),
-(140, 4, 1, 'a', '2025-11-03 11:10:48', 3),
-(141, 4, 1, 'a', '2025-11-03 11:10:52', 3),
-(142, 4, 1, 'aa', '2025-11-03 11:10:57', 3),
-(143, 4, 1, 'a', '2025-11-03 11:11:07', 3),
-(144, 4, 1, 'a', '2025-11-03 11:11:19', 3),
-(145, 4, 1, 'a', '2025-11-03 11:12:48', 3),
-(146, 4, 1, 'a', '2025-11-03 11:12:59', 3),
-(147, 4, 1, 'a', '2025-11-03 11:13:12', 3),
-(148, 4, 1, 'aaa', '2025-11-03 11:13:19', 3),
-(149, 4, 1, 'aa', '2025-11-03 11:13:19', 3),
-(150, 4, 1, 'aa', '2025-11-03 11:13:20', 3),
-(151, 4, 1, 'a', '2025-11-03 11:13:20', 3),
-(152, 4, 1, 'aaa', '2025-11-03 11:13:36', 3),
-(153, 2, 1, 'aaa', '2025-11-03 11:13:46', 1),
-(154, 4, 1, 'a', '2025-11-03 11:14:27', 3),
-(155, 4, 1, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '2025-11-03 11:39:06', 3),
-(156, 4, 1, 'aaaa', '2025-11-03 11:53:34', 3),
-(157, 4, 1, 'aaaa', '2025-11-03 11:54:28', 3),
-(158, 4, 1, 'aaaa', '2025-11-03 11:55:17', 3),
-(159, 4, 1, 'aloooooooooooo', '2025-11-03 12:01:27', 3),
-(160, 4, 1, 'aloooooooooooo', '2025-11-03 12:01:34', 3),
-(161, 4, 1, 'aloooooooooooo', '2025-11-03 12:01:34', 3),
-(162, 4, 1, 'aloooooooooooo', '2025-11-03 12:01:34', 3),
-(163, 4, 1, 'aaaa', '2025-11-03 12:04:26', 3),
-(164, 4, 1, 'aaaa', '2025-11-03 12:04:43', 3);
 
 -- --------------------------------------------------------
 
@@ -391,6 +441,18 @@ INSERT INTO `solicitacoes` (`id`, `id_contratante`, `id_prestadora`, `data_solic
 --
 
 --
+-- Índices para tabela `agenda`
+--
+ALTER TABLE `agenda`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `avaliacoes`
+--
+ALTER TABLE `avaliacoes`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Índices para tabela `chat`
 --
 ALTER TABLE `chat`
@@ -419,6 +481,8 @@ ALTER TABLE `mensagem`
   ADD KEY `id_chat` (`id_chat`),
   ADD KEY `id_para` (`id_para`),
   ADD KEY `idx_unread` (`id_chat`,`id_para`,`lido`);
+
+--
 -- Índices para tabela `notificacoes`
 --
 ALTER TABLE `notificacoes`
@@ -446,6 +510,18 @@ ALTER TABLE `solicitacoes`
 --
 
 --
+-- AUTO_INCREMENT de tabela `agenda`
+--
+ALTER TABLE `agenda`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de tabela `avaliacoes`
+--
+ALTER TABLE `avaliacoes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de tabela `chat`
 --
 ALTER TABLE `chat`
@@ -464,16 +540,16 @@ ALTER TABLE `curso`
   MODIFY `id_curso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT de tabela `notificacoes`
---
-ALTER TABLE `notificacoes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
 -- AUTO_INCREMENT de tabela `mensagem`
 --
 ALTER TABLE `mensagem`
   MODIFY `id_mensagem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
+
+--
+-- AUTO_INCREMENT de tabela `notificacoes`
+--
+ALTER TABLE `notificacoes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de tabela `prestadora`
@@ -503,6 +579,8 @@ ALTER TABLE `chat`
 --
 ALTER TABLE `mensagem`
   ADD CONSTRAINT `mensagem_ibfk_1` FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`);
+
+--
 -- Limitadores para a tabela `notificacoes`
 --
 ALTER TABLE `notificacoes`
