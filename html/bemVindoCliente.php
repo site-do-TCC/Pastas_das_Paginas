@@ -219,7 +219,7 @@ foreach ($notificacoes as $n) {
       <div class="botoes">
         <a href="busca.php" class="btn buscar">🔍 Buscar Serviços</a>
         <a href="agendaCliente.php" class="btn agenda">📅 Minha Agenda</a>
-        <a href="contato.html" class="btn mensagens">💬 Mensagens</a>
+        <a href="..\html\chat.php" class="btn mensagens">💬 Mensagens</a>
         <a href="avaliarLista.php" class="btn avaliacoes">⭐ Minhas Avaliações</a>
       </div>
     </div>
